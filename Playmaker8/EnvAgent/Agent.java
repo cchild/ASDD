@@ -113,8 +113,8 @@ public abstract class Agent extends Object {
         agentState = null;
         action = null;
         realThinker = true;
-        REFINE_MAP_STEPS = 10000;
-        REFINE_MAP_STEPS_RVRL = 10000;
+        REFINE_MAP_STEPS = 1000; //Number of iterations for dynamic programming or RL.
+        REFINE_MAP_STEPS_RVRL = 1000; //Number of iterations of RVRL value learning
     }
     
     public void initialise(Percep thePercep, Action theAction) {

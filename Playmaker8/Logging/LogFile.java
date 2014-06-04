@@ -30,7 +30,7 @@ public class LogFile extends java.lang.Object {
         try {
              w = new FileWriter(FILE_NAME, true);
         } catch (IOException e) {
-            System.out.print("\nCANNOT OPEN " + FILE_NAME);
+            System.out.print("\nCANNOT OPEN " + FILE_NAME + e.toString());
         }
         outfile = new PrintWriter(w);
     }

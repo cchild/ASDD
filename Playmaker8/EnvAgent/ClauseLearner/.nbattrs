@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="Clause.java">
+        <attr name="class_dependency_EnvAgent.ClauseLearner.Term" stringvalue="Clause"/>
+        <attr name="class_dependency_java.io.Serializable" stringvalue="Clause"/>
+        <attr name="class_dependency_java.lang.Cloneable" stringvalue="Clause"/>
+    </fileobject>
+    <fileobject name="ClauseElements.java">
+        <attr name="class_dependency_java.io.Serializable" stringvalue="ClauseElements"/>
+        <attr name="class_dependency_java.lang.Cloneable" stringvalue="ClauseElements"/>
+        <attr name="class_dependency_java.lang.Object" stringvalue="ClauseElements"/>
+    </fileobject>
+    <fileobject name="ClauseLearnerASDD.java">
+        <attr name="class_dependency_EnvAgent.ClauseLearner.ClauseLearner" stringvalue="ClauseLearnerASDD"/>
+    </fileobject>
+    <fileobject name="ClauseList.java">
+        <attr name="class_dependency_java.io.Serializable" stringvalue="ClauseList"/>
+    </fileobject>
+    <fileobject name="ClauseNode.java">
+        <attr name="class_dependency_java.io.Serializable" stringvalue="ClauseNode"/>
+        <attr name="class_dependency_java.lang.Cloneable" stringvalue="ClauseNode"/>
+        <attr name="class_dependency_java.lang.Object" stringvalue="ClauseNode"/>
+    </fileobject>
+    <fileobject name="ClauseSet.java">
+        <attr name="class_dependency_EnvAgent.ClauseLearner.ClauseList" stringvalue="ClauseSet"/>
+    </fileobject>
+    <fileobject name="Variable.java">
+        <attr name="class_dependency_EnvAgent.ClauseLearner.Term" stringvalue="Variable"/>
+        <attr name="class_dependency_java.io.Serializable" stringvalue="Variable"/>
+        <attr name="class_dependency_java.lang.Cloneable" stringvalue="Variable"/>
+    </fileobject>
+</attributes>

@@ -57,12 +57,12 @@ public class ClauseLearnerASDD extends ClauseLearner {
         
       
         
-        LogFile logfile1 = new LogFile(1);
+        LogFile logfile1 = new LogFile(2);
         logfile1.print("\n PredASDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
         System.out.print("\n PredASDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
         logfile1.close();
         
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         logfile.print("\nThe pre-filtered set of rules is...\n===========\n===========\n");
         learnedClauses.toLogFile(logfile);
         logfile.print("\n===========\n===========");
@@ -79,7 +79,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
         Date finishFilter = new Date();
         elapsedTime = finishFilter.getTime() - startTime;
         
-        logfile = new LogFile();
+        logfile = new LogFile(1);
         logfile.print("\n PredASDD FILTER IN: " + elapsedTime + " MILLISECONDS.");
         System.out.print("\n predASDD FILTER IN: " + elapsedTime + " MILLISECONDS.");   
         
@@ -170,7 +170,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
 
             LogFile logfile = null;
             if(LogFile.OUTPUT_LOG0)
-                logfile = new LogFile();
+                logfile = new LogFile(1);
             for (int candidCount = 0; candidCount < candidatesK.size(); candidCount ++) {
                 if (candidatesK.get(candidCount).getDatabaseOccurrences() < MINSUP) {
                     if(LogFile.OUTPUT_LOG0)
@@ -224,7 +224,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
             System.out.print("\nCandidates Level: " + k + " size is: " + candidatesK.size());
 
             if(LogFile.OUTPUT_LOG0)
-                logfile = new LogFile();
+                logfile = new LogFile(1);
             for (int i = 0; i < candidatesK.size(); i ++) {
                 if(LogFile.OUTPUT_LOG0)
                     logfile.print("\n Added L" + k +  " candidate: " +candidatesK.get(i).toString());
@@ -257,7 +257,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
 
         LogFile logfile = null;
         if(LogFile.OUTPUT_LOG0)
-            logfile= new LogFile();
+            logfile= new LogFile(1);
         //First: the join step
         for (int xCount = 0; xCount < Lminus1Candidates.size(); xCount ++) {
 
@@ -418,7 +418,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
         
         LogFile logfile = null;
         if (LogFile.OUTPUT_LOG0)
-            logfile = new LogFile();
+            logfile = new LogFile(1);
         
         for (int candidateCount = 0; candidateCount < candidatesK.size(); candidateCount ++) {
             //subsets of rules of this form are just the rule with a wildcard in each
@@ -486,7 +486,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
         }*/
         
         
-        //LogFile logfile = new LogFile();
+        //LogFile logfile = new LogFile(1);
         
         for (int lm1Loop =0; lm1Loop < Lminus1CandidatesWithHead.size(); lm1Loop ++) {
 
@@ -518,7 +518,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
         Date finishFilter = new Date();
         long elapsedTime = finishFilter.getTime() - startTime;
         
-        LogFile logfileResults = new LogFile(1);
+        LogFile logfileResults = new LogFile(2);
         
         logfileResults.print("\n FILTER SPECIFIC IN PROCESS: " + elapsedTime + " MILLISECONDS.");
         logfileResults.close();
@@ -600,7 +600,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
        
                 if (!candidatesK.contains(newClause)) {
                     newClause.get(0).setUniqueID();
-                    LogFile logfile = new LogFile();
+                    LogFile logfile = new LogFile(1);
                     logfile.print("\n Added L1 candidate: " + newClause.toString());
                     logfile.close();
                     candidatesK.add(new ClauseNode(newClause));
@@ -612,7 +612,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
                 newClause.addHead((Term)successorClause.get(succLoop).clone());
                 if (!candidatesK.contains(newClause)) {
                     newClause.getHead().setUniqueID();
-                    LogFile logfile = new LogFile();
+                    LogFile logfile = new LogFile(1);
                     logfile.print("\n Added L1 candidate: " + newClause.toString());
                     logfile.close();
                     candidatesK.add(new ClauseNode(newClause));

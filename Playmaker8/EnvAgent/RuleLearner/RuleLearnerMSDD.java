@@ -29,12 +29,12 @@ public class RuleLearnerMSDD extends RuleLearner {
         Date finish = new Date();
         long elapsedTime = finish.getTime() - startTime;
         
-        LogFile logfile1 = new LogFile(1);
+        LogFile logfile1 = new LogFile(2);
         logfile1.print("\n MSDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
         System.out.print("\n MSDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
         logfile1.close();
          
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         logfile.print("\nThe pre-filtered set of rules is...\n===========\n===========\n");
         logfile.print(learnedRules.toString());  
         logfile.print("\n===========\n===========");
@@ -53,7 +53,7 @@ public class RuleLearnerMSDD extends RuleLearner {
         Date finishFilter = new Date();
         elapsedTime = finishFilter.getTime() - startTime;
         
-        logfile1 = new LogFile(1);
+        logfile1 = new LogFile(2);
         logfile1.print("\n MSDD FILTER IN: " + elapsedTime + " MILLISECONDS.");
         System.out.print("\n MSDD FILTER IN: " + elapsedTime + " MILLISECONDS.");
         logfile1.close();
@@ -95,7 +95,7 @@ public class RuleLearnerMSDD extends RuleLearner {
         
         nodes.add(emptyNode);
         
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         logfile.print(nodes.get(0).toString() + "\n");
         //Main MSDD loop
         //keep looping until there are no nodes left to expand
@@ -183,7 +183,7 @@ public class RuleLearnerMSDD extends RuleLearner {
         LogFile logfile = null;
         if(LogFile.OUTPUT_LOG0)
         {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
             logfile.print("\n");
         }
      

@@ -41,7 +41,7 @@ public class RuleStateGenerator extends StateGenerator {
         
         NodeList matchingNodes = ruleNodes.matchingNodes(currentState);
         
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         
         boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
         
@@ -59,7 +59,7 @@ public class RuleStateGenerator extends StateGenerator {
             //pick the rules which have precedence and discard others
             matchingNodes = matchingNodes.filterByPrecedence();
             if (outputLog) {
-                logfile = new LogFile();
+                logfile = new LogFile(1);
                 logfile.print("\nThe rules after filtering by precedence are...\n===========\n===========\n");
                 logfile.print(matchingNodes.toString());
                 logfile.print("\n===========\n===========\n=FINISHED==");
@@ -73,7 +73,7 @@ public class RuleStateGenerator extends StateGenerator {
             removeRulesWithLessSpecificOutcome(matchingNodes, true);
 
             if (outputLog) {
-                logfile = new LogFile();
+                logfile = new LogFile(1);
                 logfile.print("\nThe pre-filtering covered by more specific nodes...\n===========\n===========\n");
                 logfile.print(matchingNodes.toString());
                 logfile.flush();
@@ -83,7 +83,7 @@ public class RuleStateGenerator extends StateGenerator {
             filterCoveredGeneralNodes(matchingNodes);
 
             if (outputLog) {
-                logfile = new LogFile();
+                logfile = new LogFile(1);
                 logfile.print("\nThe pre-filtered for same number of outcomes set of rules is...\n===========\n===========\n");
                 logfile.print(matchingNodes.toString());
                 logfile.flush();
@@ -94,7 +94,7 @@ public class RuleStateGenerator extends StateGenerator {
             removeRulesWithLessSpecificOutcome(matchingNodes, false);
 
             if (outputLog) {
-                logfile = new LogFile();
+                logfile = new LogFile(1);
                 logfile.print("\nThe generated states set of rules is...\n===========\n===========\n");
                 logfile.print(matchingNodes.toString());
                 logfile.flush();
@@ -105,7 +105,7 @@ public class RuleStateGenerator extends StateGenerator {
         ArrayList statesAndProbs = generateStates(matchingNodes, percep);
         
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
             logfile.print("\nThe generated states are...\n===========\n===========\n");
 
             //Print out the states before we filter
@@ -125,7 +125,7 @@ public class RuleStateGenerator extends StateGenerator {
         }
         
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
             logfile.print("\nThe generated states with illigal states removed are...\n===========\n===========\n");
 
             //Print out the states after we filter
@@ -141,7 +141,7 @@ public class RuleStateGenerator extends StateGenerator {
         normaliseProbabilitiesOfGeneratedStates(statesAndProbs);
         
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
             logfile.print("\nThe states with probabilities normalised are...\n===========\n===========\n");
 
             //Print out the states after we filter

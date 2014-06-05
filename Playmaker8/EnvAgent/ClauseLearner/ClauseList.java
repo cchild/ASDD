@@ -301,7 +301,7 @@ public class ClauseList implements Serializable {
         for (int i = size() -1; i >= 0; i--) {
             if (get(i).getPrecursor().isEqualTo(precursor)) {
                 if (get(i).getSuccessor().getFirstNonWildcardPosition() == successorPos) {
-                    LogFile logfile = new LogFile();
+                    LogFile logfile = new LogFile(1);
                     logfile.print("Removed because covered by rule with less Variables\n");
                     logfile.print(get(i).toString());
                     logfile.close();
@@ -389,7 +389,7 @@ public class ClauseList implements Serializable {
         
         
         if (outputLog) {
-            lf = new LogFile();
+            lf = new LogFile(1);
             lf.print("Percep: " + percep.toString() + "\n");
         }
         for (int acIt = 0; acIt < iterAction.getNumValues(); acIt ++) {
@@ -544,7 +544,7 @@ public class ClauseList implements Serializable {
         LogFile logfile = null;
         
         if (outputLog)
-            logfile = new LogFile();
+            logfile = new LogFile(1);
         
         int currentSpecificity = -1;
         ArrayList clauseSets = null;

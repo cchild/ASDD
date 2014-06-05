@@ -129,7 +129,7 @@ public class KillPredatorAgentBody extends AgentBody {
             getPredatorEnvState().setKilledState(KillPredatorEnvState.NO_KILL);
             
              //KILL_LOG
-            //LogFile logfile = new LogFile();
+            //LogFile logfile = new LogFile(1);
             //logfile.print(getPredatorPercep().getString());
             //logfile.close();
         } else {
@@ -191,7 +191,7 @@ public class KillPredatorAgentBody extends AgentBody {
             }
             default : {
                 stateDirection = KillPredatorEnvState.NORTH;
-                LogFile logfile = new LogFile();
+                LogFile logfile = new LogFile(1);
                 logfile.print("\n***Illegal move direction in agent body***\n");
                 logfile.close();
             }
@@ -206,7 +206,7 @@ public class KillPredatorAgentBody extends AgentBody {
     
     //advance the state of the agent by timeStep
     public void advanceStep() {
-        /*LogFile logfile = new LogFile();
+        /*LogFile logfile = new LogFile(1);
         logfile.print("\n");
         if (getRole() == PREDATOR) {
             logfile.print("Predator: ");

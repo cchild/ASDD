@@ -46,7 +46,7 @@ public class PredatorTester
 
 
 
-        LogFile logfile1 = new LogFile(1);
+        LogFile logfile1 = new LogFile(2);
         System.out.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES);
         System.out.print("\n" + "Total reward: " + totalReward + "\n");
         logfile1.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES);

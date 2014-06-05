@@ -121,7 +121,7 @@ public class ReinforcementLearner extends java.lang.Object {
         
         
         if (LogFile.OUTPUT_LOG0) {
-            LogFile logfile = new LogFile();
+            LogFile logfile = new LogFile(1);
             logfile.print("\nFind action for state: ");
             logfile.print(percep.toString());
             logfile.print("\nAction:" + action.toString());
@@ -148,7 +148,7 @@ public class ReinforcementLearner extends java.lang.Object {
            boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
            
            if (outputLog) {
-               logfile = new LogFile();
+               logfile = new LogFile(1);
                logfile.print("\nThe state to be refined is...\n===========\n===========\n");
                logfile.print(percep.toString() + " " + action.toString());
                logfile.print("\n");
@@ -159,7 +159,7 @@ public class ReinforcementLearner extends java.lang.Object {
            
            if (nextStatesAndProb == null) {
                if (outputLog) {
-                   logfile = new LogFile();
+                   logfile = new LogFile(1);
                    logfile.print("\nThe state generator could not generate and states for: ");
                    logfile.print(percep.toString() + " " + action.toString());
                    logfile.print("\n");

@@ -122,7 +122,7 @@ public abstract class TickEnvironment extends Environment
                 
                 //KILL_LOG
                 /*if (current.getRealThinker()) {
-                    LogFile logfile = new LogFile();
+                    LogFile logfile = new LogFile(1);
                     logfile.print(action.toString() + " \n");
                     logfile.close();
                 }*/

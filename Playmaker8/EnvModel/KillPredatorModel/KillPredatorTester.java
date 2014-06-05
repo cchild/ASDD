@@ -57,7 +57,7 @@ public class KillPredatorTester
             }
         }
 
-        LogFile logfile1 = new LogFile(1);
+        LogFile logfile1 = new LogFile(2);
         System.out.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES);
         System.out.print("\nKills:" + kills );
         System.out.print("\nAnti Kills:" + antiKill );

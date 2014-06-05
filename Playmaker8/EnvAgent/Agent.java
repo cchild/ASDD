@@ -289,7 +289,7 @@ public abstract class Agent extends Object {
                 Date finish = new Date();
                 long elapsedTime = finish.getTime() - startTime;
 
-                LogFile logfile1 = new LogFile(1);
+                LogFile logfile1 = new LogFile(2);
                 logfile1.print("\n State action model learned in: " + elapsedTime + " MILLISECONDS.");
                 System.out.print("\n State action model learned in:" + elapsedTime + " MILLISECONDS.");
                 logfile1.close();
@@ -530,7 +530,7 @@ public abstract class Agent extends Object {
 
                 valueMapClauseApriori = generateClauseValueMap(learnedClausesASDD);
                 valueMapClauseApriori.writeTo(VALUE_MAP_CLAUSE_APRIORI_FILENAME);
-                LogFile logFile = new LogFile();
+                LogFile logFile = new LogFile(1);
                 logFile.print ("\n\nClause Value Map: \n");
                 logFile.print(valueMapClauseApriori.toString());
                 logFile.flush();
@@ -548,7 +548,7 @@ public abstract class Agent extends Object {
                         //for the moment generate one because we didn't have one
                         valueMapClauseApriori = generateClauseValueMap(learnedClausesASDD);
                         valueMapClauseApriori.writeTo(VALUE_MAP_CLAUSE_APRIORI_FILENAME);
-                        LogFile logFile = new LogFile();
+                        LogFile logFile = new LogFile(1);
                         logFile.print ("\n\nClause Value Map: \n");
                         logFile.print(valueMapClauseApriori.toString());
                         logFile.flush();
@@ -577,7 +577,7 @@ public abstract class Agent extends Object {
                        reinforcementLearner.setStateGenerator(new StateActionMapStateGenerator(stateActionMapTemp));
                        StateValueMap valueMapStateActionTemp = generateStateActionValueMap(stateActionMapTemp);
                        reinforcementLearner.setValueMap(valueMapStateActionTemp);
-                       LogFile logFile = new LogFile();
+                       LogFile logFile = new LogFile(1);
                        logFile.print ("\n\nState Action Lots Value Map: \n");
                        logFile.print(valueMapStateActionTemp.toString());
                        logFile.flush();
@@ -683,7 +683,7 @@ public abstract class Agent extends Object {
                         
                    StateActionValueMap stateActionValueMapStateActionTemp = generateStateActionStateActionValueMap(stateActionMapTemp);
                    reinforcementLearner.setStateActionValueMap(stateActionValueMapStateActionTemp);
-                   LogFile logFile = new LogFile();
+                   LogFile logFile = new LogFile(1);
                    logFile.print ("\n\nState Action Value Map When generated: \n");
                    for (int j = 0; j < stateActionValueMapStateActionTemp.getStateActionValues().size(); j++) {
                        logFile.print("\n" + j + " "+ stateActionValueMapStateActionTemp.getStateActionValues().get(j).toString());
@@ -724,7 +724,7 @@ public abstract class Agent extends Object {
            }
 
            generateClauseValues (learnedClausesASDD);
-           LogFile logFile = new LogFile();
+           LogFile logFile = new LogFile(1);
            logFile.print ("\n\nLearned Clause Sets with Values: \n");
            logFile.print(learnedClausesASDD.getClauseSetMap().toString());
            logFile.flush();
@@ -746,7 +746,7 @@ public abstract class Agent extends Object {
                 }
            }
 
-           LogFile logFile1 = new LogFile(1);
+           LogFile logFile1 = new LogFile(2);
            logFile1.print ("\n\nLearned Clause Sets with Values: \n");
            logFile1.print(learnedClausesASDD.getClauseSetMap().toStringOnlyWinning());
            logFile1.flush();
@@ -827,11 +827,11 @@ public abstract class Agent extends Object {
                 totalTested ++;
                 Action action = stateActions.getAction(actionLoop);
                      
-                LogFile logfile = new LogFile();
+                LogFile logfile = new LogFile(1);
                 logfile.print("\n Initial test percep act is:" + percep.toString() + "Action: " + action.toString());
                 logfile.close();
                 if ((learnedRulesMSDD != null) || (learnedRulesApriori != null)) {
-                   logfile = new LogFile();
+                   logfile = new LogFile(1);
                    logfile.print("\n STATES GENERATED FROM 200000 STATE ACTION MAP: \n");
                    logfile.close();
                    ArrayList generatedStatesLots = stateGeneratorLotsActionMap.generateNextStates(percep, action);
@@ -839,27 +839,27 @@ public abstract class Agent extends Object {
                    
                    ArrayList generatedStatesAprioriRules = null;
                    if (learnedRulesApriori != null) {
-                       logfile = new LogFile();
+                       logfile = new LogFile(1);
                        logfile.print("\n STATES GENERATED FROM APRIORI RULES: \n");
                        logfile.close();
                        generatedStatesAprioriRules = stateGeneratorAprioriRules.generateNextStates(percep, action);
                     }
 
-                   logfile = new LogFile();
+                   logfile = new LogFile(1);
                    logfile.print("\n STATES GENERATED FROM STATE ACTION MAP: \n");
                    logfile.close();
                    ArrayList generatedStatesActionMap = stateGeneratorStateActionMap.generateNextStates(percep, action);
 
                    ArrayList generatedStatesMSDDRules = null;
                    if (learnedRulesMSDD != null) {
-                       logfile = new LogFile();
+                       logfile = new LogFile(1);
                        logfile.print("\n STATES GENERATED FROM MSDD RULES: \n");
                        logfile.close();
                        generatedStatesMSDDRules = stateGeneratorMSDDRules.generateNextStates(percep, action);
                     }
                     /*Now get the error measure for each of these against LOTS version
                     */
-                    logfile = new LogFile();
+                    logfile = new LogFile(1);
                     logfile.print("\n State Errors initial test percep act is:" + percep.toString() + "Action: " + action.toString());
                     logfile.print("\n Correct following states are:\n");
                     for (int i = 0; i < generatedStatesLots.size(); i++) {
@@ -873,7 +873,7 @@ public abstract class Agent extends Object {
                     stateFewMany.add(0);
                     stateFewMany.set(0, tooFewStatesSAM);
                     stateFewMany.set(1, extraStatesSAM);
-                    logfile = new LogFile();
+                    logfile = new LogFile(1);
                     logfile.print("\n State Action Map Errors: ");
                     logfile.close();
                     stateActionMapError += generatedStatesError(generatedStatesLots, generatedStatesActionMap, stateFewMany);
@@ -883,7 +883,7 @@ public abstract class Agent extends Object {
                     if (learnedRulesMSDD != null) {
                         stateFewMany.set(0, tooFewStatesMSDD);
                         stateFewMany.set(1, extraStatesMSDD);
-                        logfile = new LogFile();
+                        logfile = new LogFile(1);
                         logfile.print("\n MSDD rule Errors: ");
                         logfile.close();
                         MSDDError += generatedStatesError(generatedStatesLots, generatedStatesMSDDRules, stateFewMany);
@@ -895,7 +895,7 @@ public abstract class Agent extends Object {
                     if (learnedRulesApriori != null) {
                         stateFewMany.set(0, tooFewStatesAPR);
                         stateFewMany.set(1, extraStatesAPR);
-                        logfile = new LogFile();
+                        logfile = new LogFile(1);
                         logfile.print("\n Apriori rules Errors: ");
                         logfile.close();
                         aprioriError += generatedStatesError(generatedStatesLots, generatedStatesAprioriRules, stateFewMany);
@@ -907,7 +907,7 @@ public abstract class Agent extends Object {
             }
         }
         
-         LogFile logfile1 = new LogFile(1);
+         LogFile logfile1 = new LogFile(2);
          logfile1.print("\n State action Error: " + stateActionMapError);
          logfile1.print("\n MSDDError Error: " + MSDDError);
          logfile1.print("\n aprioriError Error: " + aprioriError);
@@ -960,22 +960,22 @@ public abstract class Agent extends Object {
                 totalTested ++;
                 Action action = stateActions.getAction(actionLoop);
                      
-                LogFile logfile = new LogFile();
+                LogFile logfile = new LogFile(1);
                 logfile.print("\n Initial test state is:" + percep.toString() + " " + action.toString());
                 logfile.close();
                 if (learnedClausesApriori != null) {
-                   logfile = new LogFile();
+                   logfile = new LogFile(1);
                    logfile.print("\n STATES GENERATED FROM 200000 STATE ACTION MAP: \n");
                    logfile.close();
                    ArrayList generatedStatesLots = stateGeneratorLotsActionMap.generateNextStates(percep, action);
                    totalStateActionStates += generatedStatesLots.size();
                    
-                   logfile = new LogFile();
+                   logfile = new LogFile(1);
                    logfile.print("\n STATES GENERATED FROM APRIORI RULES: \n");
                    logfile.close();
                    ArrayList generatedStatesAprioriRules = stateGeneratorAprioriClauses.generateNextStates(percep, action);
 
-                   logfile = new LogFile();
+                   logfile = new LogFile(1);
                    logfile.print("\n STATES GENERATED FROM STATE ACTION MAP: \n");
                    logfile.close();
                    ArrayList generatedStatesActionMap = stateGeneratorStateActionMap.generateNextStates(percep, action);
@@ -988,7 +988,7 @@ public abstract class Agent extends Object {
                     stateFewMany.add(0);
                     stateFewMany.set(0, tooFewStatesSAM);
                     stateFewMany.set(1, extraStatesSAM);
-                    logfile = new LogFile();
+                    logfile = new LogFile(1);
                     logfile.print("\n State action Map Errors: ");
                     logfile.close();
                     stateActionMapError += generatedStatesError(generatedStatesLots, generatedStatesActionMap, stateFewMany);
@@ -996,7 +996,7 @@ public abstract class Agent extends Object {
                     extraStatesSAM = (Integer)stateFewMany.get(1);
                     stateFewMany.set(0, tooFewStatesAPR);
                     stateFewMany.set(1, extraStatesAPR);
-                    logfile = new LogFile();
+                    logfile = new LogFile(1);
                     logfile.print("\n Apriori Clause rules Errors: ");
                     logfile.close();
                     aprioriError += generatedStatesError(generatedStatesLots, generatedStatesAprioriRules, stateFewMany);
@@ -1008,7 +1008,7 @@ public abstract class Agent extends Object {
             }
         }
         
-         LogFile logfile1 = new LogFile(1);
+         LogFile logfile1 = new LogFile(2);
          logfile1.print("\n State action Error: " + stateActionMapError);
          logfile1.print("\n aprioriError Error: " + aprioriError);
          logfile1.print("\n total state action pairs tested: " + totalTested);
@@ -1045,12 +1045,12 @@ public abstract class Agent extends Object {
                         }
                     }
                 } else {
-                    LogFile logfile = new LogFile();
+                    LogFile logfile = new LogFile(1);
                     logfile.print("\n Generated states are null in error measure.");
                     logfile.close();
                 }
                 if (!matching) {
-                    LogFile logfile = new LogFile();
+                    LogFile logfile = new LogFile(1);
                     logfile.print("\n Missed this state: " + tState.toString());
                     logfile.close();
                     error += (double)0.5f;
@@ -1058,7 +1058,7 @@ public abstract class Agent extends Object {
                 }
             }
         } else {
-            LogFile logfile = new LogFile();
+            LogFile logfile = new LogFile(1);
             logfile.print("\n Generated states are null in error measure.");
             logfile.close();
         }
@@ -1083,7 +1083,7 @@ public abstract class Agent extends Object {
             if (!matching) {
                 error += (double)0.5f;
                 stateFewMany.set(1, ((Integer)stateFewMany.get(1)).intValue()+1);
-                LogFile logfile = new LogFile();
+                LogFile logfile = new LogFile(1);
                 logfile.print("\n Extra state: " + gState.toString());
                 logfile.close();
             }
@@ -1197,7 +1197,7 @@ public StateValueMap generateRuleValueMap (NodeList learnedRules) {
         Percep initialPercep = (Percep)body.getPercep().clone();
         Percep nextPercep = (Percep)body.getPercep().clone();
         
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         //System.out.print("\n Initial test state is:" + initialState.toString());
         logfile.close();
      
@@ -1226,7 +1226,7 @@ public StateValueMap generateRuleValueMap (NodeList learnedRules) {
         Percep agentPercep = (Percep)body.getPercep().clone();
         Percep nextPercep = (Percep)body.getPercep().clone();
 
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         //System.out.print("\n Initial test state is:" + initialState.toString());
         logfile.close();
      
@@ -1281,7 +1281,7 @@ public StateValueMap generateRuleValueMap (NodeList learnedRules) {
         Percep agentPercep = (Percep)body.getPercep().clone();
         Percep nextPercep = (Percep)body.getPercep().clone();
 
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         //System.out.print("\n Initial test state is:" + initialState.toString());
         logfile.close();
      

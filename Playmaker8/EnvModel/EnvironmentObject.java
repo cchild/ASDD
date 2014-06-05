@@ -29,7 +29,7 @@ public abstract class EnvironmentObject extends Object {
     /*name of the object type as a string*/
     public abstract String getName();
     public void output() {
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         logfile.print(getName());
         logfile.close();
     }

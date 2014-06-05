@@ -157,7 +157,7 @@ public abstract class ClauseLearner {
         LogFile logfile = null;
         
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
         }
             
         ClauseSetMap clauseSetMap = clauses.buildClauseSetMap();
@@ -268,7 +268,7 @@ public abstract class ClauseLearner {
         LogFile logfile = null;
 
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
         }
 
         ClauseSetMap clauseSetMap = clauses.buildClauseSetMap();
@@ -545,7 +545,7 @@ public abstract class ClauseLearner {
             LogFile logfile = null;
 
             if (outputLog) {
-                logfile = new LogFile();
+                logfile = new LogFile(1);
                 logfile.print("\n\n\n TheClauseSet: \n");
                 logfile.print(set1.toString() + " precursor Equ1: " + set1.get(0).getPrecursorequals() + " precursor Equ2: " +set2.get(0).getPrecursorequals());
                 logfile.print("\n would be superior but not significant diff to:");
@@ -613,7 +613,7 @@ public abstract class ClauseLearner {
             LogFile logfile = null;
 
             if (outputLog) {
-                logfile = new LogFile();
+                logfile = new LogFile(1);
                 logfile.print("\n\n\n TheClauseSet: \n");
                  logfile.print(set2.toString() + " precursor Equ1: " + set1.get(0).getPrecursorequals() + " precursor Equ2: " +set2.get(0).getPrecursorequals());
                 logfile.print("\n would be superior but not significant diff to:");
@@ -735,7 +735,7 @@ public abstract class ClauseLearner {
         LogFile logfile = null;
 
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
         }
         if (returnVal < 0) {
             logfile.print("\n(double)n1*Math.log((double)(n1*t)/(double)(r1*c1)) " + (double)n1*Math.log((double)(n1*t)/(double)(r1*c1)));
@@ -786,7 +786,7 @@ public abstract class ClauseLearner {
         LogFile logfile = null;
 
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
 
             if (n2 < 0) {
                 logfile.print("\n n2= d1Precursorequals - d1Fullequals:  " + n2);
@@ -848,7 +848,7 @@ public abstract class ClauseLearner {
        LogFile logfile = null;
         boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
         }
 
        for (int clauseLoop = 0; clauseLoop < clauses.size(); clauseLoop ++) {
@@ -919,7 +919,7 @@ public abstract class ClauseLearner {
     //Check each rule to make sure every Variable value is represented
     public void addMissingClauses(ClauseList clauses, ClauseList level1Clauses) {
             
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         ClauseSetMap clauseSets = clauses.buildClauseSetMap();
         for (int clauseLoop = 0; clauseLoop < clauses.size(); clauseLoop ++) {
             ClauseNode clauseToTest = (ClauseNode)clauses.get(clauseLoop);
@@ -995,7 +995,7 @@ public abstract class ClauseLearner {
        //of how to define a varibale. It should be able to read this in from a file somehow?
        
         nodes.sortNonIncreasingGenerality();
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         
         int currentSpecificity = -1;
         ArrayList clauseSets = null;
@@ -1090,7 +1090,7 @@ public abstract class ClauseLearner {
 
         LogFile logfile = null;
         if (LogFile.OUTPUT_LOG0)
-            logfile = new LogFile();
+            logfile = new LogFile(1);
         while (currentClause >= 0) {
             if (clauses.get(currentClause).getClauseHead() == null) {
                 if (LogFile.OUTPUT_LOG0) {
@@ -1209,7 +1209,7 @@ public abstract class ClauseLearner {
         Date finishFilter = new Date();
         long elapsedTime = finishFilter.getTime() - startTime;
         
-        LogFile logfileResults = new LogFile(1);
+        LogFile logfileResults = new LogFile(2);
         
         logfileResults.print("\n ACTUAL FILTER IN PROCESS: " + elapsedTime + " MILLISECONDS.");
         logfileResults.close();
@@ -1239,7 +1239,7 @@ public abstract class ClauseLearner {
         long elapsedMissing = finishAddMissing.getTime() - startAddMissingTime;
         
         
-        LogFile logfile1 = new LogFile(1);
+        LogFile logfile1 = new LogFile(2);
         logfile1.print("\n Add Missing in: " + elapsedMissing + " MILLISECONDS.");
         System.out.print("\n Add Missing in: " + elapsedMissing + " MILLISECONDS.");
         System.out.flush();
@@ -1308,7 +1308,7 @@ public abstract class ClauseLearner {
      */
     protected boolean filterSpecific(ClauseNode node, ClauseList clauses, float g, ClauseList level1Clauses) {   
       
-        LogFile logfile = new LogFile();
+        LogFile logfile = new LogFile(1);
         for (int i = 0; i < clauses.size(); i++) {
             ClauseNode s = clauses.get(i);
             if (s.subsumes(node)) {

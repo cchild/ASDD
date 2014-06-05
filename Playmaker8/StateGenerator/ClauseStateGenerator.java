@@ -49,7 +49,7 @@ public class ClauseStateGenerator extends StateGenerator {
         LogFile logfile = null;
         
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
             logfile.print("\nState before action:");
             logfile.print(currentState.toString());
             //logfile.print("\n===========\n===========\n=FINISHED==");
@@ -68,7 +68,7 @@ public class ClauseStateGenerator extends StateGenerator {
         //pick the rules which have precedence and discard others
         matchingNodes = matchingNodes.filterByPrecedence();
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
             logfile.print("\nThe rules after filtering by precedence are...\n===========\n===========\n");
             logfile.print(matchingNodes.toString());
             logfile.print("\n===========\n===========\n=FINISHED==");
@@ -83,7 +83,7 @@ public class ClauseStateGenerator extends StateGenerator {
         
         if (outputLog) {
             double totalProb = 0.0f;
-            logfile = new LogFile();
+            logfile = new LogFile(1);
             logfile.print("\nThe generated states are...\n===========\n===========\n");
 
             //Print out the states before we filter
@@ -119,7 +119,7 @@ public class ClauseStateGenerator extends StateGenerator {
         }
         
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
             logfile.print("\nThe generated states with illigal states removed are...\n===========\n===========\n");
 
             //Print out the states after we filter
@@ -135,7 +135,7 @@ public class ClauseStateGenerator extends StateGenerator {
         normaliseProbabilitiesOfGeneratedStates(ruleStatesAndProbs);
         
         if (outputLog) {
-            logfile = new LogFile();
+            logfile = new LogFile(1);
             logfile.print("\nThe states with probabilities normalised are...\n===========\n===========\n");
 
             //Print out the states after we filter

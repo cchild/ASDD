@@ -56,7 +56,7 @@ public class PaintTester
           
         }
         
-        LogFile logfile1 = new LogFile(1);
+        LogFile logfile1 = new LogFile(2);
 
 
        logfile1.print("\n\nBlocks painted: " + blocksPainted);

@@ -52,7 +52,7 @@ public class PredatorTester
         logfile1.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES);
         logfile1.print("\n" + "Total reward: " + totalReward + "\n");
         logfile1.close();
-        logfile1.close();
+        logfile1.close(); 
         predatorEnvironment.testAgentRecords();
     }
 }

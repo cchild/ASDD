@@ -29,9 +29,9 @@ public abstract class EnvironmentObject extends Object {
     /*name of the object type as a string*/
     public abstract String getName();
     public void output() {
-        LogFile logfile = new LogFile(1);
-        logfile.print(getName());
-        logfile.close();
+        Singleton logfile = Singleton.getInstance();
+        logfile.print(getName(),1);
+        
     }
     
     /*advance the state of this object by a time step for timed environments*/

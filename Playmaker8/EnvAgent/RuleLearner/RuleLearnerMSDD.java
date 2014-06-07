@@ -29,16 +29,16 @@ public class RuleLearnerMSDD extends RuleLearner {
         Date finish = new Date();
         long elapsedTime = finish.getTime() - startTime;
         
-        LogFile logfile1 = new LogFile(2);
+        Singleton logfile2 = Singleton.getInstance();
         logfile1.print("\n MSDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
         System.out.print("\n MSDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
-        logfile1.close();
          
-        LogFile logfile = new LogFile(1);
+         
+        Singleton logfile = Singleton.getInstance();
         logfile.print("\nThe pre-filtered set of rules is...\n===========\n===========\n");
         logfile.print(learnedRules.toString());  
         logfile.print("\n===========\n===========");
-        logfile.close();
+         
         //Now filter the dependencies
         //This is called filter(D, H, n, g) in the paper
         int n = 1; //parameter indicating degree to which dependencies with low frequency of 
@@ -53,10 +53,10 @@ public class RuleLearnerMSDD extends RuleLearner {
         Date finishFilter = new Date();
         elapsedTime = finishFilter.getTime() - startTime;
         
-        logfile1 = new LogFile(2);
-        logfile1.print("\n MSDD FILTER IN: " + elapsedTime + " MILLISECONDS.");
+        
+        logfile2.print("\n MSDD FILTER IN: " + elapsedTime + " MILLISECONDS.",2);
         System.out.print("\n MSDD FILTER IN: " + elapsedTime + " MILLISECONDS.");
-        logfile1.close();
+        
         
         for (int i = 0; i < learnedRules.size(); i++) {
             //Not sure we should have to do this, but just in case the values are not set for some reason
@@ -67,7 +67,7 @@ public class RuleLearnerMSDD extends RuleLearner {
         logfile.print("\nThe post-filtered sorted set of rules is...\n===========\n===========\n");
         logfile.print(learnedRules.toString());  
         logfile.print("\n===========\n===========\n=FINISHED==");
-        logfile.close();
+         
         
         return learnedRules;
     }
@@ -95,7 +95,7 @@ public class RuleLearnerMSDD extends RuleLearner {
         
         nodes.add(emptyNode);
         
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         logfile.print(nodes.get(0).toString() + "\n");
         //Main MSDD loop
         //keep looping until there are no nodes left to expand
@@ -172,7 +172,7 @@ public class RuleLearnerMSDD extends RuleLearner {
             expanded += children.size();
         }    
         
-        logfile.close();
+         
         nodes.addAll(finishedRules);
         return nodes;
     }
@@ -180,10 +180,10 @@ public class RuleLearnerMSDD extends RuleLearner {
     private void expandPrecSucc(RuleNode n, boolean precursor, NodeList children) {
         RuleElements precSucc;
         
-        LogFile logfile = null;
+          
         if(LogFile.OUTPUT_LOG0)
         {
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
             logfile.print("\n");
         }
      
@@ -249,7 +249,7 @@ public class RuleLearnerMSDD extends RuleLearner {
             }
         }
         if(LogFile.OUTPUT_LOG0)
-            logfile.close();
+             
         return;
     }
     

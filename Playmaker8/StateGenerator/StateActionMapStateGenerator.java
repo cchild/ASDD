@@ -35,15 +35,15 @@ public class StateActionMapStateGenerator extends StateGenerator {
     
     public ArrayList generateNextStates(  Percep percep,   Action action) {
        
-        LogFile logfile;
+        
         
         ArrayList statesAndCounts = stateActionMap.getStatesAndCounts(percep, action);
         
         if (statesAndCounts == null) {
             if (outputLog) {
-                logfile = new LogFile(1);
-                logfile.print("\nWARNING: generate next states produced a NULL result");
-                logfile.close();
+                Singleton logfile = Singleton.getInstance();
+                logfile.print("\nWARNING: generate next states produced a NULL result",1);
+                
             }
             return null;
         }
@@ -51,30 +51,30 @@ public class StateActionMapStateGenerator extends StateGenerator {
         ArrayList statesAndProbs = convertStatesAndCountsToProbabilities(statesAndCounts);
         
         if (outputLog) {
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
             if (statesAndCounts != null) {
                 
-                logfile.print("\nThe states and probabilities from stateActionMap are...\n===========\n===========\n");
+                logfile.print("\nThe states and probabilities from stateActionMap are...\n===========\n===========\n",1);
                   
                 //Print out the states after we filter
                 double totalProb = 0.0f;
                 for (int i = 0; i < statesAndProbs.size(); i++) {
-                    logfile.print(((StateAndProb)statesAndProbs.get(i)).getPercep().getString());
-                    logfile.print(" " + ((StateAndProb)statesAndProbs.get(i)).getProbability());
+                    logfile.print(((StateAndProb)statesAndProbs.get(i)).getPercep().getString(),1);
+                    logfile.println(" " + ((StateAndProb)statesAndProbs.get(i)).getProbability(),1);
                     totalProb += ((StateAndProb)statesAndProbs.get(i)).getProbability();
-                    logfile.print("\n");
+                    
                 }
-                logfile.print("\n Total prob: " + totalProb + "\n");
+                logfile.print("\n Total prob: " + totalProb + "\n",1);
                 if (totalProb < 1.0f) {
-                    logfile.print("WARNING. TOTAL PROB IS " + totalProb + "\n");
+                    logfile.print("WARNING. TOTAL PROB IS " + totalProb + "\n",1);
                 }
 
-                logfile.print("\n===========\n===========\n=FINISHED==");
+                logfile.print("\n===========\n===========\n=FINISHED==",1);
             } else {
-                logfile.print("\n===========\nNO MATCHING ACTION FOR THIS STATE\n=========");
+                logfile.print("\n===========\nNO MATCHING ACTION FOR THIS STATE\n=========",1);
             }
             
-            logfile.close();
+             
         }
         
         return statesAndProbs;

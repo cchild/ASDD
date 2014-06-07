@@ -164,10 +164,10 @@ public class NodeList implements Serializable {
             if (get(i).getPrecursor().isEqualTo(precursor)) {
                 if (get(i).getSuccessor().getFirstNonWildcardPosition() == successorPos) {
                     if (LogFile.OUTPUT_LOG0) {
-                        LogFile logfile = new LogFile(1);
-                        logfile.print("Removed because covered by rule with less fluents\n");
-                        logfile.print(get(i).toString());
-                        logfile.close();
+                        Singleton logfile = Singleton.getInstance();
+                        logfile.print("Removed because covered by rule with less fluents\n",1);
+                        logfile.print(get(i).toString(),1);
+                         
                     }
                     nodeList.remove(i);
                 }

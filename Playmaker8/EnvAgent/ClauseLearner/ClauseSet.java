@@ -263,16 +263,7 @@ public class ClauseSet extends ClauseList/* implements Serializable*/ {
         return theString;
     }
     
-    public void toLogFile(LogFile logfile) {
-        //super.toLogFile(logfile);
-        logfile.print(toString());
-        /*logfile.print("\n Lrnd Val: " + getUtilityValue() + " Err: " + getError());
-         if (isFrameRule())
-            logfile.print(" (FR) ");
-        else
-            logfile.print(" (NF) ");
-        logfile.print("\n");*/
-    }
+    
 
     public boolean isFrameRule() {
 

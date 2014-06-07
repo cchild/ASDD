@@ -154,10 +154,10 @@ public abstract class ClauseLearner {
          *intersection of rules for which they work to see which one should be used
          *when they conflict.*/
         boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
-        LogFile logfile = null;
+          
         
         if (outputLog) {
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
         }
             
         ClauseSetMap clauseSetMap = clauses.buildClauseSetMap();
@@ -233,27 +233,28 @@ public abstract class ClauseLearner {
         
         if (outputLog) {
             for (int i = 0; i < clauseSetsList.size(); i++) {
-                logfile.print("\n\n\n TheClauseSet: \n");
+                Singleton logfile = Singleton.getInstance();
+                logfile.print("\n\n\n TheClauseSet: \n",1);
                 ClauseSet clauseSet = (ClauseSet)clauseSetsList.get(i);
-                logfile.print(clauseSet.toString());
-                logfile.print("\n Defers to:");
+                logfile.print(clauseSet.toString(),1);
+                logfile.print("\n Defers to:",1);
                 for (int def = 0; def < clauseSet.getDefersToList().size(); def ++) {
                     for (int b = 0; b < clauseSetsList.size(); b++) {
                         if (((ClauseSet)clauseSetsList.get(b)).getRef() == clauseSet.getDefersToList().get(def))
-                            logfile.print("\n" + ((ClauseSet)clauseSetsList.get(b)).toString());
+                            logfile.print("\n" + ((ClauseSet)clauseSetsList.get(b)).toString(),1);
                     }
                 }
 
-                logfile.print("\n Precedence over: \n");
+                logfile.print("\n Precedence over: \n",1);
                 for (int def = 0; def < clauseSet.getPrecedenceOverList().size(); def ++) {
                     for (int b = 0; b < clauseSetsList.size(); b++) {
                         if (((ClauseSet)clauseSetsList.get(b)).getRef() == clauseSet.getPrecedenceOverList().get(def))
-                            logfile.print("\n" + ((ClauseSet)clauseSetsList.get(b)).toString());
+                            logfile.print("\n" + ((ClauseSet)clauseSetsList.get(b)).toString(),1);
                     }
                 }
             }
 
-            logfile.close();
+            
         }
         
     }
@@ -265,10 +266,10 @@ public abstract class ClauseLearner {
          *intersection of rules for which they work to see which one should be used
          *when they conflict.*/
         boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
-        LogFile logfile = null;
+         
 
         if (outputLog) {
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
         }
 
         ClauseSetMap clauseSetMap = clauses.buildClauseSetMap();
@@ -315,29 +316,30 @@ public abstract class ClauseLearner {
                 
                 if (clauseSet.containsEnvironmentOperatorSet())
                 {
-                    logfile.print("\n\n\n The Environment ClauseSet: \n");
-                    logfile.print(clauseSet.toString());
-                    logfile.print("\n Defers to:");
+                    Singleton logfile = Singleton.getInstance();
+                    logfile.print("\n\n\n The Environment ClauseSet: \n",1);
+                    logfile.print(clauseSet.toString(),1);
+                    logfile.print("\n Defers to:",1);
                     for (int def = 0; def < clauseSet.getDefersToList().size(); def ++) {
                         for (int b = 0; b < clauseSetsList.size(); b++) {
                             if (((ClauseSet)clauseSetsList.get(b)).getRef() == clauseSet.getDefersToList().get(def))
                                 if (((ClauseSet)clauseSetsList.get(b)).containsEnvironmentOperatorSet())
-                                    logfile.print("\n" + ((ClauseSet)clauseSetsList.get(b)).toString());
+                                    logfile.print("\n" + ((ClauseSet)clauseSetsList.get(b)).toString(),1);
                         }
                     }
 
-                    logfile.print("\n Precedence over: \n");
+                    logfile.print("\n Precedence over: \n",1);
                     for (int def = 0; def < clauseSet.getPrecedenceOverList().size(); def ++) {
                         for (int b = 0; b < clauseSetsList.size(); b++) {
                             if (((ClauseSet)clauseSetsList.get(b)).getRef() == clauseSet.getPrecedenceOverList().get(def))
                                 if (((ClauseSet)clauseSetsList.get(b)).containsEnvironmentOperatorSet())
-                                    logfile.print("\n" + ((ClauseSet)clauseSetsList.get(b)).toString());
+                                    logfile.print("\n" + ((ClauseSet)clauseSetsList.get(b)).toString(),1);
                         }
                     }
                 }
             }
 
-            logfile.close();
+            
         }
 
     }
@@ -542,15 +544,15 @@ public abstract class ClauseLearner {
             }
 
             boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
-            LogFile logfile = null;
+             
 
             if (outputLog) {
-                logfile = new LogFile(1);
-                logfile.print("\n\n\n TheClauseSet: \n");
-                logfile.print(set1.toString() + " precursor Equ1: " + set1.get(0).getPrecursorequals() + " precursor Equ2: " +set2.get(0).getPrecursorequals());
-                logfile.print("\n would be superior but not significant diff to:");
-                logfile.print(set2.toString());
-                logfile.close();
+                Singleton logfile = Singleton.getInstance();
+                logfile.print("\n\n\n TheClauseSet: \n",1);
+                logfile.print(set1.toString() + " precursor Equ1: " + set1.get(0).getPrecursorequals() + " precursor Equ2: " +set2.get(0).getPrecursorequals(),1);
+                logfile.print("\n would be superior but not significant diff to:",1);
+                logfile.print(set2.toString(),1);
+                
             }
 
 
@@ -610,15 +612,15 @@ public abstract class ClauseLearner {
             }
 
             boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
-            LogFile logfile = null;
+             
 
             if (outputLog) {
-                logfile = new LogFile(1);
-                logfile.print("\n\n\n TheClauseSet: \n");
-                 logfile.print(set2.toString() + " precursor Equ1: " + set1.get(0).getPrecursorequals() + " precursor Equ2: " +set2.get(0).getPrecursorequals());
-                logfile.print("\n would be superior but not significant diff to:");
-                logfile.print(set1.toString());
-                logfile.close();
+                Singleton logfile = Singleton.getInstance();
+                logfile.print("\n\n\n TheClauseSet: \n",1);
+                logfile.print(set2.toString() + " precursor Equ1: " + set1.get(0).getPrecursorequals() + " precursor Equ2: " +set2.get(0).getPrecursorequals(),1);
+                logfile.print("\n would be superior but not significant diff to:",1);
+                logfile.print(set1.toString(),1);
+                
             }
 
             return true;
@@ -732,29 +734,28 @@ public abstract class ClauseLearner {
             (double)n4*Math.log((double)(n4*t)/(double)(r2*c2)));
 
         boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
-        LogFile logfile = null;
+         
 
         if (outputLog) {
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
         }
         if (returnVal < 0) {
-            logfile.print("\n(double)n1*Math.log((double)(n1*t)/(double)(r1*c1)) " + (double)n1*Math.log((double)(n1*t)/(double)(r1*c1)));
-            logfile.print("\n(double)n2*Math.log((double)(n2*t)/(double)(r1*c2)) " + (double)n2*Math.log((double)(n2*t)/(double)(r1*c2)));
-            logfile.print("\n((double)n3*Math.log((double)(n3*t)/(double)(r2*c1)) " + (double)n3*Math.log((double)(n3*t)/(double)(r2*c1)));
-            logfile.print("\n(double)n4*Math.log((double)(n4*t)/(double)(r2*c2))) " + (double)n4*Math.log((double)(n4*t)/(double)(r2*c2)));
-            logfile.print("\n (double)(n1*t)" + (double)(n1*t));
-            logfile.print("\n (double)(r1*c1)" + (double)(r1*c1));
-            logfile.print("\n (double)(n2*t)" + (double)(n2*t));
-            logfile.print("\n (double)(r1*c2)" + (double)(r1*c2));
-            logfile.print("\n (double)(n3*t)" + (double)(n3*t));
-            logfile.print("\n (double)(r2*c1))" + (double)(r2*c1));
-            logfile.print("\n (double)(n4*t)" + (double)(n4*t));
-            logfile.print("\n (double)(r2*c2))" + (double)(r2*c2));
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\n(double)n1*Math.log((double)(n1*t)/(double)(r1*c1)) " + (double)n1*Math.log((double)(n1*t)/(double)(r1*c1)),1);
+            logfile.print("\n(double)n2*Math.log((double)(n2*t)/(double)(r1*c2)) " + (double)n2*Math.log((double)(n2*t)/(double)(r1*c2)),1);
+            logfile.print("\n((double)n3*Math.log((double)(n3*t)/(double)(r2*c1)) " + (double)n3*Math.log((double)(n3*t)/(double)(r2*c1)),1);
+            logfile.print("\n(double)n4*Math.log((double)(n4*t)/(double)(r2*c2))) " + (double)n4*Math.log((double)(n4*t)/(double)(r2*c2)),1);
+            logfile.print("\n (double)(n1*t)" + (double)(n1*t),1);
+            logfile.print("\n (double)(r1*c1)" + (double)(r1*c1),1);
+            logfile.print("\n (double)(n2*t)" + (double)(n2*t),1);
+            logfile.print("\n (double)(r1*c2)" + (double)(r1*c2),1);
+            logfile.print("\n (double)(n3*t)" + (double)(n3*t),1);
+            logfile.print("\n (double)(r2*c1))" + (double)(r2*c1),1);
+            logfile.print("\n (double)(n4*t)" + (double)(n4*t),1);
+            logfile.print("\n (double)(r2*c2))" + (double)(r2*c2),1);
         }
 
-        if (outputLog) {
-            logfile.close();
-        }
+        
 
         return returnVal;
     }
@@ -783,21 +784,21 @@ public abstract class ClauseLearner {
         long n4 = d2Precursorequals -d2Fullequals;
 
         boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
-        LogFile logfile = null;
+          
 
         if (outputLog) {
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
 
             if (n2 < 0) {
-                logfile.print("\n n2= d1Precursorequals - d1Fullequals:  " + n2);
-                logfile.print("\n d1Fullequals: " + d1Fullequals);
-                logfile.print("\n d1Precursorequals: " + d1Precursorequals);
+                logfile.print("\n n2= d1Precursorequals - d1Fullequals:  " + n2,1);
+                logfile.print("\n d1Fullequals: " + d1Fullequals,1);
+                logfile.print("\n d1Precursorequals: " + d1Precursorequals,1);
             }
 
             if (n4 < 0) {
-                 logfile.print("\n n4 = d2Precursorequals -d2Fullequals:  " + n4);
-                 logfile.print("\n d2Fullequals: " + d1Fullequals);
-                 logfile.print("\n d2Precursorequals: " + d1Precursorequals);
+                 logfile.print("\n n4 = d2Precursorequals -d2Fullequals:  " + n4,1);
+                 logfile.print("\n d2Fullequals: " + d1Fullequals,1);
+                 logfile.print("\n d2Precursorequals: " + d1Precursorequals,1);
             }
         }
 
@@ -845,10 +846,10 @@ public abstract class ClauseLearner {
 
    public void findFrameRules(ClauseList clauses, ClauseList level1Clauses) {
 
-       LogFile logfile = null;
+         
         boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
         if (outputLog) {
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
         }
 
        for (int clauseLoop = 0; clauseLoop < clauses.size(); clauseLoop ++) {
@@ -898,17 +899,14 @@ public abstract class ClauseLearner {
 
                if (outputLog) {
                     if (clauseToTest.getFrameRule()) {
-                        logfile.print("\n***Found a frame rule...\n===========\n");
-                        logfile.print(clauseToTest.toString());
-                        logfile.print("\n===========\n");
+                        Singleton logfile = Singleton.getInstance();
+                        logfile.print("\n***Found a frame rule...\n===========\n",1);
+                        logfile.print(clauseToTest.toString(),1);
+                        logfile.print("\n===========\n",1);
                     }
                }
            }
        }
-
-        if (outputLog) {
-            logfile.close();
-        }
 
    }
    
@@ -919,7 +917,7 @@ public abstract class ClauseLearner {
     //Check each rule to make sure every Variable value is represented
     public void addMissingClauses(ClauseList clauses, ClauseList level1Clauses) {
             
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         ClauseSetMap clauseSets = clauses.buildClauseSetMap();
         for (int clauseLoop = 0; clauseLoop < clauses.size(); clauseLoop ++) {
             ClauseNode clauseToTest = (ClauseNode)clauses.get(clauseLoop);
@@ -970,9 +968,9 @@ public abstract class ClauseLearner {
                                 //countPrecursorequals(newNode, level1Clauses);
                                 clauses.addAt(0, newNode);
 
-                                logfile.print("\n***Added missing clause...\n===========\n");
-                                logfile.print(newNode.toString());
-                                logfile.print("\n===========\n");
+                                logfile.print("\n***Added missing clause...\n===========\n",1);
+                                logfile.print(newNode.toString(),1);
+                                logfile.print("\n===========\n",1);
                                 clauseLoop ++;
                             }
                         }
@@ -981,7 +979,7 @@ public abstract class ClauseLearner {
             }
         }
         clauses.nullClauseSetMap();
-        logfile.close();
+        
     }
     
     //The removal of rules causes some to be removed for one successor Variable but not another
@@ -995,7 +993,7 @@ public abstract class ClauseLearner {
        //of how to define a varibale. It should be able to read this in from a file somehow?
        
         nodes.sortNonIncreasingGenerality();
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         
         int currentSpecificity = -1;
         ArrayList clauseSets = null;
@@ -1068,7 +1066,7 @@ public abstract class ClauseLearner {
         }
        System.out.print("\nFinished priting final sets");
          
-        logfile.close();
+         
     }*/
   
     /*The filter algorithm takes the list of returned dependencies and removes from it
@@ -1088,21 +1086,25 @@ public abstract class ClauseLearner {
         //Remove from D all dependencies d such that n(d) < n or e(d) contains only wildcards
         int currentClause = clauses.size() - 1;
 
-        LogFile logfile = null;
+          
         if (LogFile.OUTPUT_LOG0)
-            logfile = new LogFile(1);
+        {
+            Singleton logfile = Singleton.getInstance();
+        }
         while (currentClause >= 0) {
             if (clauses.get(currentClause).getClauseHead() == null) {
                 if (LogFile.OUTPUT_LOG0) {
-                    logfile.print("\nClause filtered because it has no head\n");
-                    logfile.print(clauses.get(currentClause).toString());
+                    Singleton logfile = Singleton.getInstance();
+                    logfile.print("\nClause filtered because it has no head\n",1);
+                    logfile.print(clauses.get(currentClause).toString(),1);
                 }
                 clauses.remove(currentClause);
             }
             else if (countDatabaseOccurrences(clauses.get(currentClause), level1Clauses) < n) {
                 if (LogFile.OUTPUT_LOG0) {
-                    logfile.print("\nClauseNode filtered because less than n occurrences\n");
-                    logfile.print(clauses.get(currentClause).toString());
+                    Singleton logfile = Singleton.getInstance();
+                    logfile.print("\nClauseNode filtered because less than n occurrences\n",1);
+                    logfile.print(clauses.get(currentClause).toString(),1);
                 }
                 clauses.remove(currentClause);
             }
@@ -1110,29 +1112,46 @@ public abstract class ClauseLearner {
         }
 
         if (LogFile.OUTPUT_LOG0)
-            logfile.print("\nThe set of rules after , n filtering is...\n===========\n===========\n");
+        {
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nThe set of rules after , n filtering is...\n===========\n===========\n",1);
+            
+        }
+            
         for (int i = 0; i < clauses.size(); i++) {
             if (LogFile.OUTPUT_LOG0) {
-                logfile.print(clauses.get(i).toString());
-                logfile.print("\n");
+                Singleton logfile = Singleton.getInstance();
+                logfile.println(clauses.get(i).toString(),1);
+                
             }
         }
         if (LogFile.OUTPUT_LOG0)
-            logfile.print("\n===========\n===========");
+        {
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\n===========\n===========",1);
+        }
         
         //Sort D in non-increasing order of generality
         clauses.sortNonIncreasingGenerality();
 
         if (LogFile.OUTPUT_LOG0)
-            logfile.print("\nThe set of rules after sorting...\n===========\n===========\n");
+        {
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nThe set of rules after sorting...\n===========\n===========\n",1);
+        }
         for (int i = 0; i < clauses.size(); i++) {
             if (LogFile.OUTPUT_LOG0) {
-                logfile.print(clauses.get(i).toString());
-                logfile.print("\n");
+                Singleton logfile = Singleton.getInstance();
+                logfile.print(clauses.get(i).toString(),1);
+                logfile.print("\n",1);
             }
         }
         if (LogFile.OUTPUT_LOG0)
-            logfile.print("\n===========\n===========");
+        {
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\n===========\n===========",1);
+        }
+            
         
         ClauseList S = new ClauseList();
         
@@ -1161,15 +1180,22 @@ public abstract class ClauseLearner {
                                 //only filer at low level if the generalising rule has an action
                                 //unless the other rule also has no action
                                 if (LogFile.OUTPUT_LOG0)
-                                    logfile.print("\n Filtered " + d.toString()+ " generalised by " + s.toString() + "G: " + Gstatistic(s, d, level1Clauses));
+                                {
+                                    Singleton logfile = Singleton.getInstance();
+                                
+                                    logfile.print("\n Filtered " + d.toString()+ " generalised by " + s.toString() + "G: " + Gstatistic(s, d, level1Clauses),1);
+                                    
                                 if (Math.abs(d.getProbability() - s.getProbability()) > 0.1f) {
                                    if (LogFile.OUTPUT_LOG0)
-                                        logfile.print("\n GENERALISED RULE WITH QUITE LARGE PROB DIFFERENCE");
+                                   {
+                                       
+                                       logfile.print("\n GENERALISED RULE WITH QUITE LARGE PROB DIFFERENCE",1);
+                                   }
                                    float anotherStat = Gstatistic(s, d, level1Clauses);
                                    if (anotherStat < 0)
                                    {
                                        if (LogFile.OUTPUT_LOG0)
-                                            logfile.print("G: " + Gstatistic(s, d, level1Clauses));
+                                            logfile.print("G: " + Gstatistic(s, d, level1Clauses),1);
                                    }
                                 }
                                 clauses.remove(i);
@@ -1177,26 +1203,36 @@ public abstract class ClauseLearner {
                             } else {
                                 if (Gstatistic(s, d, level1Clauses) < 0.1f) {
                                     if (LogFile.OUTPUT_LOG0) {
-                                        logfile.print("\n Filtered " + d.toString()+ " generalised by " + s.toString());
-                                        logfile.print("\n Even though generaliser has no action (high significance) " + "G: " + Gstatistic(s, d, level1Clauses));
+                                        Singleton logfile = Singleton.getInstance();
+                                    
+                                        logfile.print("\n Filtered " + d.toString()+ " generalised by " + s.toString(),1);
+                                        logfile.print("\n Even though generaliser has no action (high significance) " + "G: " + Gstatistic(s, d, level1Clauses),1);
                                     }
 
                                     if (Math.abs(d.getProbability() - s.getProbability()) > 0.1f) {
                                         if (LogFile.OUTPUT_LOG0)
-                                            logfile.print("\n GENERALISED RULE WITH QUITE LARGE PROB DIFFERENCE");
+                                        {
+                                            Singleton logfile = Singleton.getInstance();
+                                            logfile.print("\n GENERALISED RULE WITH QUITE LARGE PROB DIFFERENCE",1);
+                                        }
                                         float anotherStat = Gstatistic(s, d, level1Clauses);
                                        if (anotherStat < 0)
                                        {
                                             if (LogFile.OUTPUT_LOG0)
-                                                logfile.print("G: " + Gstatistic(s, d, level1Clauses));
+                                            {
+                                                Singleton logfile = Singleton.getInstance();
+                                                logfile.print("G: " + Gstatistic(s, d, level1Clauses),1);
+                                            }
                                        }
                                     }
                                     clauses.remove(i);
                                     i--;
                                 } else {
                                     if (LogFile.OUTPUT_LOG0) {
-                                         logfile.print("\n Would have filtered " + d.toString()+ " generalised by " + s.toString() + "G: " + Gstatistic(s, d, level1Clauses));
-                                         logfile.print("\n But generaliser has no action " );
+                                        Singleton logfile = Singleton.getInstance();
+                                    
+                                         logfile.print("\n Would have filtered " + d.toString()+ " generalised by " + s.toString() + "G: " + Gstatistic(s, d, level1Clauses),1);
+                                         logfile.print("\n But generaliser has no action ",1);
                                     }
                                 }
                             }
@@ -1209,12 +1245,15 @@ public abstract class ClauseLearner {
         Date finishFilter = new Date();
         long elapsedTime = finishFilter.getTime() - startTime;
         
-        LogFile logfileResults = new LogFile(2);
+        Singleton logfile2 = Singleton.getInstance();
         
-        logfileResults.print("\n ACTUAL FILTER IN PROCESS: " + elapsedTime + " MILLISECONDS.");
-        logfileResults.close();
+        logfile2.print("\n ACTUAL FILTER IN PROCESS: " + elapsedTime + " MILLISECONDS.",2);
+        
         if (LogFile.OUTPUT_LOG0)
-            logfile.print("\n ACTUAL FILTER IN PROCESS: " + elapsedTime + " MILLISECONDS.");
+        {
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\n ACTUAL FILTER IN PROCESS: " + elapsedTime + " MILLISECONDS.",1);
+        }
         System.out.print("\n ACTUAL FILTER PROCESS: " + elapsedTime + " MILLISECONDS.");
         
         //The filtering of rules causes some to be removed for one successor Variable but not another
@@ -1239,34 +1278,43 @@ public abstract class ClauseLearner {
         long elapsedMissing = finishAddMissing.getTime() - startAddMissingTime;
         
         
-        LogFile logfile1 = new LogFile(2);
-        logfile1.print("\n Add Missing in: " + elapsedMissing + " MILLISECONDS.");
+        
+        logfile2.print("\n Add Missing in: " + elapsedMissing + " MILLISECONDS.",2);
         System.out.print("\n Add Missing in: " + elapsedMissing + " MILLISECONDS.");
         System.out.flush();
-        logfile1.close();
+        
 
         if (LogFile.OUTPUT_LOG0)
-            logfile.print("\nThe set of rules after filtering...\n===========\n===========\n");
+        {
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nThe set of rules after filtering...\n===========\n===========\n",1);
+        }
         for (int i = 0; i < S.size(); i++) {
             if (LogFile.OUTPUT_LOG0) {
-                logfile.print(S.get(i).toString());
-                logfile.print("\n");
+                Singleton logfile = Singleton.getInstance();
+            
+                logfile.println(S.get(i).toString(),1);
+                
             }
         }
         if (LogFile.OUTPUT_LOG0) {
-            logfile.print("\n===========\n===========");
-            logfile.flush();
+            Singleton logfile = Singleton.getInstance();
+        
+            logfile.print("\n===========\n===========",1);
+            logfile.flush(1);
         }
         //Now remove rules which are general but completely covered by more specific
         //rules
         if (LogFile.OUTPUT_LOG0)
-            logfile.print("\n WARNING: NOT REMOVING GENERAL RULES COVERED BY MORE SPECIFIC");
+        {
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\n WARNING: NOT REMOVING GENERAL RULES COVERED BY MORE SPECIFIC",1);
+        }
         
         //There was something clever here about adding missing rules first so we didn't
         //filter leaving the odd rule by the wayside.
         //removeGeneralRulesCoveredBySpecific(S);
-        if (LogFile.OUTPUT_LOG0)
-            logfile.close();
+        
         //There's another step here to remove non-significant stuff
         
         System.out.print("\n Before clause sets.");
@@ -1303,12 +1351,15 @@ public abstract class ClauseLearner {
         return S;
             
     }
+    return null;
+    }
     
     /*Filter Specific node with the the more general clauses in clauses
      */
-    protected boolean filterSpecific(ClauseNode node, ClauseList clauses, float g, ClauseList level1Clauses) {   
+    
+protected boolean filterSpecific(ClauseNode node, ClauseList clauses, float g, ClauseList level1Clauses) {   
       
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         for (int i = 0; i < clauses.size(); i++) {
             ClauseNode s = clauses.get(i);
             if (s.subsumes(node)) {
@@ -1316,13 +1367,15 @@ public abstract class ClauseLearner {
                 //logfile.print("\nAPRIORI Trying to filter " + node.toString()+ " generalised by " + s.toString() + " " + gStat);
                 
                 if (gStat < g) {
-                    logfile.print("\nAPRIORI Can filter " + node.toString()+ " generalised by " + s.toString()  + " " + gStat);
-                    logfile.close();
+                    
+                
+                    logfile.print("\nAPRIORI Can filter " + node.toString()+ " generalised by " + s.toString()  + " " + gStat,1);
+                    
                     return true;
                 }
             }
         }
-        logfile.close();
+        
         return false;
     }
     

@@ -121,12 +121,12 @@ public class ReinforcementLearner extends java.lang.Object {
         
         
         if (LogFile.OUTPUT_LOG0) {
-            LogFile logfile = new LogFile(1);
-            logfile.print("\nFind action for state: ");
-            logfile.print(percep.toString());
-            logfile.print("\nAction:" + action.toString());
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nFind action for state: ",1);
+            logfile.print(percep.toString(),1);
+            logfile.print("\nAction:" + action.toString(),1);
             //logfile.print("\n===========\n===========\n=FINISHED==");
-            logfile.close();
+             
         }
         
         return action;
@@ -144,26 +144,26 @@ public class ReinforcementLearner extends java.lang.Object {
            if (!action.legalAction())
                continue;
            
-           LogFile logfile = null;
+             
            boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
            
            if (outputLog) {
-               logfile = new LogFile(1);
-               logfile.print("\nThe state to be refined is...\n===========\n===========\n");
-               logfile.print(percep.toString() + " " + action.toString());
-               logfile.print("\n");
-               logfile.close();
+               Singleton logfile = Singleton.getInstance();
+               logfile.print("\nThe state to be refined is...\n===========\n===========\n",1);
+               logfile.println(percep.toString() + " " + action.toString(),1);
+               
+                
            }
            
            ArrayList nextStatesAndProb = stateGenerator.generateNextStates(percep, action);
            
            if (nextStatesAndProb == null) {
                if (outputLog) {
-                   logfile = new LogFile(1);
-                   logfile.print("\nThe state generator could not generate and states for: ");
-                   logfile.print(percep.toString() + " " + action.toString());
-                   logfile.print("\n");
-                   logfile.close();
+                   Singleton logfile = Singleton.getInstance();
+                   logfile.print("\nThe state generator could not generate and states for: ",1);
+                   logfile.println(percep.toString() + " " + action.toString(),1);
+                   
+                    
                }
                continue;
            }

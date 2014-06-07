@@ -43,12 +43,12 @@ public class RuleLearnerApriori extends RuleLearner {
         
       
         
-        LogFile logfile1 = new LogFile(2);
-        logfile1.print("\n APRIORI DD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
+        Singleton logfile2 = Singleton.getInstance();
+        logfile2.print("\n APRIORI DD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.",2);
         System.out.print("\n APRIORI DD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
-        logfile1.close();
         
-        LogFile logfile = new LogFile(1);
+        
+        Singleton logfile = Singleton.getInstance();
         logfile.print("\nThe pre-filtered set of rules is...\n===========\n===========\n");
         logfile.print(learnedRules.toString());
         logfile.print("\n===========\n===========");
@@ -65,12 +65,12 @@ public class RuleLearnerApriori extends RuleLearner {
         Date finishFilter = new Date();
         elapsedTime = finishFilter.getTime() - startTime;
         
-        logfile1 = new LogFile(2);
+        
         logfile1.print("\n APRIORI DD FILTER IN: " + elapsedTime + " MILLISECONDS.");
         System.out.print("\n APRIORI DD FILTER IN: " + elapsedTime + " MILLISECONDS.");
-        logfile1.close();
+         
 
-        logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         for (int i = 0; i < learnedRules.size(); i++) {
             //Not sure we should have to do this, but just in case the values are not set for some reason
             //It won't take any time if they'returnalready set anyway
@@ -81,7 +81,7 @@ public class RuleLearnerApriori extends RuleLearner {
         logfile.print("\nThe post-filtered sorted set of rules is...\n===========\n===========\n");
         logfile.print(learnedRules.toString());
         logfile.print("\n===========\n===========\n=FINISHED==");
-        logfile.close();
+         
         
         return learnedRules;
     }
@@ -127,9 +127,9 @@ public class RuleLearnerApriori extends RuleLearner {
                 }
             }
 
-            LogFile logfile = null;
+              
             if(LogFile.OUTPUT_LOG0)
-                logfile = new LogFile(1);
+                Singleton logfile = Singleton.getInstance();
             for (int candidCount = 0; candidCount < candidatesK.size(); candidCount ++) {
                 if (candidatesK.get(candidCount).getDatabaseOccurrences() < MINSUP) {
                     if(LogFile.OUTPUT_LOG0)
@@ -149,7 +149,7 @@ public class RuleLearnerApriori extends RuleLearner {
                 }
             }
             if(LogFile.OUTPUT_LOG0)
-                logfile.close();
+                 
             
             /*Not sure if we should do this at level 2 as well, but let's see what it does
             (This is becuase the precursor will have no non-wildcards at level 2
@@ -192,9 +192,9 @@ public class RuleLearnerApriori extends RuleLearner {
         
         NodeList candidatesK = new NodeList();
 
-        LogFile logfile = null;
+          
         if(LogFile.OUTPUT_LOG0)
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
         //First: the join step
         for (int xCount = 0; xCount < Lminus1Candidates.size(); xCount ++) {
             for (int yCount = 0; yCount < Lminus1Candidates.size(); yCount++) {
@@ -269,7 +269,7 @@ public class RuleLearnerApriori extends RuleLearner {
             }
         }
         if(LogFile.OUTPUT_LOG0)
-            logfile.close();
+             
         
         /*lDepth > 2 because apriori prune will have no effect on depth 2
          *candidates and apriori filter should probably be left until level 3
@@ -289,9 +289,9 @@ public class RuleLearnerApriori extends RuleLearner {
     
     protected NodeList aprioriPrune(NodeList candidatesK, NodeList Lminus1Candidates) {
         
-        LogFile logfile = null;
+          
         if (LogFile.OUTPUT_LOG0)
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
         
         for (int candidateCount = 0; candidateCount < candidatesK.size(); candidateCount ++) {
             //subsets of rules of this form are just the rule with a wildcard in each
@@ -322,7 +322,7 @@ public class RuleLearnerApriori extends RuleLearner {
         }
 
         if (LogFile.OUTPUT_LOG0)
-            logfile.close();
+             
         return candidatesK;
     }
     
@@ -406,21 +406,21 @@ public class RuleLearnerApriori extends RuleLearner {
         
         RuleNode emptyNode = new RuleNode(precursorFromDatabase, postconditionsFromDatabase);
         
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         logfile.print("\n Created (but not added) Empty Root Node: " + emptyNode.toString() + "\n");
       
         expand(emptyNode, candidatesK);
             
-        logfile.close();
+         
         return candidatesK;
     }
     
     private void expandPrecSucc(RuleNode n, boolean precursor, NodeList children) {
         RuleElements precSucc;
         
-        LogFile logfile = null;
+          
         if (LogFile.OUTPUT_LOG0) {
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
             logfile.print("\n");
         }
      
@@ -478,7 +478,7 @@ public class RuleLearnerApriori extends RuleLearner {
             }
         }
         if (LogFile.OUTPUT_LOG0)
-            logfile.close();
+             
         return;
     }
     

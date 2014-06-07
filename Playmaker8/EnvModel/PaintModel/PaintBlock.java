@@ -55,7 +55,7 @@ public class PaintBlock extends EnvironmentObject {
     
     //advance the state of the agent by timeStep
     public void advanceStep() {
-        /*LogFile logfile = new LogFile(1);
+        /*Singleton logfile = Singleton.getInstance();
         logfile.print("\n");
         if (getRole() == PREDATOR) {
             logfile.print("Predator: ");
@@ -63,7 +63,7 @@ public class PaintBlock extends EnvironmentObject {
         else {
             logfile.print("Prey: ");    
         }
-        logfile.close();*/
+         */
         super.advanceStep();
     }
     

@@ -63,22 +63,22 @@ public abstract class AgentBody extends EnvironmentObject {
     
     //advance the state of the agent by timeStep
     public void advance(float timeStep) {
-        //LogFile logfile = new LogFile(1);
+        //Singleton logfile = Singleton.getInstance();
         //logfile.print(action.getString());
-        //logfile.close();
+        // 
         //take the action indicated by the agent
         //switch (action.getAction())
     }
     
     //advance the state of the agent in a time tick Environment
     public void advanceStep() {
-        //LogFile logfile = new LogFile(1);
+        //Singleton logfile = Singleton.getInstance();
         //logfile.print("\n");
         //if (action != null)
         //    logfile.print(action.getString());
         //else
          //   logfile.print("Action not set");
-        //logfile.close();
+        // 
     }
         
 }

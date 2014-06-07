@@ -46,21 +46,22 @@ public class ClauseStateGenerator extends StateGenerator {
         ClauseList matchingNodes = clauseNodes.matchingNodes(currentState);
         
         boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
-        LogFile logfile = null;
+          
         
         if (outputLog) {
-            logfile = new LogFile(1);
-            logfile.print("\nState before action:");
-            logfile.print(currentState.toString());
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nState before action:",1);
+            logfile.print(currentState.toString(),1);
             //logfile.print("\n===========\n===========\n=FINISHED==");
-            logfile.close();
+             
         }
         
         if (outputLog) {
-            logfile.print("\nThe original matching nodes are...\n===========\n===========\n");
-            logfile.print(matchingNodes.toString());
-            logfile.print("\n===========\n===========\n=FINISHED==");
-            logfile.close();
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nThe original matching nodes are...\n===========\n===========\n",1);
+            logfile.print(matchingNodes.toString(),1);
+            logfile.print("\n===========\n===========\n=FINISHED==",1);
+             
         }
         
         
@@ -68,11 +69,11 @@ public class ClauseStateGenerator extends StateGenerator {
         //pick the rules which have precedence and discard others
         matchingNodes = matchingNodes.filterByPrecedence();
         if (outputLog) {
-            logfile = new LogFile(1);
-            logfile.print("\nThe rules after filtering by precedence are...\n===========\n===========\n");
-            logfile.print(matchingNodes.toString());
-            logfile.print("\n===========\n===========\n=FINISHED==");
-            logfile.close();
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nThe rules after filtering by precedence are...\n===========\n===========\n",1);
+            logfile.print(matchingNodes.toString(),1);
+            logfile.print("\n===========\n===========\n=FINISHED==",1);
+             
         }
         //false indicates filter if they have the same number of outcoes as well
         removeClausesWithMoreSpecificOutcome(matchingNodes, false);
@@ -83,23 +84,23 @@ public class ClauseStateGenerator extends StateGenerator {
         
         if (outputLog) {
             double totalProb = 0.0f;
-            logfile = new LogFile(1);
-            logfile.print("\nThe generated states are...\n===========\n===========\n");
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nThe generated states are...\n===========\n===========\n",1);
 
             //Print out the states before we filter
             for (int i = 0; i < clauseStatesAndProbs.size(); i++) {
-                logfile.print(((ClauseStateAndProb)clauseStatesAndProbs.get(i)).getPercep().toString());
-                logfile.print(" " + ((ClauseStateAndProb)clauseStatesAndProbs.get(i)).getProbability());
+                logfile.print(((ClauseStateAndProb)clauseStatesAndProbs.get(i)).getPercep().toString(),1);
+                logfile.println(" " + ((ClauseStateAndProb)clauseStatesAndProbs.get(i)).getProbability(),1);
                 totalProb += ((ClauseStateAndProb)clauseStatesAndProbs.get(i)).getProbability();
-                logfile.print("\n");
+                
                 
             }
               
-            logfile.print("Total Pre illegal Prob:" + totalProb + "\n");
+            logfile.print("Total Pre illegal Prob:" + totalProb + "\n",1);
             if (totalProb < 0.9999f) {
-                logfile.print("WARNING. TOTAL PROB IS " + totalProb + "\n");
+                logfile.print("WARNING. TOTAL PROB IS " + totalProb + "\n",1);
             }
-            logfile.close();
+             
         }
         
         ArrayList ruleStatesAndProbs = new ArrayList();
@@ -119,41 +120,41 @@ public class ClauseStateGenerator extends StateGenerator {
         }
         
         if (outputLog) {
-            logfile = new LogFile(1);
-            logfile.print("\nThe generated states with illigal states removed are...\n===========\n===========\n");
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nThe generated states with illigal states removed are...\n===========\n===========\n",1);
 
             //Print out the states after we filter
             for (int i = 0; i < ruleStatesAndProbs.size(); i++) {
 
-                logfile.print(((StateAndProb)ruleStatesAndProbs.get(i)).getPercep().getString());
-                logfile.print(" " + ((StateAndProb)ruleStatesAndProbs.get(i)).getProbability());
-                logfile.print("\n");
+                logfile.print(((StateAndProb)ruleStatesAndProbs.get(i)).getPercep().getString(),1);
+                logfile.println(" " + ((StateAndProb)ruleStatesAndProbs.get(i)).getProbability(),1);
+                
             }
-            logfile.close();
+             
         }
         
         normaliseProbabilitiesOfGeneratedStates(ruleStatesAndProbs);
         
         if (outputLog) {
-            logfile = new LogFile(1);
-            logfile.print("\nThe states with probabilities normalised are...\n===========\n===========\n");
+            Singleton logfile = Singleton.getInstance();
+            logfile.print("\nThe states with probabilities normalised are...\n===========\n===========\n",1);
 
             //Print out the states after we filter
             double totalProb = 0.0f;
             for (int i = 0; i < ruleStatesAndProbs.size(); i++) {
 
-                logfile.print(((StateAndProb)ruleStatesAndProbs.get(i)).getPercep().getString());
-                logfile.print(" " + ((StateAndProb)ruleStatesAndProbs.get(i)).getProbability());
+                logfile.print(((StateAndProb)ruleStatesAndProbs.get(i)).getPercep().getString(),1);
+                logfile.println(" " + ((StateAndProb)ruleStatesAndProbs.get(i)).getProbability(),1);
                 totalProb += ((StateAndProb)ruleStatesAndProbs.get(i)).getProbability();
-                logfile.print("\n");
+                
             }
-            logfile.print("\n Total prob: " + totalProb + "\n");
+            logfile.print("\n Total prob: " + totalProb + "\n",1);
             if (totalProb < 1.0f) {
-                logfile.print("WARNING. TOTAL PROB IS " + totalProb + "\n");
+                logfile.print("WARNING. TOTAL PROB IS " + totalProb + "\n",1);
             }
 
-            logfile.print("\n===========\n===========\n=FINISHED==");
-            logfile.close();
+            logfile.print("\n===========\n===========\n=FINISHED==",1);
+             
         }
         
         return ruleStatesAndProbs;

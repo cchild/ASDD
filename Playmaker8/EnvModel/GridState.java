@@ -257,17 +257,17 @@ public abstract class GridState extends State {
     /*Output text strings of all square contents to output*/
     public void outputState() {
         super.outputState();
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         for (int i = 0; i <squares.size(); i++) {
             SquareContents squareContents = getSquareContents(i);
             if ((squareContents != null) && (squareContents.size() > 0)) {   
-                logfile.print ("\nContents of square " + i + ": ");
+                logfile.print ("\nContents of square " + i + ": ",1);
                 for (int j = 0; j < squareContents.size(); j++) {
                     (squareContents.getEnvironmentObject(j)).output();
                 }
             }
         }
-        logfile.close();
+        
     }
     
     /*Returns a list of all objects contained in the environment, including

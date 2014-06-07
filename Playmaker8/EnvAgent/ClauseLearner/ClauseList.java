@@ -301,10 +301,10 @@ public class ClauseList implements Serializable {
         for (int i = size() -1; i >= 0; i--) {
             if (get(i).getPrecursor().isEqualTo(precursor)) {
                 if (get(i).getSuccessor().getFirstNonWildcardPosition() == successorPos) {
-                    LogFile logfile = new LogFile(1);
+                    Singleton logfile = Singleton.getInstance();
                     logfile.print("Removed because covered by rule with less Variables\n");
                     logfile.print(get(i).toString());
-                    logfile.close();
+                     
                     clauseList.remove(i);
                 }
             }
@@ -340,10 +340,10 @@ public class ClauseList implements Serializable {
         return str;
     }
     
-    public void toLogFile(LogFile logfile) {
+    public void toLogFile(Singleton logfile) {
         for (int i = 0; i < size(); i ++) {
-            logfile.print("\n");
-            logfile.print(get(i).toString()); 
+            logfile.print("\n",1);
+            logfile.print(get(i).toString(),1); 
         }
     }
 
@@ -385,12 +385,12 @@ public class ClauseList implements Serializable {
         int legalActions = 0;
            
         boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
-        LogFile lf = null;
+        
         
         
         if (outputLog) {
-            lf = new LogFile(1);
-            lf.print("Percep: " + percep.toString() + "\n");
+            Singleton logfile1 = Singleton.getInstance();
+            logfile1.print("Percep: " + percep.toString() + "\n",1);
         }
         for (int acIt = 0; acIt < iterAction.getNumValues(); acIt ++) {
             iterAction.setByValue(acIt);
@@ -406,19 +406,22 @@ public class ClauseList implements Serializable {
                 
                 //Lets output the contributors to this rule and see why its doing this
                 if (outputLog) {
+                    Singleton logfile = Singleton.getInstance();
                     ClauseSetMap matchingClauseSets = clauseSetMap.getWinningMatching(percep, iterAction);
-                    lf.print(matchingClauseSets.toString() + "\n");
+                    logfile.print(matchingClauseSets.toString() + "\n",1);
 
                 }
 
                 if (outputLog)
-                    lf.print("Action Value:" + iterAction.toString()+ " " + thisValue + "\n");
+                {
+                    Singleton logfile = Singleton.getInstance();
+                    logfile.print("Action Value:" + iterAction.toString()+ " " + thisValue + "\n",1);
+                }
+                    
             }
         }
         
-        if (outputLog) {
-            lf.close();
-        }
+        
         
         if (legalActions != equalLegalActions)
             return maxAction;
@@ -541,10 +544,12 @@ public class ClauseList implements Serializable {
         boolean outputLog = true;
         sortNonIncreasingGenerality();
         
-        LogFile logfile = null;
+          
         
         if (outputLog)
-            logfile = new LogFile(1);
+        {
+            Singleton logfile = Singleton.getInstance();
+        }
         
         int currentSpecificity = -1;
         ArrayList clauseSets = null;
@@ -568,7 +573,8 @@ public class ClauseList implements Serializable {
                         //useful for g-sat comparrisons later.
                         clauseSet.orderByOutputID();
                         if (outputLog) {
-                            logfile.print("\nClause Set:");
+                            Singleton logfile = Singleton.getInstance();
+                            logfile.print("\nClause Set:",1);
                             clauseSet.toLogFile(logfile);
                         }
                     }
@@ -616,19 +622,22 @@ public class ClauseList implements Serializable {
             for (int setCount = 0; setCount < clauseSets.size(); setCount ++) {
                 ClauseSet clauseSet = (ClauseSet)clauseSets.get(setCount);
                 if (outputLog) {
-                    logfile.print("\nClause Set:");
+                    Singleton logfile = Singleton.getInstance();
+                    logfile.print("\nClause Set:",1);
                     clauseSet.toLogFile(logfile);
                 }
                 
                 if (clauseSet.getTotalProb() < 0.999f)
                     if (outputLog)
-                        logfile.print("WARNING Total prob:" + clauseSet.getTotalProb());
+                    {
+                        Singleton logfile = Singleton.getInstance();
+                        logfile.print("WARNING Total prob:" + clauseSet.getTotalProb(),1);
+                    }
             }
         }
         System.out.print("\nFinished priting final sets");
          
-        if (outputLog)
-            logfile.close();
+        
     }
 
     /*public void clearRewardAndError() {

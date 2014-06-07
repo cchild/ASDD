@@ -150,7 +150,7 @@ public abstract class RuleLearner {
          *intersection of rules for which they work to see which one should be used
          *when they conflict.*/
         boolean outputLog = true;
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
             
         RuleSetMap ruleSetMap = new RuleSetMap();
         
@@ -225,7 +225,7 @@ public abstract class RuleLearner {
             }
         }
         
-        logfile.close();
+         
         
     }
     
@@ -515,7 +515,7 @@ public abstract class RuleLearner {
          */
         NodeList postGeneralCoveredRules = new NodeList();
         
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         for (int i = 0; i < nodes.size() -1; i++) {
             RuleNode nodeToTest = nodes.get(i);
             RuleElements testPrecursor = nodeToTest.getPrecursor();
@@ -671,7 +671,7 @@ public abstract class RuleLearner {
                 } //end of "if wildcard"
             } //end of loop through wildcard positions
         } //and of loop through nodes
-        logfile.close();
+         
     }
     
  
@@ -682,7 +682,7 @@ public abstract class RuleLearner {
     //and check that they are either in the rule base of don't match with the database
     //Check each rule to make sure every fluent value is represented
     public void addMissingRules(NodeList nodes) {   
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         for (int nodeLoop = 0; nodeLoop < nodes.size(); nodeLoop ++) {
             RuleNode nodeToTest = (RuleNode)nodes.get(nodeLoop);
             RuleElements successor = nodeToTest.getSuccessor();
@@ -711,7 +711,7 @@ public abstract class RuleLearner {
                 }
             }
         }
-        logfile.close();
+         
     }
     
     //The removal of rules causes some to be removed for one successor fluent but not another
@@ -722,7 +722,7 @@ public abstract class RuleLearner {
     public void generateRuleSets(NodeList nodes) {
         
         nodes.sortNonIncreasingGenerality();
-        LogFile logfile = new LogFile(1);
+        Singleton logfile = Singleton.getInstance();
         
         int currentSpecificity = -1;
         ArrayList ruleSets = null;
@@ -779,7 +779,7 @@ public abstract class RuleLearner {
             }
         }    
          
-        logfile.close();
+         
     }
   
     /*The filter algorithm takes the list of returned dependencies and removes from it
@@ -799,9 +799,9 @@ public abstract class RuleLearner {
         //Remove from D all dependencies d such that n(d) < n or e(d) contains only wildcards
         int currentNode = nodes.size() - 1;
         
-        LogFile logfile = null;
+          
         if (LogFile.OUTPUT_LOG0)
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
         while (currentNode >= 0) {
             if (nodes.get(currentNode).getSuccessor().isAllWildcardsFrom(1)) {
                 if (LogFile.OUTPUT_LOG0) {
@@ -877,13 +877,13 @@ public abstract class RuleLearner {
         Date finishFilter = new Date();
         long elapsedTime = finishFilter.getTime() - startTime;
 
-        LogFile logfile1 = new LogFile(2);
+        Singleton logfile2 = Singleton.getInstance();
         logfile1.print("\n ACTUAL FILTER IN PROCESS (not add missing): " + elapsedTime + " MILLISECONDS.");
         System.out.print("\n ACTUAL FILTER PROCESS (not add missing): " + elapsedTime + " MILLISECONDS.");
-        logfile1.close();
+         
 
         if (LogFile.OUTPUT_LOG0)
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
         //The filtering of rules causes some to be removed for one successor fluent but not another
         //This means we don't get rules which add up to one.
         //Next step is to create all succesor values for each precursor and fluent
@@ -902,7 +902,7 @@ public abstract class RuleLearner {
         //filter leaving the odd rule by the wayside.
         //removeGeneralRulesCoveredBySpecific(S);
         if (LogFile.OUTPUT_LOG0)
-            logfile.close();
+             
         //There's another step here to remove non-significant stuff
         generateRuleSets(S);
     
@@ -916,9 +916,9 @@ public abstract class RuleLearner {
      */
     protected boolean filterSpecific(RuleNode node, NodeList nodes, float g) {   
       
-        LogFile logfile = null;
+          
         if (LogFile.OUTPUT_LOG0)
-            logfile = new LogFile(1);
+            Singleton logfile = Singleton.getInstance();
         for (int i = 0; i < nodes.size(); i++) {
             RuleNode s = nodes.get(i);
             if (subsumes(s, node))  {
@@ -929,14 +929,14 @@ public abstract class RuleLearner {
                 if (Gstatistic(s, node) < g) {
                     if (LogFile.OUTPUT_LOG0) {
                         logfile.print("\n Can filter " + node.toString()+ " generalised by " + s.toString());
-                        logfile.close();
+                         
                     }
                     return true;
                 }
             }
         }
         if (LogFile.OUTPUT_LOG0)
-            logfile.close();
+             
         return false;
     }
 }

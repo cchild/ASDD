@@ -46,13 +46,12 @@ public class PredatorTester
 
 
 
-        LogFile logfile1 = new LogFile(2);
+        Singleton logfile2 = Singleton.getInstance();
         System.out.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES);
         System.out.print("\n" + "Total reward: " + totalReward + "\n");
-        logfile1.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES);
-        logfile1.print("\n" + "Total reward: " + totalReward + "\n");
-        logfile1.close();
-        logfile1.close(); 
+        logfile2.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES,2);
+        logfile2.print("\n" + "Total reward: " + totalReward + "\n",2);
+        
         predatorEnvironment.testAgentRecords();
     }
 }

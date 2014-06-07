@@ -101,9 +101,9 @@ public class PaintAgentBody extends AgentBody {
         getPaintPercep().setGripperClean(getCleanGripper());
         getPaintPercep().setReward(reward);
        
-        //LogFile logfile = new LogFile(1);
+        //Singleton logfile = Singleton.getInstance();
         //logfile.print(getPredatorPercep().getString());
-        //logfile.close();
+        // 
     }
     
     //this function works directly on the environment
@@ -256,7 +256,7 @@ public class PaintAgentBody extends AgentBody {
     
     //advance the state of the agent by timeStep
     public void advanceStep() {
-        /*LogFile logfile = new LogFile(1);
+        /*Singleton logfile = Singleton.getInstance();
         logfile.print("\n");
         if (getRole() == PREDATOR) {
             logfile.print("Predator: ");
@@ -264,7 +264,7 @@ public class PaintAgentBody extends AgentBody {
         else {
             logfile.print("Prey: ");    
         }
-        logfile.close();*/
+         */
         super.advanceStep();
 
         if (getAction() != null)

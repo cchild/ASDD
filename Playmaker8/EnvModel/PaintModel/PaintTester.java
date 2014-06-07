@@ -56,16 +56,16 @@ public class PaintTester
           
         }
         
-        LogFile logfile1 = new LogFile(2);
+        Singleton logfile2 = Singleton.getInstance();
 
 
-       logfile1.print("\n\nBlocks painted: " + blocksPainted);
-       logfile1.print("\nBlocks unpainted: " + blocksUnpainted);
-       logfile1.print("\nTotal reward: " + totalReward  + "\n");
+       logfile2.print("\n\nBlocks painted: " + blocksPainted,2);
+       logfile2.print("\nBlocks unpainted: " + blocksUnpainted,2);
+       logfile2.print("\nTotal reward: " + totalReward  + "\n",2);
        System.out.print("\n\nBlocks painted: " + blocksPainted);
        System.out.print("\nBlocks unpainted: " + blocksUnpainted);
-       logfile1.print("\nTotal reward: " + totalReward + "\n");
-       logfile1.close();
+       logfile2.print("\nTotal reward: " + totalReward + "\n",2);
+       
        
        paintEnvironment.testAgentRecords();
     }

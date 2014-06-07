@@ -106,11 +106,11 @@ public class StateValueMap extends Object implements Serializable {
     }
     
     public void output() {
-        LogFile logfile = new LogFile(3);
+        Singleton logfile3 = Singleton.getInstance();
         for (int i = 0; i < stateValues.size(); i++) {
-            logfile.print(toString());
+            logfile3.print(toString(),3);
         }
-        logfile.close();
+         
     }
     
     public StateValue getOrCreateStateValue(Percep percep) {

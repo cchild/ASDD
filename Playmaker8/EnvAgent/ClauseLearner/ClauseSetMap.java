@@ -157,14 +157,7 @@ public class ClauseSetMap implements Serializable {
        for (int i = size() -1; i >= 0 ; i--) {
           ClauseSet seti = get(i);
           seti.setUsedWithSpremacy(true);
-          if (LogFile.OUTPUT_LOG0) {
-              if (!seti.getBody().containsAnAction()) {
-                  LogFile log = new LogFile(1);
-                  //log.print("\nError with rule supremacy: \n ");
-                  //log.print(seti.toString());
-                  log.close();
-              }
-          }
+          
         }
     }
     

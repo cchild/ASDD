@@ -3,7 +3,7 @@ package Logging;
 import java.io.*;
 
 /*
- * Singleton.java
+ * LogFiles.java
  *
  * Created on June 04, 2012, 11:55 PM
  */
@@ -13,22 +13,22 @@ import java.io.*;
  * @author  virgile
  * @version 
  */
-public class Singleton extends java.lang.Object {
+public class LogFiles extends java.lang.Object {
     
-   private static final String FILE_NAME_1 = "c:\\JAVA Projects\\playmaker8\\LogFile.txt";
-   private static final String FILE_NAME_2 = "c:\\JAVA Projects\\playmaker8\\LogFileResults.txt";
-   private static final String FILE_NAME_3 = "c:\\JAVA Projects\\playmaker8\\LogFileValueTable.txt";
-   private PrintWriter outfile1;
-   private PrintWriter outfile2;
-   private PrintWriter outfile3;
+   private static final String FILE_NAME_1 = "c:\\JAVA Projects\\playmaker8\\Singleton.txt";
+   private static final String FILE_NAME_2 = "c:\\JAVA Projects\\playmaker8\\SingletonResults.txt";
+   private static final String FILE_NAME_3 = "c:\\JAVA Projects\\playmaker8\\SingletonValueTable.txt";
+   private  PrintWriter outfile1;
+   private  PrintWriter outfile2;
+   private  PrintWriter outfile3;
    public static final boolean OUTPUT_LOG0 = true;
    public static final boolean OUTPUT_LOG1 = true;
    public static final boolean OUTPUT_LOG2 = true;
 
-   private static Singleton instance;
+   private static LogFiles instance;
    
    
-   protected Singleton() {
+   protected LogFiles() {
       
        FileWriter w1 = null;
        FileWriter w2 = null;
@@ -47,11 +47,11 @@ public class Singleton extends java.lang.Object {
        outfile3 = new PrintWriter(w3);
        
    }
-   public static Singleton getInstance() {
+   public static LogFiles getInstance() {
       
       
             if(instance == null) {
-                instance = new Singleton();
+                instance = new LogFiles();
             }           
             return instance;    
        

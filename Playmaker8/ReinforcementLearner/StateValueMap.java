@@ -106,7 +106,7 @@ public class StateValueMap extends Object implements Serializable {
     }
     
     public void output() {
-        Singleton logfile3 = Singleton.getInstance();
+        LogFiles logfile3 = LogFiles.getInstance();
         for (int i = 0; i < stateValues.size(); i++) {
             logfile3.print(toString(),3);
         }

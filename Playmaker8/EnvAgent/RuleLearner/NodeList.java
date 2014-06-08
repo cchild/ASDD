@@ -163,8 +163,8 @@ public class NodeList implements Serializable {
         for (int i = size() -1; i >= 0; i--) {
             if (get(i).getPrecursor().isEqualTo(precursor)) {
                 if (get(i).getSuccessor().getFirstNonWildcardPosition() == successorPos) {
-                    if (LogFile.OUTPUT_LOG0) {
-                        Singleton logfile = Singleton.getInstance();
+                    if (LogFiles.OUTPUT_LOG0) {
+                        LogFiles logfile = LogFiles.getInstance();
                         logfile.print("Removed because covered by rule with less fluents\n",1);
                         logfile.print(get(i).toString(),1);
                          

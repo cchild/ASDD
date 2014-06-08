@@ -43,15 +43,15 @@ public class RuleLearnerApriori extends RuleLearner {
         
       
         
-        Singleton logfile2 = Singleton.getInstance();
+        LogFiles logfile2 = LogFiles.getInstance();
         logfile2.print("\n APRIORI DD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.",2);
         System.out.print("\n APRIORI DD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
         
         
-        Singleton logfile = Singleton.getInstance();
-        logfile.print("\nThe pre-filtered set of rules is...\n===========\n===========\n");
-        logfile.print(learnedRules.toString());
-        logfile.print("\n===========\n===========");
+        LogFiles logfile = LogFiles.getInstance();
+        logfile.print("\nThe pre-filtered set of rules is...\n===========\n===========\n",1);
+        logfile.print(learnedRules.toString(),1);
+        logfile.print("\n===========\n===========",1);
         //Now filter the dependencies
         //This is called filter(D, H, n, g) in the paper
         int n = 1; //parameter indicating degree to which dependencies with low frequency of 
@@ -66,11 +66,11 @@ public class RuleLearnerApriori extends RuleLearner {
         elapsedTime = finishFilter.getTime() - startTime;
         
         
-        logfile1.print("\n APRIORI DD FILTER IN: " + elapsedTime + " MILLISECONDS.");
+        logfile2.print("\n APRIORI DD FILTER IN: " + elapsedTime + " MILLISECONDS.",2);
         System.out.print("\n APRIORI DD FILTER IN: " + elapsedTime + " MILLISECONDS.");
          
 
-        Singleton logfile = Singleton.getInstance();
+        
         for (int i = 0; i < learnedRules.size(); i++) {
             //Not sure we should have to do this, but just in case the values are not set for some reason
             //It won't take any time if they'returnalready set anyway
@@ -78,9 +78,9 @@ public class RuleLearnerApriori extends RuleLearner {
             countDatabaseOccurrences(learnedRules.get(i));
         }
         
-        logfile.print("\nThe post-filtered sorted set of rules is...\n===========\n===========\n");
-        logfile.print(learnedRules.toString());
-        logfile.print("\n===========\n===========\n=FINISHED==");
+        logfile.print("\nThe post-filtered sorted set of rules is...\n===========\n===========\n",1);
+        logfile.print(learnedRules.toString(),1);
+        logfile.print("\n===========\n===========\n=FINISHED==",1);
          
         
         return learnedRules;
@@ -128,12 +128,14 @@ public class RuleLearnerApriori extends RuleLearner {
             }
 
               
-            if(LogFile.OUTPUT_LOG0)
-                Singleton logfile = Singleton.getInstance();
+            
             for (int candidCount = 0; candidCount < candidatesK.size(); candidCount ++) {
                 if (candidatesK.get(candidCount).getDatabaseOccurrences() < MINSUP) {
-                    if(LogFile.OUTPUT_LOG0)
-                        logfile.print("\nPruned candidate: " + candidatesK.get(candidCount).toString());
+                    if(LogFiles.OUTPUT_LOG0)
+                    {
+                        LogFiles logfile = LogFiles.getInstance();
+                        logfile.print("\nPruned candidate: " + candidatesK.get(candidCount).toString(),1);
+                    }
                     candidatesK.remove(candidCount);
                     candidCount --;
                 }
@@ -148,7 +150,7 @@ public class RuleLearnerApriori extends RuleLearner {
                     }
                 }
             }
-            if(LogFile.OUTPUT_LOG0)
+            
                  
             
             /*Not sure if we should do this at level 2 as well, but let's see what it does
@@ -193,8 +195,7 @@ public class RuleLearnerApriori extends RuleLearner {
         NodeList candidatesK = new NodeList();
 
           
-        if(LogFile.OUTPUT_LOG0)
-            Singleton logfile = Singleton.getInstance();
+        
         //First: the join step
         for (int xCount = 0; xCount < Lminus1Candidates.size(); xCount ++) {
             for (int yCount = 0; yCount < Lminus1Candidates.size(); yCount++) {
@@ -261,14 +262,17 @@ public class RuleLearnerApriori extends RuleLearner {
                             }
                             
                             candidatesK.add(newCandidate);
-                            if(LogFile.OUTPUT_LOG0)
-                                logfile.print("\nGenerated candidate is " + newCandidate.toString());
+                            if(LogFiles.OUTPUT_LOG0)
+                            {
+                                LogFiles logfile = LogFiles.getInstance();
+                                logfile.print("\nGenerated candidate is " + newCandidate.toString(),1);
+                            }
                         }
                     }
                 }
             }
         }
-        if(LogFile.OUTPUT_LOG0)
+        if(LogFiles.OUTPUT_LOG0)
              
         
         /*lDepth > 2 because apriori prune will have no effect on depth 2
@@ -290,8 +294,7 @@ public class RuleLearnerApriori extends RuleLearner {
     protected NodeList aprioriPrune(NodeList candidatesK, NodeList Lminus1Candidates) {
         
           
-        if (LogFile.OUTPUT_LOG0)
-            Singleton logfile = Singleton.getInstance();
+        
         
         for (int candidateCount = 0; candidateCount < candidatesK.size(); candidateCount ++) {
             //subsets of rules of this form are just the rule with a wildcard in each
@@ -314,14 +317,17 @@ public class RuleLearnerApriori extends RuleLearner {
                 }
             }
             if (!validRule) {
-                if (LogFile.OUTPUT_LOG0)
-                    logfile.print("\nRemoved by Apriori prune: " + candidatesK.get(candidateCount).toString());
+                if (LogFiles.OUTPUT_LOG0)
+                {
+                    LogFiles logfile = LogFiles.getInstance();
+                    logfile.print("\nRemoved by Apriori prune: " + candidatesK.get(candidateCount).toString(),1);
+                }
                 candidatesK.remove(candidateCount);
                 candidateCount --;
             }
         }
 
-        if (LogFile.OUTPUT_LOG0)
+        
              
         return candidatesK;
     }
@@ -406,8 +412,8 @@ public class RuleLearnerApriori extends RuleLearner {
         
         RuleNode emptyNode = new RuleNode(precursorFromDatabase, postconditionsFromDatabase);
         
-        Singleton logfile = Singleton.getInstance();
-        logfile.print("\n Created (but not added) Empty Root Node: " + emptyNode.toString() + "\n");
+        LogFiles logfile = LogFiles.getInstance();
+        logfile.print("\n Created (but not added) Empty Root Node: " + emptyNode.toString() + "\n",1);
       
         expand(emptyNode, candidatesK);
             
@@ -419,9 +425,9 @@ public class RuleLearnerApriori extends RuleLearner {
         RuleElements precSucc;
         
           
-        if (LogFile.OUTPUT_LOG0) {
-            Singleton logfile = Singleton.getInstance();
-            logfile.print("\n");
+        if (LogFiles.OUTPUT_LOG0) {
+            LogFiles logfile = LogFiles.getInstance();
+            logfile.print("\n",1);
         }
      
         if (precursor)
@@ -471,13 +477,16 @@ public class RuleLearnerApriori extends RuleLearner {
                     }
                     e.setByValue(values);
 
-                    if (LogFile.OUTPUT_LOG0)
-                        logfile.print("\n added " + child.toString());
+                    if (LogFiles.OUTPUT_LOG0)
+                    {
+                        LogFiles logfile = LogFiles.getInstance();
+                        logfile.print("\n added " + child.toString(),1);
+                    }
                     children.add(child);
                 }
             }
         }
-        if (LogFile.OUTPUT_LOG0)
+        if (LogFiles.OUTPUT_LOG0)
              
         return;
     }

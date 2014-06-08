@@ -57,14 +57,14 @@ public class ClauseLearnerASDD extends ClauseLearner {
         
       
         
-        Singleton logfile2 = Singleton.getInstance();
-        logfile2.print("\n PredASDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.",2);
-        System.out.print("\n PredASDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
+        LogFiles logfile2 = LogFiles.getInstance();
+        logfile2.print("\nPredASDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.",2);
+        System.out.print("\nPredASDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
          
         
-        Singleton logfile = Singleton.getInstance();
+        LogFiles logfile = LogFiles.getInstance();
         logfile.print("\nThe pre-filtered set of rules is...\n===========\n===========\n",1);
-        learnedClauses.toLogFile(logfile);
+        learnedClauses.toSingleton(logfile);
         logfile.print("\n===========\n===========",1);
         //Now filter the dependencies
         //This is called filter(D, H, n, g) in the paper
@@ -80,8 +80,8 @@ public class ClauseLearnerASDD extends ClauseLearner {
         elapsedTime = finishFilter.getTime() - startTime;
         
         
-        logfile.print("\n PredASDD FILTER IN: " + elapsedTime + " MILLISECONDS.",1);
-        System.out.print("\n predASDD FILTER IN: " + elapsedTime + " MILLISECONDS.");   
+        logfile.print("\nPredASDD FILTER IN: " + elapsedTime + " MILLISECONDS.",1);
+        System.out.print("\nPredASDD FILTER IN: " + elapsedTime + " MILLISECONDS.");   
         
         for (int i = 0; i < learnedClauses.size(); i++) {
             //Not sure we should have to do this, but just in case the values are not set for some reason
@@ -123,7 +123,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
         
         //2)
         for (int k=1; ((ClauseList)L.get(k-1)).size() != 0 || k == 1; k++) {
-            System.out.print("\nAriori Clauses Level: " + k + "Running garbage collect");
+            System.out.print("\nAriori Clauses Level: " + k + "\nRunning garbage collect");
             if (k==7) {
                 int stoppage = 1;
             }
@@ -172,9 +172,9 @@ public class ClauseLearnerASDD extends ClauseLearner {
             
             for (int candidCount = 0; candidCount < candidatesK.size(); candidCount ++) {
                 if (candidatesK.get(candidCount).getDatabaseOccurrences() < MINSUP) {
-                    if(LogFile.OUTPUT_LOG0)
+                    if(LogFiles.OUTPUT_LOG0)
                     {
-                        Singleton logfile = Singleton.getInstance();
+                        LogFiles logfile = LogFiles.getInstance();
                         logfile.print("\nPruned candidate: " + candidatesK.get(candidCount).toString(),1);
                     }
                     candidatesK.remove(candidCount);
@@ -194,7 +194,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
                         candidatesK.get(candidCount).setPrecursorequals(percepRecord.size()-1);
                 }
             }
-            if(LogFile.OUTPUT_LOG0)
+            if(LogFiles.OUTPUT_LOG0)
                  
             
             /*Not sure if we should do this at level 2 as well, but let's see what it does
@@ -227,9 +227,9 @@ public class ClauseLearnerASDD extends ClauseLearner {
 
             
             for (int i = 0; i < candidatesK.size(); i ++) {
-                if(LogFile.OUTPUT_LOG0)
+                if(LogFiles.OUTPUT_LOG0)
                 {
-                    Singleton logfile = Singleton.getInstance();
+                    LogFiles logfile = LogFiles.getInstance();
                     logfile.print("\n Added L" + k +  " candidate: " +candidatesK.get(i).toString(),1);
                 }
             }
@@ -259,9 +259,9 @@ public class ClauseLearnerASDD extends ClauseLearner {
         Lminus1Candidates.sortIncreasingLastElement();
 
           
-        if(LogFile.OUTPUT_LOG0)
+        if(LogFiles.OUTPUT_LOG0)
         {
-            Singleton logfile1 = Singleton.getInstance();
+            LogFiles logfile1 = LogFiles.getInstance();
         }
         //First: the join step
         for (int xCount = 0; xCount < Lminus1Candidates.size(); xCount ++) {
@@ -376,9 +376,9 @@ public class ClauseLearnerASDD extends ClauseLearner {
                                     newNode.setMatchingExamples(intersection);
                                  }
                             }
-                             if(LogFile.OUTPUT_LOG0)
+                             if(LogFiles.OUTPUT_LOG0)
                              {
-                                Singleton logfile = Singleton.getInstance();
+                                LogFiles logfile = LogFiles.getInstance();
                                  logfile.print("\nGenerated candidate is " + newNode.toString(),1);
                              }
                         }
@@ -447,17 +447,17 @@ public class ClauseLearnerASDD extends ClauseLearner {
                 }
             }
             if (!validRule) {
-                if (LogFile.OUTPUT_LOG0)
+                if (LogFiles.OUTPUT_LOG0)
                 {
-                    Singleton logfile = Singleton.getInstance();
+                    LogFiles logfile = LogFiles.getInstance();
                     logfile.print("\nRemoved by Apriori prune: " + candidatesK.get(candidateCount).toString(),1);
                 }
                 candidatesK.remove(candidateCount);
                 candidateCount --;
             } else {
-                if (LogFile.OUTPUT_LOG0)
+                if (LogFiles.OUTPUT_LOG0)
                 {
-                    Singleton logfile = Singleton.getInstance();
+                    LogFiles logfile = LogFiles.getInstance();
                     logfile.print("\nKEPT after Apriori prune: " + candidatesK.get(candidateCount).toString(),1);
                 }
             }
@@ -498,7 +498,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
         }*/
         
         
-        //Singleton logfile = Singleton.getInstance();
+        //Singleton logfile = LogFiles.getInstance();
         
         for (int lm1Loop =0; lm1Loop < Lminus1CandidatesWithHead.size(); lm1Loop ++) {
 
@@ -530,7 +530,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
         Date finishFilter = new Date();
         long elapsedTime = finishFilter.getTime() - startTime;
         
-        Singleton logfile2 = Singleton.getInstance();
+        LogFiles logfile2 = LogFiles.getInstance();
         
         logfile2.print("\n FILTER SPECIFIC IN PROCESS: " + elapsedTime + " MILLISECONDS.",2);
         
@@ -612,7 +612,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
        
                 if (!candidatesK.contains(newClause)) {
                     newClause.get(0).setUniqueID();
-                    Singleton logfile = Singleton.getInstance();
+                    LogFiles logfile = LogFiles.getInstance();
                     logfile.print("\n Added L1 candidate: " + newClause.toString(),1);
                      
                     candidatesK.add(new ClauseNode(newClause));
@@ -624,7 +624,7 @@ public class ClauseLearnerASDD extends ClauseLearner {
                 newClause.addHead((Term)successorClause.get(succLoop).clone());
                 if (!candidatesK.contains(newClause)) {
                     newClause.getHead().setUniqueID();
-                    Singleton logfile = Singleton.getInstance();
+                    LogFiles logfile = LogFiles.getInstance();
                     logfile.print("\n Added L1 candidate: " + newClause.toString(),1);
                      
                     candidatesK.add(new ClauseNode(newClause));

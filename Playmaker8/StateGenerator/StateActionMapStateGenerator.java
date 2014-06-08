@@ -26,7 +26,7 @@ public class StateActionMapStateGenerator extends StateGenerator {
 
     StateActionMap stateActionMap;
     
-    static final boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
+    static final boolean outputLog = Logging.LogFiles.OUTPUT_LOG0;
     
     /** Creates new StateGenerator */
     public StateActionMapStateGenerator(StateActionMap stateActionMap){
@@ -41,7 +41,7 @@ public class StateActionMapStateGenerator extends StateGenerator {
         
         if (statesAndCounts == null) {
             if (outputLog) {
-                Singleton logfile = Singleton.getInstance();
+                LogFiles logfile = LogFiles.getInstance();
                 logfile.print("\nWARNING: generate next states produced a NULL result",1);
                 
             }
@@ -51,7 +51,7 @@ public class StateActionMapStateGenerator extends StateGenerator {
         ArrayList statesAndProbs = convertStatesAndCountsToProbabilities(statesAndCounts);
         
         if (outputLog) {
-            Singleton logfile = Singleton.getInstance();
+            LogFiles logfile = LogFiles.getInstance();
             if (statesAndCounts != null) {
                 
                 logfile.print("\nThe states and probabilities from stateActionMap are...\n===========\n===========\n",1);

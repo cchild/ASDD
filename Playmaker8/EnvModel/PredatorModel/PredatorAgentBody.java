@@ -114,7 +114,7 @@ public class PredatorAgentBody extends AgentBody {
                     getPredatorPercep().setPercep(i, PredatorFluent.WALL);
             }
         }
-        //Singleton logfile = Singleton.getInstance();
+        //Singleton logfile = LogFiles.getInstance();
         //logfile.print(getPredatorPercep().getString());
         // 
     }
@@ -138,7 +138,7 @@ public class PredatorAgentBody extends AgentBody {
             }
             default : {
                 stateDirection = PredatorEnvState.NORTH;
-                Singleton logfile = Singleton.getInstance();
+                LogFiles logfile = LogFiles.getInstance();
                 logfile.print("\n***Illegal move direction in agent body***\n",1);
                 
             }
@@ -153,7 +153,7 @@ public class PredatorAgentBody extends AgentBody {
     
     //advance the state of the agent by timeStep
     public void advanceStep() {
-        /*Singleton logfile = Singleton.getInstance();
+        /*LogFiles logfile = LogFiles.getInstance();
         logfile.print("\n");
         if (getRole() == PREDATOR) {
             logfile.print("Predator: ");

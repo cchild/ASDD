@@ -193,7 +193,7 @@ public class StateActionValueMap extends Object implements Serializable {
                         maxActionValue = stav.getValue();
                         maxAction = posAction;
                     } else {
-                        Singleton logfile = Singleton.getInstance();
+                        LogFiles logfile = LogFiles.getInstance();
                         logfile.print("\n The State action values when it goes wrong are:\n",1);
                         for (int j = 0; j < stateActionValues.size(); j++) {
                             logfile.print("\n" + j + " "+ this.stateActionValues.get(j).toString(),1);

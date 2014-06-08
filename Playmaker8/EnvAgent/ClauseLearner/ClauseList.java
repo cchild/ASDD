@@ -301,7 +301,7 @@ public class ClauseList implements Serializable {
         for (int i = size() -1; i >= 0; i--) {
             if (get(i).getPrecursor().isEqualTo(precursor)) {
                 if (get(i).getSuccessor().getFirstNonWildcardPosition() == successorPos) {
-                    Singleton logfile = Singleton.getInstance();
+                    Singletons logfile = Singletons.getInstance();
                     logfile.print("Removed because covered by rule with less Variables\n");
                     logfile.print(get(i).toString());
                      
@@ -340,7 +340,7 @@ public class ClauseList implements Serializable {
         return str;
     }
     
-    public void toLogFile(Singleton logfile) {
+    public void toSingleton(LogFiles logfile) {
         for (int i = 0; i < size(); i ++) {
             logfile.print("\n",1);
             logfile.print(get(i).toString(),1); 
@@ -384,12 +384,12 @@ public class ClauseList implements Serializable {
         int equalLegalActions = 1;
         int legalActions = 0;
            
-        boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
+        boolean outputLog = Logging.LogFiles.OUTPUT_LOG0;
         
         
         
         if (outputLog) {
-            Singleton logfile1 = Singleton.getInstance();
+            LogFiles logfile1 = LogFiles.getInstance();
             logfile1.print("Percep: " + percep.toString() + "\n",1);
         }
         for (int acIt = 0; acIt < iterAction.getNumValues(); acIt ++) {
@@ -406,7 +406,7 @@ public class ClauseList implements Serializable {
                 
                 //Lets output the contributors to this rule and see why its doing this
                 if (outputLog) {
-                    Singleton logfile = Singleton.getInstance();
+                    LogFiles logfile = LogFiles.getInstance();
                     ClauseSetMap matchingClauseSets = clauseSetMap.getWinningMatching(percep, iterAction);
                     logfile.print(matchingClauseSets.toString() + "\n",1);
 
@@ -414,7 +414,7 @@ public class ClauseList implements Serializable {
 
                 if (outputLog)
                 {
-                    Singleton logfile = Singleton.getInstance();
+                    LogFiles logfile = LogFiles.getInstance();
                     logfile.print("Action Value:" + iterAction.toString()+ " " + thisValue + "\n",1);
                 }
                     
@@ -548,7 +548,7 @@ public class ClauseList implements Serializable {
         
         if (outputLog)
         {
-            Singleton logfile = Singleton.getInstance();
+            LogFiles logfile = LogFiles.getInstance();
         }
         
         int currentSpecificity = -1;
@@ -573,9 +573,9 @@ public class ClauseList implements Serializable {
                         //useful for g-sat comparrisons later.
                         clauseSet.orderByOutputID();
                         if (outputLog) {
-                            Singleton logfile = Singleton.getInstance();
+                            LogFiles logfile = LogFiles.getInstance();
                             logfile.print("\nClause Set:",1);
-                            clauseSet.toLogFile(logfile);
+                            clauseSet.toSingleton(logfile);
                         }
                     }
                 }
@@ -622,15 +622,15 @@ public class ClauseList implements Serializable {
             for (int setCount = 0; setCount < clauseSets.size(); setCount ++) {
                 ClauseSet clauseSet = (ClauseSet)clauseSets.get(setCount);
                 if (outputLog) {
-                    Singleton logfile = Singleton.getInstance();
+                    LogFiles logfile = LogFiles.getInstance();
                     logfile.print("\nClause Set:",1);
-                    clauseSet.toLogFile(logfile);
+                    clauseSet.toSingleton(logfile);
                 }
                 
                 if (clauseSet.getTotalProb() < 0.999f)
                     if (outputLog)
                     {
-                        Singleton logfile = Singleton.getInstance();
+                        LogFiles logfile = LogFiles.getInstance();
                         logfile.print("WARNING Total prob:" + clauseSet.getTotalProb(),1);
                     }
             }

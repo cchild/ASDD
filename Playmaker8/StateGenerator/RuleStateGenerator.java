@@ -41,9 +41,9 @@ public class RuleStateGenerator extends StateGenerator {
         
         NodeList matchingNodes = ruleNodes.matchingNodes(currentState);
         
-        Singleton logfile = Singleton.getInstance();
+        LogFiles logfile = LogFiles.getInstance();
         
-        boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
+        boolean outputLog = Logging.LogFiles.OUTPUT_LOG0;
         
         if (outputLog) {
             

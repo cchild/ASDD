@@ -56,7 +56,7 @@ public class PaintTester
           
         }
         
-        Singleton logfile2 = Singleton.getInstance();
+        LogFiles logfile2 = LogFiles.getInstance();
 
 
        logfile2.print("\n\nBlocks painted: " + blocksPainted,2);

@@ -45,11 +45,11 @@ public class ClauseStateGenerator extends StateGenerator {
     public ArrayList generateNextClauseStates(ClauseElements currentState, Percep percep, Action action) {
         ClauseList matchingNodes = clauseNodes.matchingNodes(currentState);
         
-        boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
+        boolean outputLog = Logging.LogFiles.OUTPUT_LOG0;
           
         
         if (outputLog) {
-            Singleton logfile = Singleton.getInstance();
+            LogFiles logfile = LogFiles.getInstance();
             logfile.print("\nState before action:",1);
             logfile.print(currentState.toString(),1);
             //logfile.print("\n===========\n===========\n=FINISHED==");
@@ -57,7 +57,7 @@ public class ClauseStateGenerator extends StateGenerator {
         }
         
         if (outputLog) {
-            Singleton logfile = Singleton.getInstance();
+            LogFiles logfile = LogFiles.getInstance();
             logfile.print("\nThe original matching nodes are...\n===========\n===========\n",1);
             logfile.print(matchingNodes.toString(),1);
             logfile.print("\n===========\n===========\n=FINISHED==",1);
@@ -69,7 +69,7 @@ public class ClauseStateGenerator extends StateGenerator {
         //pick the rules which have precedence and discard others
         matchingNodes = matchingNodes.filterByPrecedence();
         if (outputLog) {
-            Singleton logfile = Singleton.getInstance();
+            LogFiles logfile = LogFiles.getInstance();
             logfile.print("\nThe rules after filtering by precedence are...\n===========\n===========\n",1);
             logfile.print(matchingNodes.toString(),1);
             logfile.print("\n===========\n===========\n=FINISHED==",1);
@@ -84,7 +84,7 @@ public class ClauseStateGenerator extends StateGenerator {
         
         if (outputLog) {
             double totalProb = 0.0f;
-            Singleton logfile = Singleton.getInstance();
+            LogFiles logfile = LogFiles.getInstance();
             logfile.print("\nThe generated states are...\n===========\n===========\n",1);
 
             //Print out the states before we filter
@@ -120,7 +120,7 @@ public class ClauseStateGenerator extends StateGenerator {
         }
         
         if (outputLog) {
-            Singleton logfile = Singleton.getInstance();
+            LogFiles logfile = LogFiles.getInstance();
             logfile.print("\nThe generated states with illigal states removed are...\n===========\n===========\n",1);
 
             //Print out the states after we filter
@@ -136,7 +136,7 @@ public class ClauseStateGenerator extends StateGenerator {
         normaliseProbabilitiesOfGeneratedStates(ruleStatesAndProbs);
         
         if (outputLog) {
-            Singleton logfile = Singleton.getInstance();
+            LogFiles logfile = LogFiles.getInstance();
             logfile.print("\nThe states with probabilities normalised are...\n===========\n===========\n",1);
 
             //Print out the states after we filter

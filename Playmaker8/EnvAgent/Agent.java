@@ -289,8 +289,8 @@ public abstract class Agent extends Object {
                 Date finish = new Date();
                 long elapsedTime = finish.getTime() - startTime;
 
-                Singleton logfile2 = Singleton.getInstance();
-                logfile1.print("\n State action model learned in: " + elapsedTime + " MILLISECONDS.");
+                LogFiles logfile2 = LogFiles.getInstance();
+                logfile2.print("\n State action model learned in: " + elapsedTime + " MILLISECONDS.",2);
                 System.out.print("\n State action model learned in:" + elapsedTime + " MILLISECONDS.");
                  
                 
@@ -530,10 +530,10 @@ public abstract class Agent extends Object {
 
                 valueMapClauseApriori = generateClauseValueMap(learnedClausesASDD);
                 valueMapClauseApriori.writeTo(VALUE_MAP_CLAUSE_APRIORI_FILENAME);
-                Singleton logfile = Singleton.getInstance();
-                logFile.print ("\n\nClause Value Map: \n");
-                logFile.print(valueMapClauseApriori.toString());
-                logFile.flush();
+                LogFiles logfile = LogFiles.getInstance();
+                logfile.print ("\n\nClause Value Map: \n",1);
+                logfile.print(valueMapClauseApriori.toString(),1);
+                logfile.flush(1);
              
             } else {
                  try {   
@@ -548,10 +548,10 @@ public abstract class Agent extends Object {
                         //for the moment generate one because we didn't have one
                         valueMapClauseApriori = generateClauseValueMap(learnedClausesASDD);
                         valueMapClauseApriori.writeTo(VALUE_MAP_CLAUSE_APRIORI_FILENAME);
-                        Singleton logfile = Singleton.getInstance();
-                        logFile.print ("\n\nClause Value Map: \n");
-                        logFile.print(valueMapClauseApriori.toString());
-                        logFile.flush();
+                        LogFiles logfile = LogFiles.getInstance();
+                        logfile.print ("\n\nClause Value Map: \n",1);
+                        logfile.print(valueMapClauseApriori.toString(),1);
+                        logfile.flush(1);
                     }
                     ex.printStackTrace(); 
                 } 
@@ -577,11 +577,11 @@ public abstract class Agent extends Object {
                        reinforcementLearner.setStateGenerator(new StateActionMapStateGenerator(stateActionMapTemp));
                        StateValueMap valueMapStateActionTemp = generateStateActionValueMap(stateActionMapTemp);
                        reinforcementLearner.setValueMap(valueMapStateActionTemp);
-                       Singleton logfile = Singleton.getInstance();
-                       logFile.print ("\n\nState Action Lots Value Map: \n");
-                       logFile.print(valueMapStateActionTemp.toString());
-                       logFile.flush();
-                       logFile.close();            
+                       LogFiles logfile = LogFiles.getInstance();
+                       logfile.print ("\n\nState Action Lots Value Map: \n",1);
+                       logfile.print(valueMapStateActionTemp.toString(),1);
+                       logfile.flush(1);
+                                  
                        
                    } else {// (USE_CLAUSE_APRIORI_VALUES) // note there is no q-version yet
                        if (USE_CLAUSE_APRIORI_VALUES) {
@@ -683,13 +683,13 @@ public abstract class Agent extends Object {
                         
                    StateActionValueMap stateActionValueMapStateActionTemp = generateStateActionStateActionValueMap(stateActionMapTemp);
                    reinforcementLearner.setStateActionValueMap(stateActionValueMapStateActionTemp);
-                   Singleton logfile = Singleton.getInstance();
-                   logFile.print ("\n\nState Action Value Map When generated: \n");
+                   LogFiles logfile = LogFiles.getInstance();
+                   logfile.print ("\n\nState Action Value Map When generated: \n",1);
                    for (int j = 0; j < stateActionValueMapStateActionTemp.getStateActionValues().size(); j++) {
-                       logFile.print("\n" + j + " "+ stateActionValueMapStateActionTemp.getStateActionValues().get(j).toString());
+                       logfile.print("\n" + j + " "+ stateActionValueMapStateActionTemp.getStateActionValues().get(j).toString(),1);
                    }
-                   logFile.flush();
-                   logFile.close();
+                   logfile.flush(1);
+                   
                
                }
            }
@@ -724,11 +724,11 @@ public abstract class Agent extends Object {
            }
 
            generateClauseValues (learnedClausesASDD);
-           Singleton logfile = Singleton.getInstance();
-           logFile.print ("\n\nLearned Clause Sets with Values: \n");
-           logFile.print(learnedClausesASDD.getClauseSetMap().toString());
-           logFile.flush();
-           logFile.close();
+           LogFiles logfile = LogFiles.getInstance();
+           logfile.print ("\n\nLearned Clause Sets with Values: \n",1);
+           logfile.print(learnedClausesASDD.getClauseSetMap().toString(),1);
+           logfile.flush(1);
+           
 
          
 
@@ -745,7 +745,7 @@ public abstract class Agent extends Object {
                     }
                 }
            }
-           Singleton logfile2 = Singleton.getInstance();
+           LogFiles logfile2 = LogFiles.getInstance();
            logfile2.print ("\n\nLearned Clause Sets with Values: \n",2);
            logfile2.print(learnedClausesASDD.getClauseSetMap().toStringOnlyWinning(),2);
            logfile2.flush(2);
@@ -826,45 +826,45 @@ public abstract class Agent extends Object {
                 totalTested ++;
                 Action action = stateActions.getAction(actionLoop);
                      
-                Singleton logfile = Singleton.getInstance();
-                logfile.print("\n Initial test percep act is:" + percep.toString() + "Action: " + action.toString());
+                LogFiles logfile = LogFiles.getInstance();
+                logfile.print("\n Initial test percep act is:" + percep.toString() + "Action: " + action.toString(),1);
                  
                 if ((learnedRulesMSDD != null) || (learnedRulesApriori != null)) {
-                   Singleton logfile = Singleton.getInstance();
-                   logfile.print("\n STATES GENERATED FROM 200000 STATE ACTION MAP: \n");
+                   
+                   logfile.print("\n STATES GENERATED FROM 200000 STATE ACTION MAP: \n",1);
                     
                    ArrayList generatedStatesLots = stateGeneratorLotsActionMap.generateNextStates(percep, action);
                    totalStateActionStates += generatedStatesLots.size();
                    
                    ArrayList generatedStatesAprioriRules = null;
                    if (learnedRulesApriori != null) {
-                       Singleton logfile = Singleton.getInstance();
-                       logfile.print("\n STATES GENERATED FROM APRIORI RULES: \n");
+                       
+                       logfile.print("\n STATES GENERATED FROM APRIORI RULES: \n",1);
                         
                        generatedStatesAprioriRules = stateGeneratorAprioriRules.generateNextStates(percep, action);
                     }
 
-                   Singleton logfile = Singleton.getInstance();
-                   logfile.print("\n STATES GENERATED FROM STATE ACTION MAP: \n");
+                   
+                   logfile.print("\n STATES GENERATED FROM STATE ACTION MAP: \n",1);
                     
                    ArrayList generatedStatesActionMap = stateGeneratorStateActionMap.generateNextStates(percep, action);
 
                    ArrayList generatedStatesMSDDRules = null;
                    if (learnedRulesMSDD != null) {
-                       Singleton logfile = Singleton.getInstance();
-                       logfile.print("\n STATES GENERATED FROM MSDD RULES: \n");
+                       
+                       logfile.print("\n STATES GENERATED FROM MSDD RULES: \n",1);
                         
                        generatedStatesMSDDRules = stateGeneratorMSDDRules.generateNextStates(percep, action);
                     }
                     /*Now get the error measure for each of these against LOTS version
                     */
-                    Singleton logfile = Singleton.getInstance();
-                    logfile.print("\n State Errors initial test percep act is:" + percep.toString() + "Action: " + action.toString());
-                    logfile.print("\n Correct following states are:\n");
+                    
+                    logfile.print("\n State Errors initial test percep act is:" + percep.toString() + "Action: " + action.toString(),1);
+                    logfile.print("\n Correct following states are:\n",1);
                     for (int i = 0; i < generatedStatesLots.size(); i++) {
-                       logfile.print(((StateAndProb)generatedStatesLots.get(i)).getPercep().getString());
-                       logfile.print(" " + ((StateAndProb)generatedStatesLots.get(i)).getProbability());
-                       logfile.print("\n");
+                       logfile.print(((StateAndProb)generatedStatesLots.get(i)).getPercep().getString(),1);
+                       logfile.println(" " + ((StateAndProb)generatedStatesLots.get(i)).getProbability(),1);
+                       
                     }
                      
                     ArrayList stateFewMany = new ArrayList();
@@ -872,8 +872,8 @@ public abstract class Agent extends Object {
                     stateFewMany.add(0);
                     stateFewMany.set(0, tooFewStatesSAM);
                     stateFewMany.set(1, extraStatesSAM);
-                    Singleton logfile = Singleton.getInstance();
-                    logfile.print("\n State Action Map Errors: ");
+                    
+                    logfile.print("\n State Action Map Errors: ",1);
                      
                     stateActionMapError += generatedStatesError(generatedStatesLots, generatedStatesActionMap, stateFewMany);
                     tooFewStatesSAM = (Integer)stateFewMany.get(0);
@@ -882,8 +882,8 @@ public abstract class Agent extends Object {
                     if (learnedRulesMSDD != null) {
                         stateFewMany.set(0, tooFewStatesMSDD);
                         stateFewMany.set(1, extraStatesMSDD);
-                        Singleton logfile = Singleton.getInstance();
-                        logfile.print("\n MSDD rule Errors: ");
+                        
+                        logfile.print("\n MSDD rule Errors: ",1);
                          
                         MSDDError += generatedStatesError(generatedStatesLots, generatedStatesMSDDRules, stateFewMany);
                         tooFewStatesMSDD = (Integer)stateFewMany.get(0);
@@ -894,8 +894,8 @@ public abstract class Agent extends Object {
                     if (learnedRulesApriori != null) {
                         stateFewMany.set(0, tooFewStatesAPR);
                         stateFewMany.set(1, extraStatesAPR);
-                        Singleton logfile = Singleton.getInstance();
-                        logfile.print("\n Apriori rules Errors: ");
+                        
+                        logfile.print("\n Apriori rules Errors: ",1);
                          
                         aprioriError += generatedStatesError(generatedStatesLots, generatedStatesAprioriRules, stateFewMany);
                         tooFewStatesAPR = (Integer)stateFewMany.get(0);
@@ -906,18 +906,18 @@ public abstract class Agent extends Object {
             }
         }
         
-         Singleton logfile2 = Singleton.getInstance();
-         logfile1.print("\n State action Error: " + stateActionMapError);
-         logfile1.print("\n MSDDError Error: " + MSDDError);
-         logfile1.print("\n aprioriError Error: " + aprioriError);
-         logfile1.print("\n total state action pairs tested: " + totalTested);
-         logfile1.print("\n Total Stateaction States: " + totalStateActionStates);
-         logfile1.print("\n Total Extra SAM States: " + extraStatesSAM);
-         logfile1.print("\n Total to few SAM States: " + tooFewStatesSAM);
-         logfile1.print("\n Total Extra MSDD States: " + extraStatesMSDD);
-         logfile1.print("\n Total to few MSDD States: " + tooFewStatesMSDD);
-         logfile1.print("\n Total Extra APR States: " + extraStatesAPR);
-         logfile1.print("\n Total to few APR States: " + tooFewStatesAPR);
+         LogFiles logfile2 = LogFiles.getInstance();
+         logfile2.print("\n State action Error: " + stateActionMapError,2);
+         logfile2.print("\n MSDDError Error: " + MSDDError,2);
+         logfile2.print("\n aprioriError Error: " + aprioriError,2);
+         logfile2.print("\n total state action pairs tested: " + totalTested,2);
+         logfile2.print("\n Total Stateaction States: " + totalStateActionStates,2);
+         logfile2.print("\n Total Extra SAM States: " + extraStatesSAM,2);
+         logfile2.print("\n Total to few SAM States: " + tooFewStatesSAM,2);
+         logfile2.print("\n Total Extra MSDD States: " + extraStatesMSDD,2);
+         logfile2.print("\n Total to few MSDD States: " + tooFewStatesMSDD,2);
+         logfile2.print("\n Total Extra APR States: " + extraStatesAPR,2);
+         logfile2.print("\n Total to few APR States: " + tooFewStatesAPR,2);
         
           
     }
@@ -959,23 +959,23 @@ public abstract class Agent extends Object {
                 totalTested ++;
                 Action action = stateActions.getAction(actionLoop);
                      
-                Singleton logfile = Singleton.getInstance();
-                logfile.print("\n Initial test state is:" + percep.toString() + " " + action.toString());
+                LogFiles logfile = LogFiles.getInstance();
+                logfile.print("\n Initial test state is:" + percep.toString() + " " + action.toString(),2);
                  
                 if (learnedClausesApriori != null) {
-                   Singleton logfile = Singleton.getInstance();
-                   logfile.print("\n STATES GENERATED FROM 200000 STATE ACTION MAP: \n");
+                   
+                   logfile.print("\n STATES GENERATED FROM 200000 STATE ACTION MAP: \n",1);
                     
                    ArrayList generatedStatesLots = stateGeneratorLotsActionMap.generateNextStates(percep, action);
                    totalStateActionStates += generatedStatesLots.size();
                    
-                   Singleton logfile = Singleton.getInstance();
-                   logfile.print("\n STATES GENERATED FROM APRIORI RULES: \n");
+                   
+                   logfile.print("\n STATES GENERATED FROM APRIORI RULES: \n",1);
                     
                    ArrayList generatedStatesAprioriRules = stateGeneratorAprioriClauses.generateNextStates(percep, action);
 
-                   Singleton logfile = Singleton.getInstance();
-                   logfile.print("\n STATES GENERATED FROM STATE ACTION MAP: \n");
+                   
+                   logfile.print("\n STATES GENERATED FROM STATE ACTION MAP: \n",1);
                     
                    ArrayList generatedStatesActionMap = stateGeneratorStateActionMap.generateNextStates(percep, action);
                    
@@ -987,16 +987,16 @@ public abstract class Agent extends Object {
                     stateFewMany.add(0);
                     stateFewMany.set(0, tooFewStatesSAM);
                     stateFewMany.set(1, extraStatesSAM);
-                    Singleton logfile = Singleton.getInstance();
-                    logfile.print("\n State action Map Errors: ");
+                    
+                    logfile.print("\n State action Map Errors: ",1);
                      
                     stateActionMapError += generatedStatesError(generatedStatesLots, generatedStatesActionMap, stateFewMany);
                     tooFewStatesSAM = (Integer)stateFewMany.get(0);
                     extraStatesSAM = (Integer)stateFewMany.get(1);
                     stateFewMany.set(0, tooFewStatesAPR);
                     stateFewMany.set(1, extraStatesAPR);
-                    Singleton logfile = Singleton.getInstance();
-                    logfile.print("\n Apriori Clause rules Errors: ");
+                    
+                    logfile.print("\n Apriori Clause rules Errors: ",1);
                      
                     aprioriError += generatedStatesError(generatedStatesLots, generatedStatesAprioriRules, stateFewMany);
                     tooFewStatesAPR = (Integer)stateFewMany.get(0);
@@ -1007,15 +1007,15 @@ public abstract class Agent extends Object {
             }
         }
         
-         Singleton logfile2 = Singleton.getInstance();
-         logfile1.print("\n State action Error: " + stateActionMapError);
-         logfile1.print("\n aprioriError Error: " + aprioriError);
-         logfile1.print("\n total state action pairs tested: " + totalTested);
-         logfile1.print("\n Total Stateaction States: " + totalStateActionStates);
-         logfile1.print("\n Total Extra SAM States: " + extraStatesSAM);
-         logfile1.print("\n Total to few SAM States: " + tooFewStatesSAM);
-         logfile1.print("\n Total Extra APR States: " + extraStatesAPR);
-         logfile1.print("\n Total to few APR States: " + tooFewStatesAPR);
+         LogFiles logfile2 = LogFiles.getInstance();
+         logfile2.print("\n State action Error: " + stateActionMapError,2);
+         logfile2.print("\n aprioriError Error: " + aprioriError,2);
+         logfile2.print("\n total state action pairs tested: " + totalTested,2);
+         logfile2.print("\n Total Stateaction States: " + totalStateActionStates,2);
+         logfile2.print("\n Total Extra SAM States: " + extraStatesSAM,2);
+         logfile2.print("\n Total to few SAM States: " + tooFewStatesSAM,2);
+         logfile2.print("\n Total Extra APR States: " + extraStatesAPR,2);
+         logfile2.print("\n Total to few APR States: " + tooFewStatesAPR,2);
         
           
     }
@@ -1044,21 +1044,21 @@ public abstract class Agent extends Object {
                         }
                     }
                 } else {
-                    Singleton logfile = Singleton.getInstance();
-                    logfile.print("\n Generated states are null in error measure.");
+                    LogFiles logfile = LogFiles.getInstance();
+                    logfile.print("\n Generated states are null in error measure.",1);
                      
                 }
                 if (!matching) {
-                    Singleton logfile = Singleton.getInstance();
-                    logfile.print("\n Missed this state: " + tState.toString());
+                    LogFiles logfile = LogFiles.getInstance();
+                    logfile.print("\n Missed this state: " + tState.toString(),1);
                      
                     error += (double)0.5f;
                     stateFewMany.set(0, ((Integer)stateFewMany.get(0)).intValue()+1);
                 }
             }
         } else {
-            Singleton logfile = Singleton.getInstance();
-            logfile.print("\n Generated states are null in error measure.");
+            LogFiles logfile = LogFiles.getInstance();
+            logfile.print("\n Generated states are null in error measure.",1);
              
         }
             
@@ -1082,8 +1082,8 @@ public abstract class Agent extends Object {
             if (!matching) {
                 error += (double)0.5f;
                 stateFewMany.set(1, ((Integer)stateFewMany.get(1)).intValue()+1);
-                Singleton logfile = Singleton.getInstance();
-                logfile.print("\n Extra state: " + gState.toString());
+                LogFiles logfile = LogFiles.getInstance();
+                logfile.print("\n Extra state: " + gState.toString(),1);
                  
             }
         }
@@ -1196,11 +1196,10 @@ public StateValueMap generateRuleValueMap (NodeList learnedRules) {
         Percep initialPercep = (Percep)body.getPercep().clone();
         Percep nextPercep = (Percep)body.getPercep().clone();
         
-        Singleton logfile = Singleton.getInstance();
-        //System.out.print("\n Initial test state is:" + initialState.toString());
+        LogFiles logfile = LogFiles.getInstance();
          
      
-        System.out.print("WARNING (Predator Agnet): Reinforcement learner set to " + REFINE_MAP_STEPS + " itterations");
+        System.out.println("\nWARNING (Predator Agnet): Reinforcement learner set to " + REFINE_MAP_STEPS + " itterations");
         for (int i = 0; i < REFINE_MAP_STEPS; i++) {
             //System.out.print("\nInitial state: " + initialState.toString() + "\n");
             tempReinforcementLearner.bellmanRefineValue(initialPercep, action);
@@ -1225,11 +1224,10 @@ public StateValueMap generateRuleValueMap (NodeList learnedRules) {
         Percep agentPercep = (Percep)body.getPercep().clone();
         Percep nextPercep = (Percep)body.getPercep().clone();
 
-        Singleton logfile = Singleton.getInstance();
-        //System.out.print("\n Initial test state is:" + initialState.toString());
+        
          
      
-        System.out.print("WARNING (Predator Agnet): State Action Reinforcement learner set to " + REFINE_MAP_STEPS+ " itterations");
+        System.out.println("\nWARNING (Predator Agnet): State Action Reinforcement learner set to " + REFINE_MAP_STEPS+ " itterations");
         for (int i = 0; i < 1; i++) {
             //System.out.print(i);
             //System.out.flush();
@@ -1280,11 +1278,10 @@ public StateValueMap generateRuleValueMap (NodeList learnedRules) {
         Percep agentPercep = (Percep)body.getPercep().clone();
         Percep nextPercep = (Percep)body.getPercep().clone();
 
-        Singleton logfile = Singleton.getInstance();
-        //System.out.print("\n Initial test state is:" + initialState.toString());
+        LogFiles logfile = LogFiles.getInstance();
          
      
-        System.out.print("\nWARNING (Pedator Agnet): Clause (Rule based) \n Value Reinforcement learner set to " + REFINE_MAP_STEPS_RVRL+ " itterations");
+        System.out.println("\nWARNING (Pedator Agnet): Clause (Rule based) \n Value Reinforcement learner set to " + REFINE_MAP_STEPS_RVRL+ " itterations");
         for (int i = 0; i < 1; i++) {
             //System.out.print(i);
             //System.out.flush();

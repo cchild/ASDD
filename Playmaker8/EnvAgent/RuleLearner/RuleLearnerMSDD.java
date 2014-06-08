@@ -29,15 +29,15 @@ public class RuleLearnerMSDD extends RuleLearner {
         Date finish = new Date();
         long elapsedTime = finish.getTime() - startTime;
         
-        Singleton logfile2 = Singleton.getInstance();
-        logfile1.print("\n MSDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
+        LogFiles logfile2 = LogFiles.getInstance();
+        logfile2.print("\n MSDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.",2);
         System.out.print("\n MSDD LEARNED RULES IN: " + elapsedTime + " MILLISECONDS.");
          
          
-        Singleton logfile = Singleton.getInstance();
-        logfile.print("\nThe pre-filtered set of rules is...\n===========\n===========\n");
-        logfile.print(learnedRules.toString());  
-        logfile.print("\n===========\n===========");
+        LogFiles logfile = LogFiles.getInstance();
+        logfile.print("\nThe pre-filtered set of rules is...\n===========\n===========\n",1);
+        logfile.print(learnedRules.toString(),1);  
+        logfile.print("\n===========\n===========",1);
          
         //Now filter the dependencies
         //This is called filter(D, H, n, g) in the paper
@@ -64,9 +64,9 @@ public class RuleLearnerMSDD extends RuleLearner {
             countDatabaseOccurrences(learnedRules.get(i));
         }
         
-        logfile.print("\nThe post-filtered sorted set of rules is...\n===========\n===========\n");
-        logfile.print(learnedRules.toString());  
-        logfile.print("\n===========\n===========\n=FINISHED==");
+        logfile.print("\nThe post-filtered sorted set of rules is...\n===========\n===========\n",1);
+        logfile.print(learnedRules.toString(),1);  
+        logfile.print("\n===========\n===========\n=FINISHED==",1);
          
         
         return learnedRules;
@@ -95,8 +95,8 @@ public class RuleLearnerMSDD extends RuleLearner {
         
         nodes.add(emptyNode);
         
-        Singleton logfile = Singleton.getInstance();
-        logfile.print(nodes.get(0).toString() + "\n");
+        LogFiles logfile = LogFiles.getInstance();
+        logfile.print(nodes.get(0).toString() + "\n",1);
         //Main MSDD loop
         //keep looping until there are no nodes left to expand
         //or we've reached the maximum number
@@ -142,9 +142,9 @@ public class RuleLearnerMSDD extends RuleLearner {
                     for (int j = 0; j < finishedRules.size(); j ++) {
                         RuleNode finished = finishedRules.get(j);
                         if (finished.isEqualTo(child)) {
-                            logfile.print("\n repeated node " + children.get(i).toString());
-                            logfile.print("\n parent was " + expand.toString());
-                            logfile.print("\n previous node parent was " + finished.getParent().toString());
+                            logfile.print("\n repeated node " + children.get(i).toString(),1);
+                            logfile.print("\n parent was " + expand.toString(),1);
+                            logfile.print("\n previous node parent was " + finished.getParent().toString(),1);
                             children.remove(i);
                             removed = true;
                             boolean stop = true;
@@ -155,8 +155,8 @@ public class RuleLearnerMSDD extends RuleLearner {
                         for (int j = 0; j < nodes.size(); j ++) {
                             if (nodes.get(j).isEqualTo
                                     (children.get(i))) {
-                                logfile.print("/n repeated node " + children.get(i).toString());
-                                logfile.print("/n parent was " + expand.toString());
+                                logfile.print("/n repeated node " + children.get(i).toString(),1);
+                                logfile.print("/n parent was " + expand.toString(),1);
                                 children.remove(i);
                                 boolean stop = true;
                                 j = nodes.size();
@@ -181,10 +181,10 @@ public class RuleLearnerMSDD extends RuleLearner {
         RuleElements precSucc;
         
           
-        if(LogFile.OUTPUT_LOG0)
+        if(LogFiles.OUTPUT_LOG0)
         {
-            Singleton logfile = Singleton.getInstance();
-            logfile.print("\n");
+            LogFiles logfile = LogFiles.getInstance();
+            logfile.print("\n",1);
         }
      
         if (precursor)
@@ -236,19 +236,25 @@ public class RuleLearnerMSDD extends RuleLearner {
 
                
                     if (!prune(child)) {
-                        if(LogFile.OUTPUT_LOG0)
-                            logfile.print("\n added " + child.toString());
+                        if(LogFiles.OUTPUT_LOG0)
+                        {
+                            LogFiles logfile = LogFiles.getInstance();
+                            logfile.print("\n added " + child.toString(),1);
+                        }
                         children.add(child);
                     }
                     else{
-                        if(LogFile.OUTPUT_LOG0)
-                           logfile.print("\n pruned " + child.toString());
+                        if(LogFiles.OUTPUT_LOG0)
+                        {
+                            LogFiles logfile = LogFiles.getInstance();
+                           logfile.print("\n pruned " + child.toString(),1);
+                        }
                     }
                    
                 }
             }
         }
-        if(LogFile.OUTPUT_LOG0)
+        if(LogFiles.OUTPUT_LOG0)
              
         return;
     }

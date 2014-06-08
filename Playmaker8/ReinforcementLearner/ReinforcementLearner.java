@@ -120,8 +120,8 @@ public class ReinforcementLearner extends java.lang.Object {
         }
         
         
-        if (LogFile.OUTPUT_LOG0) {
-            Singleton logfile = Singleton.getInstance();
+        if (LogFiles.OUTPUT_LOG0) {
+            LogFiles logfile = LogFiles.getInstance();
             logfile.print("\nFind action for state: ",1);
             logfile.print(percep.toString(),1);
             logfile.print("\nAction:" + action.toString(),1);
@@ -145,10 +145,10 @@ public class ReinforcementLearner extends java.lang.Object {
                continue;
            
              
-           boolean outputLog = Logging.LogFile.OUTPUT_LOG0;
+           boolean outputLog = Logging.LogFiles.OUTPUT_LOG0;
            
            if (outputLog) {
-               Singleton logfile = Singleton.getInstance();
+               LogFiles logfile = LogFiles.getInstance();
                logfile.print("\nThe state to be refined is...\n===========\n===========\n",1);
                logfile.println(percep.toString() + " " + action.toString(),1);
                
@@ -159,7 +159,7 @@ public class ReinforcementLearner extends java.lang.Object {
            
            if (nextStatesAndProb == null) {
                if (outputLog) {
-                   Singleton logfile = Singleton.getInstance();
+                   LogFiles logfile = LogFiles.getInstance();
                    logfile.print("\nThe state generator could not generate and states for: ",1);
                    logfile.println(percep.toString() + " " + action.toString(),1);
                    

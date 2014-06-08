@@ -20,8 +20,7 @@ public class PredatorTester
         PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);
         PredatorAgent prey = (PredatorAgent)predatorEnvironment.addPredatorAgent(3,3,PredatorAgent.PREY);
         int stepsOntop = 0;
-
-        int NUM_MOVES = 150; //will be doubled for turn taking
+        int NUM_MOVES = 1000; //will be doubled for turn taking
         double totalReward = 0;
         for (int i = 0; i < NUM_MOVES * 2; i++){
             predatorEnvironment.updateEnvironment();
@@ -46,7 +45,7 @@ public class PredatorTester
 
 
 
-        Singleton logfile2 = Singleton.getInstance();
+        LogFiles logfile2 = LogFiles.getInstance();
         System.out.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES);
         System.out.print("\n" + "Total reward: " + totalReward + "\n");
         logfile2.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES,2);

@@ -150,7 +150,7 @@ public abstract class RuleLearner {
          *intersection of rules for which they work to see which one should be used
          *when they conflict.*/
         boolean outputLog = true;
-        Singleton logfile = Singleton.getInstance();
+        LogFiles logfile = LogFiles.getInstance();
             
         RuleSetMap ruleSetMap = new RuleSetMap();
         
@@ -211,17 +211,17 @@ public abstract class RuleLearner {
         ArrayList ruleSetsList = ruleSetMap.getArrayList();
         
         for (int i = 0; i < ruleSetsList.size(); i++) {
-            logfile.print("\n\n\n TheRuleSet: \n");
+            logfile.print("\n\n\n TheRuleSet: \n",1);
             RuleSet ruleSet = (RuleSet)ruleSetsList.get(i);
-            logfile.print(ruleSet.toString());
-            logfile.print("\n Defers to:");
+            logfile.print(ruleSet.toString(),1);
+            logfile.print("\n Defers to:",1);
             for (int def = 0; def < ruleSet.getDefersToList().size(); def ++) {
-                logfile.print("\n" + ruleSet.getDefersToList().get(def).toString());
+                logfile.print("\n" + ruleSet.getDefersToList().get(def).toString(),1);
             }
                        
-            logfile.print("\n Precedence over: \n");
+            logfile.print("\n Precedence over: \n",1);
             for (int def = 0; def < ruleSet.getPrecedenceOverList().size(); def ++) {
-                logfile.print("\n" + ruleSet.getPrecedenceOverList().get(def).toString());
+                logfile.print("\n" + ruleSet.getPrecedenceOverList().get(def).toString(),1);
             }
         }
         
@@ -515,7 +515,7 @@ public abstract class RuleLearner {
          */
         NodeList postGeneralCoveredRules = new NodeList();
         
-        Singleton logfile = Singleton.getInstance();
+        LogFiles logfile = LogFiles.getInstance();
         for (int i = 0; i < nodes.size() -1; i++) {
             RuleNode nodeToTest = nodes.get(i);
             RuleElements testPrecursor = nodeToTest.getPrecursor();
@@ -624,15 +624,15 @@ public abstract class RuleLearner {
                         
                         //This line seems to be removing the wrong rules
                         
-                        logfile.print("\nRemoved " + nodeToTest.toString()+ ". Covered by more specific rules.");
+                        logfile.print("\nRemoved " + nodeToTest.toString()+ ". Covered by more specific rules.",1);
                         nodes.remove(nodeToTest);
-                        logfile.print("\nCovered by the following rules: \n");
+                        logfile.print("\nCovered by the following rules: \n",1);
                         for (int covering = 0; covering < coveredByRules.size(); covering++) {
-                            logfile.print(coveredByRules.get(covering).toString() + "\n");
+                            logfile.print(coveredByRules.get(covering).toString() + "\n",1);
                         }
-                        logfile.print("\nThese missing rules didn't match the database: ");
+                        logfile.print("\nThese missing rules didn't match the database: ",1);
                         for (int covering = 0; covering < noDatabaseMatchRules.size(); covering++) {
-                            logfile.print(noDatabaseMatchRules.get(covering).toString() + "\n");
+                            logfile.print(noDatabaseMatchRules.get(covering).toString() + "\n",1);
                         }
                         
                         //go back one because we've removed the i'th node
@@ -654,7 +654,7 @@ public abstract class RuleLearner {
                                     if (nodeToTest.getSuccessor().isEqualTo(node.getSuccessor())) {
                                         if (nodeToTest.getPrecursor().isEqualTo(node.getPrecursor())) {
                                             nodes.remove(clearupCount);
-                                            logfile.print("\nAlso removed " + nodeToTest.toString()+ ". because it is for the same variable and has the same preconditions.");
+                                            logfile.print("\nAlso removed " + nodeToTest.toString()+ ". because it is for the same variable and has the same preconditions.",1);
                                             if (clearupCount <= i) {
                                                 //we've removed a node that we were about to look
                                                 //at so go back one.
@@ -682,7 +682,7 @@ public abstract class RuleLearner {
     //and check that they are either in the rule base of don't match with the database
     //Check each rule to make sure every fluent value is represented
     public void addMissingRules(NodeList nodes) {   
-        Singleton logfile = Singleton.getInstance();
+        LogFiles logfile = LogFiles.getInstance();
         for (int nodeLoop = 0; nodeLoop < nodes.size(); nodeLoop ++) {
             RuleNode nodeToTest = (RuleNode)nodes.get(nodeLoop);
             RuleElements successor = nodeToTest.getSuccessor();
@@ -703,9 +703,9 @@ public abstract class RuleLearner {
                         //countPrecursorequals(newNode);
                         nodes.addAt(0, newNode);
 
-                        logfile.print("\n***Added missing rule...\n===========\n");
-                        logfile.print(newNode.toString());
-                        logfile.print("\n===========\n");
+                        logfile.print("\n***Added missing rule...\n===========\n",1);
+                        logfile.print(newNode.toString(),1);
+                        logfile.print("\n===========\n",1);
                         nodeLoop ++;
                     }
                 }
@@ -722,7 +722,7 @@ public abstract class RuleLearner {
     public void generateRuleSets(NodeList nodes) {
         
         nodes.sortNonIncreasingGenerality();
-        Singleton logfile = Singleton.getInstance();
+        LogFiles logfile = LogFiles.getInstance();
         
         int currentSpecificity = -1;
         ArrayList ruleSets = null;
@@ -739,7 +739,7 @@ public abstract class RuleLearner {
                     //we're starting a new rule set level so output the last one
                     for (int setCount = 0; setCount < ruleSets.size(); setCount ++) {
                         RuleSet ruleSet = (RuleSet)ruleSets.get(setCount);
-                        logfile.print("\nRule Set:" + ruleSet.toString());
+                        logfile.print("\nRule Set:" + ruleSet.toString(),1);
                     }
                 }
                 
@@ -800,50 +800,65 @@ public abstract class RuleLearner {
         int currentNode = nodes.size() - 1;
         
           
-        if (LogFile.OUTPUT_LOG0)
-            Singleton logfile = Singleton.getInstance();
+        
         while (currentNode >= 0) {
             if (nodes.get(currentNode).getSuccessor().isAllWildcardsFrom(1)) {
-                if (LogFile.OUTPUT_LOG0) {
-                    logfile.print("\nNode filtered because successor all wildcards\n");
-                    logfile.print(nodes.get(currentNode).toString());
+                if (LogFiles.OUTPUT_LOG0) {
+                    LogFiles logfile = LogFiles.getInstance();
+                    logfile.print("\nNode filtered because successor all wildcards\n",1);
+                    logfile.print(nodes.get(currentNode).toString(),1);
                 }
                 nodes.remove(currentNode);
             }
             else if (countDatabaseOccurrences(nodes.get(currentNode)) < n) {
-                if (LogFile.OUTPUT_LOG0) {
-                    logfile.print("\nRuleNode filtered because less than n occurrences\n");
-                    logfile.print(nodes.get(currentNode).toString());
+                if (LogFiles.OUTPUT_LOG0) {
+                    LogFiles logfile = LogFiles.getInstance();
+                    logfile.print("\nRuleNode filtered because less than n occurrences\n",1);
+                    logfile.print(nodes.get(currentNode).toString(),1);
                 }
                 nodes.remove(currentNode);
             }
             currentNode --;
         }
 
-        if (LogFile.OUTPUT_LOG0)
-            logfile.print("\nThe set of rules after , n filtering is...\n===========\n===========\n");
+        if (LogFiles.OUTPUT_LOG0)
+        {
+            LogFiles logfile = LogFiles.getInstance();
+            logfile.print("\nThe set of rules after , n filtering is...\n===========\n===========\n",1);
+        }
         for (int i = 0; i < nodes.size(); i++) {
-            if (LogFile.OUTPUT_LOG0) {
-                logfile.print(nodes.get(i).toString());
-                logfile.print("\n");
+            if (LogFiles.OUTPUT_LOG0) {
+                LogFiles logfile = LogFiles.getInstance();
+                logfile.println(nodes.get(i).toString(),1);
+                
             }
         }
-        if (LogFile.OUTPUT_LOG0)
-            logfile.print("\n===========\n===========");
+        if (LogFiles.OUTPUT_LOG0)
+        {
+            LogFiles logfile = LogFiles.getInstance();
+            logfile.print("\n===========\n===========",1);
+        }
         
         //Sort D in non-increasing order of generality
         nodes.sortNonIncreasingGenerality();
 
-        if (LogFile.OUTPUT_LOG0)
-            logfile.print("\nThe set of rules after sorting...\n===========\n===========\n");
+        if (LogFiles.OUTPUT_LOG0)
+        {
+            LogFiles logfile = LogFiles.getInstance();
+            logfile.print("\nThe set of rules after sorting...\n===========\n===========\n",1);
+        }
         for (int i = 0; i < nodes.size(); i++) {
-            if (LogFile.OUTPUT_LOG0) {
-                logfile.print(nodes.get(i).toString());
-                logfile.print("\n");
+            if (LogFiles.OUTPUT_LOG0) {
+                LogFiles logfile = LogFiles.getInstance();
+                logfile.println(nodes.get(i).toString(),1);
+                
             }
         }
-        if (LogFile.OUTPUT_LOG0)
-            logfile.print("\n===========\n===========");
+        if (LogFiles.OUTPUT_LOG0)
+        {
+            LogFiles logfile = LogFiles.getInstance();
+            logfile.print("\n===========\n===========",1);
+        }
         
         NodeList S = new NodeList();
         
@@ -862,11 +877,17 @@ public abstract class RuleLearner {
                 RuleNode d = nodes.get(i);
                 if (subsumes(s,d))  {
                     float gStat = Gstatistic(s,d);
-                    if (LogFile.OUTPUT_LOG0)
-                        logfile.print("\n Trying to filter " + d.toString()+ " generalised by " + s.toString() + " GStat: " + gStat);
+                    if (LogFiles.OUTPUT_LOG0)
+                    {
+                        LogFiles logfile = LogFiles.getInstance();
+                        logfile.print("\n Trying to filter " + d.toString()+ " generalised by " + s.toString() + " GStat: " + gStat,1);
+                    }
                     if (Gstatistic(s, d) < g) {
-                        if (LogFile.OUTPUT_LOG0)
-                            logfile.print("\n filtered " + d.toString()+ " generalised by " + s.toString());
+                        if (LogFiles.OUTPUT_LOG0)
+                        {
+                            LogFiles logfile = LogFiles.getInstance();
+                            logfile.print("\n filtered " + d.toString()+ " generalised by " + s.toString(),1);
+                        }
                         nodes.remove(i);
                         i--;
                     }
@@ -877,13 +898,12 @@ public abstract class RuleLearner {
         Date finishFilter = new Date();
         long elapsedTime = finishFilter.getTime() - startTime;
 
-        Singleton logfile2 = Singleton.getInstance();
-        logfile1.print("\n ACTUAL FILTER IN PROCESS (not add missing): " + elapsedTime + " MILLISECONDS.");
+        LogFiles logfile2 = LogFiles.getInstance();
+        logfile2.print("\n ACTUAL FILTER IN PROCESS (not add missing): " + elapsedTime + " MILLISECONDS.",2);
         System.out.print("\n ACTUAL FILTER PROCESS (not add missing): " + elapsedTime + " MILLISECONDS.");
          
 
-        if (LogFile.OUTPUT_LOG0)
-            Singleton logfile = Singleton.getInstance();
+        
         //The filtering of rules causes some to be removed for one successor fluent but not another
         //This means we don't get rules which add up to one.
         //Next step is to create all succesor values for each precursor and fluent
@@ -895,13 +915,16 @@ public abstract class RuleLearner {
         
         //Now remove rules which are general but completely covered by more specific
         //rules
-        if (LogFile.OUTPUT_LOG0)
-            logfile.print("\n WARNING: NOT REMOVING GENERAL RULES COVERED BY MORE SPECIFIC");
+        if (LogFiles.OUTPUT_LOG0)
+                {
+            LogFiles logfile = LogFiles.getInstance();
+            logfile.print("\n WARNING: NOT REMOVING GENERAL RULES COVERED BY MORE SPECIFIC",1);
+                }
         
         //There was something clever here about adding missing rules first so we didn't
         //filter leaving the odd rule by the wayside.
         //removeGeneralRulesCoveredBySpecific(S);
-        if (LogFile.OUTPUT_LOG0)
+        if (LogFiles.OUTPUT_LOG0)
              
         //There's another step here to remove non-significant stuff
         generateRuleSets(S);
@@ -917,25 +940,28 @@ public abstract class RuleLearner {
     protected boolean filterSpecific(RuleNode node, NodeList nodes, float g) {   
       
           
-        if (LogFile.OUTPUT_LOG0)
-            Singleton logfile = Singleton.getInstance();
+        
         for (int i = 0; i < nodes.size(); i++) {
             RuleNode s = nodes.get(i);
             if (subsumes(s, node))  {
                 float gStat = Gstatistic(s, node);
-                if (LogFile.OUTPUT_LOG0)
-                    logfile.print("\n Trying to filter " + node.toString()+ " generalised by " + s.toString() + " " + gStat);
+                if (LogFiles.OUTPUT_LOG0)
+                {
+                    LogFiles logfile = LogFiles.getInstance();
+                    logfile.print("\n Trying to filter " + node.toString()+ " generalised by " + s.toString() + " " + gStat,1);
+                }
                 
                 if (Gstatistic(s, node) < g) {
-                    if (LogFile.OUTPUT_LOG0) {
-                        logfile.print("\n Can filter " + node.toString()+ " generalised by " + s.toString());
+                    if (LogFiles.OUTPUT_LOG0) {
+                        LogFiles logfile = LogFiles.getInstance();
+                        logfile.print("\n Can filter " + node.toString()+ " generalised by " + s.toString(),1);
                          
                     }
                     return true;
                 }
             }
         }
-        if (LogFile.OUTPUT_LOG0)
+        
              
         return false;
     }

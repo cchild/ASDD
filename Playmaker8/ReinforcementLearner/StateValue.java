@@ -38,7 +38,7 @@ public class StateValue extends Object implements Serializable {
     
     public StateValue(Percep percep) {
         this.percep = (Percep)percep.clone();
-        String string = percep.getString();
+        String string = percep.toString();
         if (string.substring(1, 6).equals("ERROR")) {
             boolean stop = true;
         }
@@ -108,6 +108,6 @@ public class StateValue extends Object implements Serializable {
     public String toString() {
         DecimalFormat df = new DecimalFormat("#.#####");
 
-        return ("\n StateValue: " + percep.getString() + " value: " + df.format(value) + " reward: "+ reward);
+        return ("\n StateValue: " + percep.toString() + " value: " + df.format(value) + " reward: "+ reward);
     }
 }

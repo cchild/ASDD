@@ -100,7 +100,7 @@ public class SimModel{
             for (int i =0; i < actionStateRecords.size(); i++){
                 for (int j = 0; j < (getActionState(i).getAfterPercepStore()).getSize(); j++){
                     out.println();
-                    out.print("\"" + (getActionState(i).getPercepBefore()).getString() + "\"");
+                    out.print("\"" + (getActionState(i).getPercepBefore()).toString() + "\"");
                     out.print(" \" " + (getActionState(i).getAction()).toString() + "\"");
                     ((getActionState(i).getAfterPercepStore()).getAfterPercepRecord(j)).printRec(out);
                     out.print(" \"" + getActionState(i).getUtility() + "\"");

@@ -44,10 +44,10 @@ public abstract class RuleLearner {
 
        // if (percepRecord.size() > 20000) { //This isn't set yet so will not work
             if (FINAL_G <= 2.706f)
-                 System.out.print("\n*****STOP******STGOP\nFINAL_G SET FOR < 20k EVIDENCE at 2.706");
+                 System.out.print("\n*****STOP******STOP\nFINAL_G SET FOR < 20k EVIDENCE at 2.706");
             else
                if (FINAL_G > 2.706f)
-                   System.out.print("\n*****STOP******STGOP\nFINAL_G SET FOR > 20k EVIDENCE at > 2.706");
+                   System.out.print("\n*****STOP******STOP\nFINAL_G SET FOR > 20k EVIDENCE at > 2.706");
         //}
     }
     

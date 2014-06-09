@@ -74,7 +74,9 @@ public abstract class Percep extends Object implements Cloneable, Serializable {
     }
 
     /*Return a string of tokens representiing the contents of the perception*/
-    public abstract String getString();
+    
+    
+    public abstract String translation();
     
     /*return the number of fluents this percep contains*/
     public abstract int getNumFluents();

@@ -108,7 +108,7 @@ public class PaintAgentPercep extends Percep implements Cloneable, Serializable 
     }
     
     /*return a tokenised version of the contents of the percep as a string*/
-    public String getString() {
+    public String toString() {
         String percepString = "[";
         for (int i = 0; i < SIZE; i++) {
             percepString += ((Fluent)getFluent(i)).toString();
@@ -120,9 +120,19 @@ public class PaintAgentPercep extends Percep implements Cloneable, Serializable 
         return percepString;
     }
     
-    public String toString() {
-        return getString();
+    public String translation() {
+        String percepString = "";
+        for (int i = 0; i < SIZE; i++) {
+            percepString += ((Fluent)getFluent(i)).toString();
+            percepString += "";
+        }
+        
+        percepString += "";
+        
+        return percepString;
     }
+    
+    
     
     public void setBlockPainted(boolean bp) {
         PaintPaintedFluent ppf = (PaintPaintedFluent)getFluent(BLOCK_PAINTED);

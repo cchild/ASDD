@@ -49,7 +49,7 @@ public class StateActionValue extends Object implements Serializable {
     public StateActionValue(Percep percep, Action action) {
         this.percep = (Percep)percep.clone();
         this.action = (Action)action.clone();
-        String string = percep.getString();
+        String string = percep.toString();
         if (string.substring(1, 6).equals("ERROR")) {
             boolean stop = true;
         }
@@ -134,6 +134,6 @@ public class StateActionValue extends Object implements Serializable {
     }
     
     public String toString() {
-        return ("\n StateActionValue: " + ((Percep)percep).getString() + " " + ((Action)action).toString() + " value: " + value + " reward: "+ reward);
+        return ("\n StateActionValue: " + ((Percep)percep).toString() + " " + ((Action)action).toString() + " value: " + value + " reward: "+ reward);
     }
 }

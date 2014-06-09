@@ -111,7 +111,7 @@ public class RuleStateGenerator extends StateGenerator {
 
             //Print out the states before we filter
             for (int i = 0; i < statesAndProbs.size(); i++) {
-                logfile.print(((StateAndProb)statesAndProbs.get(i)).getPercep().getString(),1);
+                logfile.print(((StateAndProb)statesAndProbs.get(i)).getPercep().toString(),1);
                 logfile.println(" " + ((StateAndProb)statesAndProbs.get(i)).getProbability(),1);
                 
             }
@@ -132,7 +132,7 @@ public class RuleStateGenerator extends StateGenerator {
             //Print out the states after we filter
             for (int i = 0; i < statesAndProbs.size(); i++) {
 
-                logfile.print(((StateAndProb)statesAndProbs.get(i)).getPercep().getString(),1);
+                logfile.print(((StateAndProb)statesAndProbs.get(i)).getPercep().toString(),1);
                 logfile.println(" " + ((StateAndProb)statesAndProbs.get(i)).getProbability(),1);
                 
             }
@@ -149,7 +149,7 @@ public class RuleStateGenerator extends StateGenerator {
             double totalProb = 0.0f;
             for (int i = 0; i < statesAndProbs.size(); i++) {
 
-                logfile.print(((StateAndProb)statesAndProbs.get(i)).getPercep().getString(),1);
+                logfile.print(((StateAndProb)statesAndProbs.get(i)).getPercep().toString(),1);
                 logfile.println(" " + ((StateAndProb)statesAndProbs.get(i)).getProbability(),1);
                 totalProb += ((StateAndProb)statesAndProbs.get(i)).getProbability();
                 

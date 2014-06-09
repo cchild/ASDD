@@ -27,14 +27,14 @@ public class ClauseLearnerASDD extends ClauseLearner {
 
         if (percepRecord.size() > 20000) {
             if (FINAL_G <= 2.706f)
-                 System.out.print("\n*****STOP******STGOP\nFINAL_G SET FOR < 20k EVIDENCE at 2.706");
+                 System.out.print("\n*****STOP******STOP\nFINAL_G SET FOR < 20k EVIDENCE at 2.706");
              if (APRIORI_G <= 0.445f)
-                System.out.print("\n*****STOP******STGOP\nAPRIORI SET FOR < 20k EVIDENCE at 0.445");
+                System.out.print("\n*****STOP******STOP\nAPRIORI SET FOR < 20k EVIDENCE at 0.445");
         } else {
             if (FINAL_G > 2.706f)
-                 System.out.print("\n*****STOP******STGOP\nFINAL_G SET FOR > 20k EVIDENCE at > 2.706");
+                 System.out.print("\n*****STOP******STOP\nFINAL_G SET FOR > 20k EVIDENCE at > 2.706");
             if (APRIORI_G > 0.445f)
-                System.out.print("\n*****STOP******STGOP\nAPRIORI SET FOR > 20k EVIDENCE at > 0.445");
+                System.out.print("\n*****STOP******STOP\nAPRIORI SET FOR > 20k EVIDENCE at > 0.445");
         }
 
 

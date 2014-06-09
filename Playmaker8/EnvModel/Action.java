@@ -83,6 +83,8 @@ public abstract class Action extends RuleObject implements Cloneable, Serializab
     
     /*returns a tokenised representation of the action as a string*/
     public abstract String toString();
+    
+    public abstract String translation();
     /*returns true if this element is currently set to the wildcard state*/
     abstract public boolean isWildcard();
     

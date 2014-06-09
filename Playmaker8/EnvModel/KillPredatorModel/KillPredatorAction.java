@@ -166,6 +166,68 @@ public class KillPredatorAction extends Action implements Cloneable, Serializabl
         return actionString;
     }
  
+    
+    public String translation() {
+        String actionString = "";
+        
+        if (action == WILDCARD)
+            return "*";
+        
+        switch (action) {
+            case NOOP: {
+                actionString += "NOOP";
+                break;
+            }
+            case MOVE: {
+                actionString += "";
+                break;
+            }
+            case KILL: {
+                actionString += "KILL";
+                break;
+            }
+            default: {
+                actionString += "ERROR";
+                break;
+            }
+        }
+        
+        if (action == MOVE) {
+            actionString += "";
+
+            switch (moveDirection) {
+                case NORTH: {
+                    actionString += "N";
+                    break;
+                }
+                case EAST: {
+                    actionString += "E";
+                    break;
+                }
+                case SOUTH: {
+                    actionString += "S";
+                    break;
+                }
+                case WEST: {
+                    actionString += "W";
+                    break;
+                }
+                case NOTSET: {
+                    actionString += "NOTSET";
+                    break;
+                }
+                default: {
+                    actionString += "ERROR";
+                    break;
+                }
+            }
+        }
+        
+        actionString += "";
+    
+        return actionString;
+    }
+    
     public boolean isWildcard() {
         if (action == WILDCARD)
             return true;

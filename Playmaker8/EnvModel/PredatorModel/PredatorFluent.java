@@ -74,6 +74,27 @@ public class PredatorFluent extends Fluent implements Cloneable, Serializable {
         return "ERROR";
     }
     
+    
+    public String translation() {
+        
+        if (getValue() == getNumValues())
+            return "*"; //don't care symbol
+        else {
+            switch (getValue()){
+                case EMPTY: {
+                    return "E"; 
+                }
+                case AGENT_BODY: {
+                    return "A";
+                }
+                case WALL: {
+                    return "W";
+                }
+            }
+        }
+        return "ERROR";
+    }
+    
     public void convertFromClause(Clause clause) {
         Term term = clause.getPredicate(1);
         if (term.stringIsEqual("Obj(A)"))

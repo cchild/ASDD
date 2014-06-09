@@ -58,7 +58,7 @@ public class AfterPercepRecord implements Cloneable{
     }
 
     public void printRec(PrintWriter out){
-        out.print("\"" +  getPercepAfter().getString() + "\"");
+        out.print("\"" +  getPercepAfter().toString() + "\"");
         out.print("\"" +  getFrequency() + "\"");
      
     }

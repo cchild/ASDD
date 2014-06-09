@@ -85,7 +85,7 @@ public class PredatorAgentPercep extends Percep implements Cloneable, Serializab
     }
     
     /*return a tokenised version of the contents of the percep as a string*/
-    public String getString() {
+    public String toString() {
         String percepString = "[";
         for (int i = 0; i < SIZE; i++) {
             percepString += ((PredatorFluent)getFluent(i)).toString();
@@ -97,9 +97,20 @@ public class PredatorAgentPercep extends Percep implements Cloneable, Serializab
         return percepString;
     }
     
-    public String toString() {
-        return getString();
+    
+    public String translation() {
+        String percepString = "";
+        for (int i = 0; i < SIZE; i++) {
+            percepString += ((PredatorFluent)getFluent(i)).translation();
+            percepString += "";
+        }
+        
+        percepString += "";
+        
+        return percepString;
     }
+    
+    
     
     public boolean isOntopOfAgent() {
         return ((PredatorFluent)getFluent(BELOW)).isAgentBody();

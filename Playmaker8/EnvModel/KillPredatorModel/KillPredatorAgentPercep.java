@@ -98,7 +98,7 @@ public class KillPredatorAgentPercep extends Percep implements Cloneable, Serial
     }
     
     /*return a tokenised version of the contents of the percep as a string*/
-    public String getString() {
+    public String toString() {
         String percepString = "[";
         for (int i = 0; i < SIZE; i++) {
             percepString += getFluent(i).toString();
@@ -110,9 +110,20 @@ public class KillPredatorAgentPercep extends Percep implements Cloneable, Serial
         return percepString;
     }
     
-    public String toString() {
-        return getString();
+    
+    public String translation() {
+        String percepString = "";
+        for (int i = 0; i < SIZE; i++) {
+            percepString += ((KillPredatorFluent)getFluent(i)).translation();
+            percepString += "";
+        }
+        
+        percepString += "";
+        
+        return percepString;
     }
+    
+    
     
     public boolean isOntopOfAgent() {
         return ((KillPredatorFluent)getFluent(BELOW)).isAgentBody();

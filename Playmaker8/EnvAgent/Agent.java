@@ -827,8 +827,8 @@ public abstract class Agent extends Object {
                 Action action = stateActions.getAction(actionLoop);
                      
                 LogFiles logfile = LogFiles.getInstance();
-                logfile.print("\n Initial test percep act is:" + percep.toString() + "Action: " + action.toString(),1);
-                 
+                logfile.println("Initial test percep act is:" + percep.toString() + "Action: " + action.toString(),1);
+                logfile.println(percep.translation()+ action.translation(),4);
                 if ((learnedRulesMSDD != null) || (learnedRulesApriori != null)) {
                    
                    logfile.print("\n STATES GENERATED FROM 200000 STATE ACTION MAP: \n",1);
@@ -862,7 +862,7 @@ public abstract class Agent extends Object {
                     logfile.print("\n State Errors initial test percep act is:" + percep.toString() + "Action: " + action.toString(),1);
                     logfile.print("\n Correct following states are:\n",1);
                     for (int i = 0; i < generatedStatesLots.size(); i++) {
-                       logfile.print(((StateAndProb)generatedStatesLots.get(i)).getPercep().getString(),1);
+                       logfile.print(((StateAndProb)generatedStatesLots.get(i)).getPercep().toString(),1);
                        logfile.println(" " + ((StateAndProb)generatedStatesLots.get(i)).getProbability(),1);
                        
                     }

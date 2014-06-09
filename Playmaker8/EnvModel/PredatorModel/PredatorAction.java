@@ -51,7 +51,7 @@ public class PredatorAction extends Action implements Cloneable, Serializable {
         moveDirection = s.readInt();
     }
     
-    /*return the int refernece of the current action*/
+    /*return the int reference of the current action*/
     public int getAction() {
         return action;
     }
@@ -158,6 +158,65 @@ public class PredatorAction extends Action implements Cloneable, Serializable {
         return actionString;
     }
  
+    
+    public String translation() {
+        String actionString = "";
+        
+        if (action == WILDCARD)
+            return "*";
+        
+        switch (action) {
+            case NOOP: {
+                actionString += "NOOP";
+                break;
+            }
+            case MOVE: {
+                actionString += "";
+                break;
+            }
+            default: {
+                actionString += "ERROR";
+                break;
+            }
+        }
+        
+        actionString += "";
+        
+        switch (moveDirection) {
+            case NORTH: {
+                actionString += "N";
+                break;
+            }
+            case EAST: {
+                actionString += "E";
+                break;
+            }
+            case SOUTH: {
+                actionString += "S";
+                break;
+            }
+            case WEST: {
+                actionString += "W";
+                break;
+            }
+            case NOTSET: {
+                actionString += "NOTSET";
+                break;
+            }
+            default: {
+                actionString += "ERROR";
+                break;
+            }
+        }
+        
+        actionString += "";
+    
+        return actionString;
+    }
+    
+    
+    
+    
     public boolean isWildcard() {
         if (action == WILDCARD)
             return true;
@@ -194,6 +253,8 @@ public class PredatorAction extends Action implements Cloneable, Serializable {
             int error = 1;
         }
     }
+    
+    
     
     public boolean isInvalid() {
         if (action > WILDCARD)

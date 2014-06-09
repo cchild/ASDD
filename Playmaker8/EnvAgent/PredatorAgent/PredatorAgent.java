@@ -46,8 +46,8 @@ public class PredatorAgent extends Agent {
         USE_REINFORCEMENT_POLICY = false;
         USE_BELLMAN = true;
         USE_STATE_ACTION_LOTS = false;
-        USE_CLAUSE_VALUES = false;
-        USE_CLAUSE_APRIORI_VALUES = true;
+        USE_CLAUSE_VALUES = true;
+        USE_CLAUSE_APRIORI_VALUES = false;
         USE_RULE_APRIORI_VALUES = false;
 
           //Note: VALUE MAPS ARE GENERATED IN_LINE WHEN THE REINFORCEMENT POLICY IS USED
@@ -84,8 +84,8 @@ public class PredatorAgent extends Agent {
         USE_SAVED_APRIORI_CLAUSES = USE_REINFORCEMENT_POLICY;
 
         LEARN_RULES_MSDD = false;
-        LEARN_RULES_APRIORI = true;
-        LEARN_CLAUSES_ASDD = false;
+        LEARN_RULES_APRIORI = false;
+        LEARN_CLAUSES_ASDD = true;
         //set USE_SET_BASED_APRIORI_COUNTING in ClauseLearnerASDD
 
            String aprioriClaueseFileExt = "";

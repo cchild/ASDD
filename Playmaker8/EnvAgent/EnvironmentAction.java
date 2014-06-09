@@ -32,4 +32,7 @@ public abstract class EnvironmentAction extends Action {
         return "";
     }
     
+    public String translation() {
+        return "";
+    }
 }

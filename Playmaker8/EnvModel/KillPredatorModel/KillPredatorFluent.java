@@ -83,6 +83,26 @@ public class KillPredatorFluent extends Fluent implements Cloneable, Serializabl
         return "ERROR";
     }
     
+    public String translation() {
+        
+        if (getValue() == getNumValues())
+            return "*"; //don't care symbol
+        else {
+            switch (getValue()){
+                case EMPTY: {
+                    return "E"; 
+                }
+                case AGENT_BODY: {
+                    return "A";
+                }
+                case WALL: {
+                    return "W";
+                }
+            }
+        }
+        return "ERROR";
+    }
+    
     @Override
     public void convertFromClause(Clause clause) {
         

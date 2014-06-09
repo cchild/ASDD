@@ -22,10 +22,10 @@ public class RuleLearnerApriori extends RuleLearner {
        
         if (percepRecord.size() > 20000) {
             if (APRIORI_G <= 0.445f)
-                System.out.print("\n*****STOP******STGOP\nAPRIORI SET FOR < 20k EVIDENCE at 0.445");
+                System.out.print("\n*****STOP******STOP\nAPRIORI SET FOR < 20k EVIDENCE at 0.445");
         } else {
             if (APRIORI_G > 0.445f)
-                System.out.print("\n*****STOP******STGOP\nAPRIORI SET FOR > 20k EVIDENCE at > 0.445");
+                System.out.print("\n*****STOP******STOP\nAPRIORI SET FOR > 20k EVIDENCE at > 0.445");
         }
     }
     

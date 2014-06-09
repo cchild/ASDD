@@ -121,6 +121,45 @@ public class PaintAction extends Action implements Cloneable, Serializable {
     
         return actionString;
     }
+    
+    
+    public String translation() {
+        String actionString = "";
+        
+        if (action == WILDCARD)
+            return "*";
+        
+        switch (action) {
+            case NOOP: {
+                actionString += "NOOP";
+                break;
+            }
+            case DRY: {
+                actionString += "DRY";
+                break;
+            }
+            case NEW: {  
+                actionString += "NEW";
+                break;
+            }
+            case PAINT: {  
+                actionString += "PAINT";
+                break;
+            }
+            case PICKUP: {  
+                actionString += "PICKUP";
+                break;
+            }
+            default: {
+                actionString += "ERROR";
+                break;
+            }
+        }
+        
+        actionString += "";
+    
+        return actionString;
+    }
  
     public boolean isWildcard() {
         if (action == WILDCARD)

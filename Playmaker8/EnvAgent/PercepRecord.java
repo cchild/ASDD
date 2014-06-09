@@ -60,7 +60,7 @@ public class PercepRecord extends Object implements Serializable {
     
     public String getPercepString(int index) {
         Percep percep = getPercep(index);
-        return percep.getString();
+        return percep.toString();
     }
         
     public int size() {

@@ -20,7 +20,7 @@ public class KillPredatorTester
         int stepsOntop = 0;
         int kills = 0;
         int antiKill = 0;
-        int NUM_MOVES = 5000; //will be doubled for turn taking
+        int NUM_MOVES = 100; //will be doubled for turn taking
         double totalReward = 0;
         for (int i = 0; i < NUM_MOVES * 2; i++){
             killPredatorEnvironment.updateEnvironment();

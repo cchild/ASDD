@@ -43,14 +43,14 @@ public class KillPredatorAgent extends Agent {
         this.role = role;
         
         USE_SAVED_PERCEP_ACTION_RECORD = false;
-        USE_REINFORCEMENT_POLICY = false;
-        USE_BELLMAN = false;
+        USE_REINFORCEMENT_POLICY = true;
+        USE_BELLMAN = true;
         USE_STATE_ACTION_LOTS = false;
-        USE_CLAUSE_VALUES = false;
-        USE_CLAUSE_APRIORI_VALUES = false;
-        USE_RULE_APRIORI_VALUES = true;
+        USE_CLAUSE_VALUES = true;
+        USE_CLAUSE_APRIORI_VALUES = true;
+        USE_RULE_APRIORI_VALUES = false;
 
-          //Note: VALUE MAPS ARE GENERATED IN_LINE WHEN THE REINFORCEMENT POLICY IS USED
+        //Note: VALUE MAPS ARE GENERATED IN_LINE WHEN THE REINFORCEMENT POLICY IS USED
         //Note: LEARN_CLAUSES_ASDD always needs to be true to access any other RL relarning
         //Note: Set USE_CLAUSE_APRIORI_VALUES to TRUE to learn value - should be set tro
         //true when leaning if needed because it is not done in-line
@@ -83,9 +83,9 @@ public class KillPredatorAgent extends Agent {
         USE_SAVED_STATE_ACTION_MAP = USE_REINFORCEMENT_POLICY;
         USE_SAVED_APRIORI_CLAUSES = USE_REINFORCEMENT_POLICY;
 
-        LEARN_RULES_MSDD = true;
-        LEARN_RULES_APRIORI = true;
-        LEARN_CLAUSES_ASDD = false;
+        LEARN_RULES_MSDD = false;
+        LEARN_RULES_APRIORI = false;
+        LEARN_CLAUSES_ASDD = true;
         //set USE_SET_BASED_APRIORI_COUNTING in ClauseLearnerASDD
 
         String aprioriClaueseFileExt = "";

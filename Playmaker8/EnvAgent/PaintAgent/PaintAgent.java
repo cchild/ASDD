@@ -62,7 +62,7 @@ public class PaintAgent extends Agent {
             MSDD_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedPaintMSDDRules.sav";
             APRIORI_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedPaintAprioriRules.sav";
             STATE_ACTION_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\paintStateActionMap.sav";
-            STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\paintStateActionMapBig.sav";
+            STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\paintStateActionMap.sav";
             APRIORI_CLAUSES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedPaintAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
         }
         else
@@ -75,7 +75,7 @@ public class PaintAgent extends Agent {
             MSDD_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedCleanPaintMSDDRules.sav";   
             APRIORI_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedCleanPaintAprioriRules.sav";  
             STATE_ACTION_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\cleanPaintStateActionMap.sav";
-            STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\cleanPaintStateActionMapBig.sav";
+            STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\cleanPaintStateActionMap.sav";
             APRIORI_CLAUSES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedCleanPaintAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
         }
 

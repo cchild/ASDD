@@ -170,6 +170,8 @@ public abstract class Agent extends Object {
             clauseLearnerASDD = new ClauseLearnerASDD((Percep)thePercep.clone(), (Action)theAction.clone(), percepRecord, actionRecord);
     
         action = (Action)theAction.clone();
+        
+        
     }
     
     public boolean getUseSavedPercepActionRecord() {

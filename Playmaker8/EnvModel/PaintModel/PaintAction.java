@@ -235,4 +235,8 @@ public class PaintAction extends Action implements Cloneable, Serializable {
      public void randomDumbAction() {
          randomAction();
      }
+     
+     public void readFromString(String str) {
+         
+     }
 }

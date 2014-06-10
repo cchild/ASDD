@@ -114,7 +114,7 @@ public class PredatorAgent extends Agent {
         MSDD_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedMSDDRules.sav";        
         APRIORI_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedAprioriRules.sav";        
         STATE_ACTION_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\stateActionMap.sav";        
-        STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\stateActionMapBig.sav";
+        STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\stateActionMap.sav";
         APRIORI_CLAUSES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
   
         initialise(new PredatorAgentPercep(), new PredatorAction());

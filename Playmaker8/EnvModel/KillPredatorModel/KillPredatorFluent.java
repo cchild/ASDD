@@ -20,7 +20,7 @@ public class KillPredatorFluent extends Fluent implements Cloneable, Serializabl
 
    /*possible things which can be precieved*/
     public static final int
-	EMPTY = 0, AGENT_BODY = 1, WALL = 2;
+	EMPTY = 0, AGENT_BODY = 1, WALL = 2, NO_RE = 3;
     /** Creates new Fluent */
     
     static final String OBJ_A = "Obj(A)";
@@ -78,6 +78,8 @@ public class KillPredatorFluent extends Fluent implements Cloneable, Serializabl
                 case WALL: {
                     return "WALL";
                 }
+                
+                
             }
         }
         return "ERROR";
@@ -98,6 +100,11 @@ public class KillPredatorFluent extends Fluent implements Cloneable, Serializabl
                 case WALL: {
                     return "W";
                 }
+                case NO_RE: {
+                    return "OOOO";
+                }
+                
+                
             }
         }
         return "ERROR";

@@ -4,6 +4,7 @@ package EnvModel.KillPredatorModel;
 
 
 import EnvAgent.KillPredatorAgent.*;
+import EnvModel.Action;
 import Logging.*;
 
 public class KillPredatorTester
@@ -20,7 +21,7 @@ public class KillPredatorTester
         int stepsOntop = 0;
         int kills = 0;
         int antiKill = 0;
-        int NUM_MOVES = 100; //will be doubled for turn taking
+        int NUM_MOVES = 20; //will be doubled for turn taking
         double totalReward = 0;
         for (int i = 0; i < NUM_MOVES * 2; i++){
             killPredatorEnvironment.updateEnvironment();
@@ -68,6 +69,37 @@ public class KillPredatorTester
         logfile2.print("\n" + "Total reward: " + totalReward + "\n",2);
         
         killPredatorEnvironment.testAgentRecords();
+        
+        //// TARGET STRING /////
+        
+        String str = "WEEAE+E";
+        
+        
+        
+        ////////////   PERCEP PART   ////////////       
+        
+        System.out.println("\nPrecep before function : " + pred.getPercep().toString());
+        pred.getPercep().readFromString(str);
+        //pred.getPercep().setPercep(0, 0);
+        
+        System.out.println("Precep after function : " + pred.getPercep().toString());
+        //System.out.println(pred.getPercep().getFluent(5).getNumValues());
+        
+        
+        
+        ///////////    ACTION PART  ///////////
+        
+        Action action = pred.getActionRecord().getAction(0);
+  
+        System.out.println("\nAction before function : " + action.toString());
+        
+        
+        //action.setByValue(9);
+        action.readFromString(str);
+        
+        System.out.println("Action after function : " + action.toString());
+        
+        logfile2.closeall();
     }
 }
       

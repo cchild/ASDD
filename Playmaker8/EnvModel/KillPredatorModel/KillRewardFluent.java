@@ -16,7 +16,7 @@ import java.io.*;
  * @author  eu779
  * @version 
  */
-public class KillRewardFluent extends Fluent implements Cloneable, Serializable {
+public class KillRewardFluent extends KillPredatorFluent implements Cloneable, Serializable {
 
    /*possible things which can be precieved*/
     public static final int
@@ -72,6 +72,26 @@ public class KillRewardFluent extends Fluent implements Cloneable, Serializable 
                 }
                 case NEGATIVE_REWARD: {
                     return "NE_RE";
+                }
+            }
+        }
+        return "ERROR";
+    }
+    
+    public String translation() {
+        
+        if (getValue() == getNumValues())
+            return "*"; //don't care symbol
+        else {
+            switch (getValue()){
+                case NO_REWARD: {
+                    return "0"; 
+                }
+                case POSITIVE_REWARD: {
+                    return "+";
+                }
+                case NEGATIVE_REWARD: {
+                    return "-";
                 }
             }
         }

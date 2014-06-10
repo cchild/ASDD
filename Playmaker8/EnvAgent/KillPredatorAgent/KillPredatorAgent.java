@@ -43,7 +43,7 @@ public class KillPredatorAgent extends Agent {
         this.role = role;
         
         USE_SAVED_PERCEP_ACTION_RECORD = false;
-        USE_REINFORCEMENT_POLICY = true;
+        USE_REINFORCEMENT_POLICY = false;
         USE_BELLMAN = true;
         USE_STATE_ACTION_LOTS = false;
         USE_CLAUSE_VALUES = true;
@@ -114,7 +114,7 @@ public class KillPredatorAgent extends Agent {
         MSDD_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killLearnedMSDDRules.sav";        
         APRIORI_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killLearnedAprioriRules.sav";        
         STATE_ACTION_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killStateActionMap.sav";        
-        STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\killStateActionMapBig.sav";
+        STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\killStateActionMap.sav";
         APRIORI_CLAUSES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killLearnedAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
   
         initialise(new KillPredatorAgentPercep(), new KillPredatorAction());

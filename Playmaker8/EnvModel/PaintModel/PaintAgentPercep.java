@@ -315,4 +315,26 @@ public class PaintAgentPercep extends Percep implements Cloneable, Serializable 
         return pap;
      }
     
+     
+     @Override
+    public void readFromString(String str) {
+    
+    System.out.println("The target String (" + str + ") is " + str.length() + "chars long");
+    //String out = "";
+    for (int i = 0; i < str.length()-1; i++)
+    {
+//        switch(str.charAt(i)) {
+//            case 'W' : p.setPercep(i, 2);
+//                break;
+//            case 'E' : p.setPercep(i, 0);
+//                break;
+//            case 'A' : p.setPercep(i, 1);
+//                break;
+//            // No relevant case found, ERROR is returned
+//            default : p.setPercep(i, 4);
+//                break;
+//        }
+        System.out.println(str.charAt(i));
+    }
+    }
 }

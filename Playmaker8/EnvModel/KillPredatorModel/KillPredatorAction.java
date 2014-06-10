@@ -26,6 +26,7 @@ public class KillPredatorAction extends Action implements Cloneable, Serializabl
         NOOP =0, MOVE =1, KILL = 2, WILDCARD=3;
     public static final int
         NOTSET = 0, NORTH = 1, EAST = 2, SOUTH = 3, WEST = 4, AFTER_DIRECTIONS = 5;
+    
     /** Creates new State */
     private int action;
     private int moveDirection;
@@ -175,7 +176,7 @@ public class KillPredatorAction extends Action implements Cloneable, Serializabl
         
         switch (action) {
             case NOOP: {
-                actionString += "NOOP";
+                actionString += "O";
                 break;
             }
             case MOVE: {
@@ -183,11 +184,11 @@ public class KillPredatorAction extends Action implements Cloneable, Serializabl
                 break;
             }
             case KILL: {
-                actionString += "KILL";
+                actionString += "K";
                 break;
             }
             default: {
-                actionString += "ERROR";
+                actionString += "X";
                 break;
             }
         }
@@ -213,11 +214,11 @@ public class KillPredatorAction extends Action implements Cloneable, Serializabl
                     break;
                 }
                 case NOTSET: {
-                    actionString += "NOTSET";
+                    actionString += "U";
                     break;
                 }
                 default: {
-                    actionString += "ERROR";
+                    actionString += "X";
                     break;
                 }
             }
@@ -338,5 +339,25 @@ public class KillPredatorAction extends Action implements Cloneable, Serializabl
      
      public void setDefault() {
          setMove(3);
+     }
+     
+     public void readFromString(String str) {
+         //System.out.println(str.charAt(str.length()-1));
+         
+         switch (str.charAt(str.length()-1)) {
+             
+             case 'N' : setByValue(0);
+                 break;
+             case 'E' : setByValue(1);
+                 break;
+             case 'S' : setByValue(2);
+                 break;
+             case 'W' : setByValue(3);
+                 break;
+             case 'K' : setByValue(4);
+                 break;
+             default : setByValue(10); // NOOP
+                 break;
+         }
      }
 }

@@ -104,4 +104,7 @@ public abstract class Percep extends Object implements Cloneable, Serializable {
     abstract public double reward();
     
     abstract public Percep convertFromClauseElements(ClauseElements clauseElements);
+    
+    
+    public abstract void readFromString(String str);
 }

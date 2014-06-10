@@ -263,4 +263,36 @@ public class KillPredatorAgentPercep extends Percep implements Cloneable, Serial
         return pap;
     }
     
+    
+     @Override
+    public void readFromString(String str) {
+    
+    System.out.println("The target String (" + str + ") is " + str.length() + "chars long");
+    //String out = "";
+    for (int i = 0; i < str.length()-1; i++)
+    {
+        switch(str.charAt(i)) {
+            case 'W' : setPercep(i, 2);
+                break;
+            case 'E' : setPercep(i, 0);
+                break;
+            case 'A' : setPercep(i, 1);
+                break;
+        // REWARDS
+        // 1 PO_RE
+        // 0 NO_RE
+        // 2 NE_RE
+            case '=' : setPercep(i, 0);
+                break;
+            case '+' : setPercep(i, 1);
+                break;
+            case '-' : setPercep(i, 2);
+                break;
+            // No relevant case found, ERROR is returned
+            default : setPercep(i, 4);
+                break;
+        }
+        //System.out.println(str.charAt(i));
+    }
+    }
 }

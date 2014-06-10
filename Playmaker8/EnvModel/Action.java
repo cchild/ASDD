@@ -108,4 +108,6 @@ public abstract class Action extends RuleObject implements Cloneable, Serializab
     
     public abstract void setDefault();
     
+    public abstract void readFromString(String str);
+    
 }

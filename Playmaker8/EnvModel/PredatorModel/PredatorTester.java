@@ -5,6 +5,7 @@ package EnvModel.PredatorModel;
 
 import EnvAgent.PredatorAgent.*;
 import EnvAgent.ClauseLearner.*;
+import EnvModel.*;
 
 import Logging.*;
 import java.io.FileWriter;
@@ -74,7 +75,39 @@ public class PredatorTester
         
         
         
+        //System.out.println(str.charAt(0));
         predatorEnvironment.testAgentRecords();
+        
+        
+        
+        //// TARGET STRING /////
+        
+        String str = "WEEAEN";
+        
+        ////////////   PERCEP PART   ////////////
+        
+        System.out.println("\nPrecep before function : " + pred.getPercep().toString());
+        pred.getPercep().readFromString(str);
+        //pred.getPercep().setPercep(0, 0);
+        System.out.println("Precep after function : " + pred.getPercep().toString());
+        
+        System.out.println(pred.getActionRecord().getActionString(0));
+        System.out.println(pred.getActionRecord().getAction(0).getNumValues());
+        //System.out.println(pred.getActionRecord().);
+        
+        
+        
+        ///////////    ACTION PART  ///////////
+        
+        Action action = pred.getActionRecord().getAction(0);
+  
+        System.out.println("\nAction before function : " + action.toString());
+ 
+        action.readFromString(str);
+        
+        System.out.println("Action after function : " + action.toString());
+        
+        
         
         logfile2.closeall();
         

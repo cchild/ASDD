@@ -80,8 +80,8 @@ public class ClauseLearnerASDD extends ClauseLearner {
         elapsedTime = finishFilter.getTime() - startTime;
         
         
-        logfile.print("\nPredASDD FILTER IN: " + elapsedTime + " MILLISECONDS.",1);
-        System.out.print("\nPredASDD FILTER IN: " + elapsedTime + " MILLISECONDS.");   
+        logfile.println("\nPredASDD FILTER IN: " + elapsedTime + " MILLISECONDS.",1);
+        System.out.println("\nPredASDD FILTER IN: " + elapsedTime + " MILLISECONDS.");   
         
         for (int i = 0; i < learnedClauses.size(); i++) {
             //Not sure we should have to do this, but just in case the values are not set for some reason

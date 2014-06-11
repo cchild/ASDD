@@ -68,6 +68,12 @@ public class PaintTester
        
        
        paintEnvironment.testAgentRecords();
+       
+       
+       
+       
+       
+       logfile2.closeall();
     }
 }
       

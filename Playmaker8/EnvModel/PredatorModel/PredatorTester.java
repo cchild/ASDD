@@ -91,8 +91,8 @@ public class PredatorTester
         //pred.getPercep().setPercep(0, 0);
         System.out.println("Precep after function : " + pred.getPercep().toString());
         
-        System.out.println(pred.getActionRecord().getActionString(0));
-        System.out.println(pred.getActionRecord().getAction(0).getNumValues());
+        //System.out.println(pred.getActionRecord().getActionString(0));
+        //System.out.println(pred.getActionRecord().getAction(0).getNumValues());
         //System.out.println(pred.getActionRecord().);
         
         

@@ -8,50 +8,18 @@ import EnvAgent.ClauseLearner.*;
 import EnvModel.*;
 
 import Logging.*;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
 
 
 
-public class PredatorTester
+public class Tester
 {   
   
-    PredatorTester() {
+    Tester() {
         ;
     }
-    
-    
-    public static int getLines () {
-        String filePath = Logging.LogFiles.INPUT_FILE;
-        int lines = 1;
-         try {
-        
-            Scanner scanner=new Scanner(new File(filePath));
-            
-            
-            while (scanner.hasNextLine()) {
-                lines++;
-                scanner.nextLine();
-            }
-            
-            
-            scanner.close();
-            return lines;
-        
- 
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("ERROR OPENING INPUT FILE");
-        }
-         return 0;
-    }
-    
-    
-    
     
     public static void main (String[] args) {
 //        PrintWriter outfile3 = null;
@@ -67,16 +35,12 @@ public class PredatorTester
 //        outfile3 = new PrintWriter (w);
 //        outfile3.print("Hello");
         
-        boolean changeFromInput = true;
+        
         PredatorEnvironment predatorEnvironment = new PredatorEnvironment();
         PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);
         PredatorAgent prey = (PredatorAgent)predatorEnvironment.addPredatorAgent(3,3,PredatorAgent.PREY);
         int stepsOntop = 0;
-        int NUM_MOVES = 30;
-        if (changeFromInput) {
-            NUM_MOVES = getLines();
-        }
-         //will be doubled for turn taking
+        int NUM_MOVES = 10; //will be doubled for turn taking
         double totalReward = 0;
         for (int i = 0; i < NUM_MOVES * 2; i++){
             predatorEnvironment.updateEnvironment();
@@ -112,22 +76,18 @@ public class PredatorTester
         
         
         //System.out.println(str.charAt(0));
-        
-        
-        
-        
-        
+        predatorEnvironment.testAgentRecords();
         
         
         
         //// TARGET STRING /////
         
-        //String str = "WEEAEN";
+        String str = "WEEAEN";
         
         ////////////   PERCEP PART   ////////////
         
         //System.out.println("\nPrecep before function : " + pred.getPercep().toString());
-        //pred.getPercep().readFromString(str);
+        pred.getPercep().readFromString(str);
         //pred.getPercep().setPercep(0, 0);
         //System.out.println("Precep after function : " + pred.getPercep().toString());
         
@@ -139,72 +99,18 @@ public class PredatorTester
         
         ///////////    ACTION PART  ///////////
         
-        //Action action = pred.getActionRecord().getAction(0);
+        Action action = pred.getActionRecord().getAction(0);
   
         //System.out.println("\nAction before function : " + action.toString());
  
-        //action.readFromString(str);
+        action.readFromString(str);
         
         //System.out.println("Action after function : " + action.toString());
         
+        pred.getPercep().readFile(pred);
         
-        if (changeFromInput)
-        {
-        
-            int lines = getLines();
-            int i = 0;
-
-             for (int h = 0; h < pred.getActionRecord().size(); h++) {
-
-            System.out.println("PERCEPS : " + pred.getPercepRecord().getPercep(h));
-            //System.out.println("ACTIONS : " + pred.getActionRecord().getActionString(h));
-
-             }
-
-
-            String filePath = Logging.LogFiles.INPUT_FILE;
-
-             try {
-
-                Scanner scanner=new Scanner(new File(filePath));
-
-                System.out.println();
-                while (scanner.hasNextLine()) {
-
-                    String line = scanner.nextLine();
-                    pred.getPercepRecord().getPercep(i).readFromString(line);
-                    pred.getActionRecord().getAction(i).readFromChar(line.charAt(line.length()-1));
-                    i++;
-                }
-
-                
-                scanner.close();
-
-            }
-            catch (FileNotFoundException e) {
-                System.out.println("ERROR OPENING INPUT FILE");
-            }
-
-
-
-
-              for (int h = 0; h < pred.getActionRecord().size(); h++) {
-
-
-            //System.out.println("MODIFIED ACTIONS : " + pred.getActionRecord().getActionString(h));
-            System.out.println("MODIFIED PERCEPS : " + pred.getPercepRecord().getPercepString(h));
-             }
-              
-              predatorEnvironment.testAgentRecords2(lines);
-        }
-        
-        
-        else {
-        predatorEnvironment.testAgentRecords();
-        }
         logfile2.closeall();
         
         
     }
 }
-      

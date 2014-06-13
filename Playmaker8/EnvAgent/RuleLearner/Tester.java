@@ -8,9 +8,13 @@ package EnvAgent.RuleLearner;
 
 import Token.*;
 import EnvAgent.*;
+import EnvAgent.PredatorAgent.PredatorAgent;
+import EnvModel.PredatorModel.PredatorEnvironment;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import EnvModel.*;
+import StateGenerator.*;
 
 /**
  *
@@ -76,13 +80,22 @@ public class Tester {
         
         
         
-        System.out.println("\n\nCREATING SENSORS FROM FILE\n");
-        readFile(t);
+        //System.out.println("\n\nCREATING SENSORS FROM FILE\n");
+        //readFile(t);
         
+        Sensor s = new Sensor("WEEAEN",t);
         
+        System.out.println(s.getString());
+        
+        PredatorEnvironment predatorEnvironment = new PredatorEnvironment();
+        PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);
+        PredatorAgent prey = (PredatorAgent)predatorEnvironment.addPredatorAgent(3,3,PredatorAgent.PREY);
+        
+        Percep a = pred.getPercep();
+        System.out.println(a);
 
         
-        
+        //Percep b = (StateGenerator)generateNextState(a,pred.getActionRecord().getAction(0));
     }
     
     

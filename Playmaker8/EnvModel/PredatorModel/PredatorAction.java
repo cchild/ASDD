@@ -331,4 +331,23 @@ public class PredatorAction extends Action implements Cloneable, Serializable {
                  break;
          }
      }
+     
+     
+      public void readFromChar(char c) {
+         //System.out.println(str.charAt(str.length()-1));
+         
+         switch (c) {
+             
+             case 'N' : setByValue(6);
+                 break;
+             case 'E' : setByValue(7);
+                 break;
+             case 'S' : setByValue(8);
+                 break;
+             case 'W' : setByValue(9);
+                 break;
+             default : setByValue(10);
+                 break;
+         }
+     }
 }

@@ -3,6 +3,7 @@ package EnvModel;
 import java.io.*;
 import java.util.*;
 import EnvAgent.ClauseLearner.*;
+import EnvAgent.PredatorAgent.PredatorAgent;
 
 /*
  * Percep.java
@@ -107,4 +108,7 @@ public abstract class Percep extends Object implements Cloneable, Serializable {
     
     
     public abstract void readFromString(String str);
+    
+    
+    public abstract int readFile(PredatorAgent pred);
 }

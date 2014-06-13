@@ -54,6 +54,11 @@ public class ActionRecord extends Object implements Serializable {
         return action.toString();
     }
     
+    public int setActionString(int index, Action a) {
+        actions.set(index, a);
+        return 0;
+    }
+    
     public int size() {
         return actions.size();
     }

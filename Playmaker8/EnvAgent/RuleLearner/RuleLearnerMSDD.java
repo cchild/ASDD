@@ -133,7 +133,7 @@ public class RuleLearnerMSDD extends RuleLearner {
             NodeList children = new NodeList();
             expand(expand, children);
             
-            /*This is some debug code to make sure we'return not cyclicly creating rules*/
+            /*This is some debug code to make sure we don't return cyclicly creating rules*/
             if (false) {//check for repeated node
                 for (int i = children.size()-1; i >= 0; i--) {
                     boolean removed = false;
@@ -254,9 +254,9 @@ public class RuleLearnerMSDD extends RuleLearner {
                 }
             }
         }
-        if(LogFiles.OUTPUT_LOG0)
+        
              
-        return;
+        
     }
     
     /*Expand a node generating all it's children*/

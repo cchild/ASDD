@@ -6,6 +6,10 @@
 
 package Token;
 
+
+import java.io.*;
+import java.util.*;
+import EnvAgent.RuleLearner.RuleLearnerMSDD_Sensor;
 /**
  *
  * @author virgile
@@ -22,14 +26,16 @@ public class Token {
 	TEST_TOKEN = 1;
     
     
-    String reference;
+    int reference;
     int position;
+    static TokenMap tokenMap = null;
     
     
-    public Token(String str)
+    public Token(String str, int position, TokenMap t)
     {
-        this.reference = str;
-        this.position = 0;
+        this.tokenMap = t;
+        this.position = position;
+        this.reference = t.getReference(position, str);
     }
     
     
@@ -42,47 +48,24 @@ public class Token {
     
     public String toString () {
         
+        if (reference == -1)
+        {
+            return "*";
+        }
+        Object res = tokenMap.getToken(position).get(reference-1);
+        return String.valueOf(res);
+    }
+    
+    public int getReference () {
+        
         return reference;
     }
     
-    
-    
-    
-
-    
-
-
-public static void main (String[] args) {
+    public int getPosition () {
         
-        
-        //System.out.println("Hello");
-        
-        //Token a = new Token("Test");
-        
-        TokenMap t = new TokenMap();
-        
-        System.out.println(t.TokenTypes.toString());
-        System.out.println("Call First, 0");
-        t.setToken("First", 0);
-        System.out.println(t.TokenTypes.toString());
-        System.out.println("Call Second, 1");
-        t.setToken("Second", 1);
-        System.out.println(t.TokenTypes.toString());
-        String target = "Second";
-        int b = 1;
-        System.out.println("Call " + target + " , " + b);
-        //System.out.println("Searching Second in list at index "+b);
-        t.setToken(target, b);
-        System.out.println(t.TokenTypes.toString());
-        System.out.println("Call Third, 2");
-        t.setToken("Third", 2);
-        
-        //System.out.println(t.TokenTypes.get(0));
-        //System.out.println(t.TokenTypes.get(1));
-        System.out.println("Final TokenMap : " + t.TokenTypes.toString());
-        //System.out.println(t);  returns Token.TokenMap@7f31245a
-        //System.out.println(a.toString());
+        return position;
     }
+    
     
 }    
     

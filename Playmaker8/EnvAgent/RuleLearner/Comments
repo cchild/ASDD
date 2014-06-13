@@ -1,0 +1,58 @@
+TESTER
+
+
+
+//System.out.println("Hello");
+        
+        //Token a = new Token("Test");               
+//        System.out.println(t.TokenTypes.toString());
+//        t.setToken("W", 0);
+//        System.out.println(t.TokenTypes.toString());
+//        t.setToken("E",1);
+//        System.out.println(t.TokenTypes.toString());
+//        System.out.println(t.TokenTypes.toString());
+//        System.out.println("Call W, 2");
+//        t.setToken("W", 2);
+//        System.out.println(t.TokenTypes.toString());
+//        //System.out.println("Call Second, 1");
+//        t.setToken("H", 7);
+//        //System.out.println("try");
+////        t.TokenTypes.get(0).add("Hi");
+////        t.TokenTypes.get(0).add("Bouh");
+//        for (int i = 0; i <= 6; i++)
+//        {
+//            t.setToken("E", i);
+//            t.setToken("W", i);
+//            t.setToken("A", i);
+//        }
+//        t.setToken("B", 3);
+//        t.setToken("H", 3);
+//        t.setToken("W", 3);
+//        t.setToken("H", 5);
+//        
+//        System.out.println();
+//        System.out.println();
+//        System.out.println(t.getToken(3));
+//        
+//        
+//        System.out.println(t.getPosition("Bouh"));
+//        
+//        System.out.println(t.getReference(1, "First"));
+//        
+//        System.out.println("Final TokenMap : " + t.TokenTypes.toString());
+        
+        
+        
+        //System.out.println("////// END OF TOKENMAP PART ////// \n \n");
+        
+        
+        
+        
+//        String str = "WEHAEN";
+//        Sensor sen = new Sensor(str, t);
+//        
+//        System.out.println("SENSOR : " + sen.getString());
+        
+        
+        
+        //System.out.println("////// END OF SENSOR PART ////// \n \n");

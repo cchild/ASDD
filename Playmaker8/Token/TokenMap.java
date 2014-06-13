@@ -15,12 +15,52 @@ import java.util.*;
  */
 public class TokenMap {
     
-    protected ArrayList <ArrayList> TokenTypes;
+    public ArrayList <ArrayList> TokenTypes;
+    public int id;
     
     public TokenMap()
     {
         //String [][] a = {{""}};
+        this.id = 0;
         this.TokenTypes = new ArrayList <ArrayList> ();
+    }
+    
+    
+    public int fromFile () {
+        
+        String filePath = Logging.LogFiles.INPUT_FILE;
+ 
+        try {
+        
+            Scanner scanner=new Scanner(new File(filePath));
+            int i = 0;
+            while (scanner.hasNextLine()) {
+                
+                String line = scanner.nextLine();
+                
+                System.out.println("Adding Line " + i + " (" + line + ")");
+                
+                for (int j = 0; j < (line.length()); j++) {
+                    setToken(String.valueOf(line.charAt(j)),j);
+                }
+                
+
+                
+                System.out.println("TokenMap is : " + this.TokenTypes.toString());
+                //faites ici votre traitement
+                i++;
+            }
+            scanner.close();
+            return 0;
+        
+ 
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("ERROR OPENING INPUT FILE");
+        }
+        
+        return 1;
+        
     }
     
     
@@ -28,55 +68,125 @@ public class TokenMap {
     public int setToken (String str, int position) {
         
         if (this.TokenTypes.isEmpty())
-        {    
-        ArrayList a = new ArrayList();
-        a.add(str);
-        this.TokenTypes.add(a);
-        return 1;
+        {  
+                //System.out.println("Is Empty");
+                
+                for (int j = 0 ; j < position ; j++)
+                {
+                    ArrayList a = new ArrayList();
+                    this.TokenTypes.add(j,a);
+                }
+
+                ArrayList b = new ArrayList();
+                b.add(str);
+                this.TokenTypes.add(position, b);
+                return 0;
         }
         else {
             if (this.TokenTypes.size() < position)
             {
-//                if (!this.TokenTypes.get(position).contains(str))
-//                {
-//                    this.TokenTypes.get(position).add(str);
-//                }
-                System.out.println("Position " + position + " is not reachable, Index max : " + this.TokenTypes.size());
+                //System.out.println("Position " + position + " is not reachable, Index max : " + (this.TokenTypes.size()-1));
+                
+                for (int i = (this.TokenTypes.size()) ; i < position ; i++)
+                {
+                    ArrayList a = new ArrayList();
+                    this.TokenTypes.add(i,a);
+                }
+                
+                ArrayList d = new ArrayList();
+                d.add(str);
+                this.TokenTypes.add(position, d);
                 return 2;
             }
-//            if (this.TokenTypes.get(position-1).contains(str))
-//            {
-//                System.out.println("Hahaha");
-//            }
-//            try { this.TokenTypes.get(position); }
-//            catch (Exception e) 
-//            {
-//                System.out.println("Zoub");
-//            }
+
             if (this.TokenTypes.size() > position)
+            
             {
-            if ((this.TokenTypes.get(position).contains(str)))
-            {
-                System.out.println(str + " found at index " + position + "! Not adding ");
-                return 3;
-            }
-            else {
-                this.TokenTypes.get(position).add(str);
-                return 4;
-            }
+                if ((this.TokenTypes.get(position).contains(str)))
+                {
+                    //System.out.println(str + " found at index " + position + "! Not adding ");
+                    return 3;
+                }
+                else
+                {
+                    this.TokenTypes.get(position).add(str);
+                    return 4;
+                    
+                }
             
             }
-            
-            
-            //System.out.println("Token at index : " + (position-1) + " : " + this.TokenTypes.get(position-1));
-            ArrayList a = new ArrayList();
-            a.add(str);
-            this.TokenTypes.add(position, a );
-            //System.out.println("Size is now : " + this.TokenTypes.size());
+            ArrayList test = new ArrayList();
+            this.TokenTypes.add(position, test);
+            this.TokenTypes.get(position).add(str);
+                       
         }
     return 0;
         
     }
     
     
-}
+     public ArrayList getToken (int position) {
+         
+         return this.TokenTypes.get(position);
+     }
+     
+     
+     public List getPosition (String str)  {
+         if (this.TokenTypes.isEmpty())
+         {
+             List m = new ArrayList();
+             return m;
+         }
+         
+         
+         List s = new ArrayList();
+         
+         for (int i = 0; (i < this.TokenTypes.size()-1); i++)
+         {
+           if (this.TokenTypes.get(i).contains(str))  
+           {
+             
+             s.add(i);
+           }
+         }
+         
+         return s;
+     }
+    
+     
+     public int getReference (int position, String str) {
+         
+         // Returns the spot of the String, at the position specified
+         // NOTICE the value is the index + 1. 0 reserved to Wildcards
+         // If not found, returns (0)
+         
+         if (this.TokenTypes.isEmpty())
+         {
+             
+             return -1;
+         }
+         
+         if (position >= this.TokenTypes.size()) { 
+             return -1;
+         }
+         
+         int res = this.TokenTypes.get(position).indexOf(str);
+         
+         if (res != -1)
+         {
+             return res+1;
+         }
+         return res;
+         
+     }
+     
+     
+     
+     
+    
+ }
+     
+     
+     
+    
+

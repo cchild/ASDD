@@ -83,9 +83,9 @@ public class PredatorAgent extends Agent {
         USE_SAVED_STATE_ACTION_MAP = USE_REINFORCEMENT_POLICY;
         USE_SAVED_APRIORI_CLAUSES = USE_REINFORCEMENT_POLICY;
 
-        LEARN_RULES_MSDD = false;
+        LEARN_RULES_MSDD = true;
         LEARN_RULES_APRIORI = false;
-        LEARN_CLAUSES_ASDD = true;
+        LEARN_CLAUSES_ASDD = false;
         //set USE_SET_BASED_APRIORI_COUNTING in ClauseLearnerASDD
 
            String aprioriClaueseFileExt = "";

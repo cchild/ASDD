@@ -19,7 +19,7 @@ public class LogFiles extends java.lang.Object {
    private  final String FILE_NAME_2 = "c:\\JAVA Projects\\playmaker8\\LogFilesResults.txt";
    private  final String FILE_NAME_3 = "c:\\JAVA Projects\\playmaker8\\LogFilesValueTable.txt";
    private  final String FILE_NAME_4 = "c:\\JAVA Projects\\playmaker8\\LogFilesOutput.txt";
-   public static String INPUT_FILE = "c:\\JAVA Projects\\playmaker8\\LogFilesInput.txt";
+   public static String INPUT_FILE = "c:\\JAVA Projects\\playmaker8\\InputFile.txt";
    private  PrintWriter outfile1;
    private  PrintWriter outfile2;
    private  PrintWriter outfile3;
@@ -92,6 +92,7 @@ public class LogFiles extends java.lang.Object {
        outfile1 = null;
        outfile2 = null;
        outfile3 = null;
+       outfile4 = null;
        
         }
    

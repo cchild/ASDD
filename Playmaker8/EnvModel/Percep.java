@@ -1,9 +1,10 @@
 package EnvModel;
 
-import java.io.*;
-import java.util.*;
 import EnvAgent.ClauseLearner.*;
 import EnvAgent.PredatorAgent.PredatorAgent;
+import Token.Sensor;
+import java.io.*;
+import java.util.*;
 
 /*
  * Percep.java
@@ -111,4 +112,6 @@ public abstract class Percep extends Object implements Cloneable, Serializable {
     
     
     public abstract int readFile(PredatorAgent pred);
+    
+    //public abstract Percep percepFromSensor(Sensor s);
 }

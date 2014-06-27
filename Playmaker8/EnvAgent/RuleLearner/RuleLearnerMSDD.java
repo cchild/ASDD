@@ -10,7 +10,7 @@ import EnvAgent.*;
 
 public class RuleLearnerMSDD extends RuleLearner {
     
-  
+   
     
     /** Creates new RuleLearner */
     public RuleLearnerMSDD(Percep agentPercep, Action agentAction, PercepRecord percepRecord, ActionRecord actionRecord) {

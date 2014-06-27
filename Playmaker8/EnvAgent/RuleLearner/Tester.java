@@ -21,45 +21,7 @@ import StateGenerator.*;
  * @author virgile
  */
 public class Tester {
-    
-    
-    
-    public static int readFile (TokenMap t) {
-        String filePath = Logging.LogFiles.INPUT_FILE;
- 
-        try {
-        
-            Scanner scanner=new Scanner(new File(filePath));
-            int i = 0;
-            while (scanner.hasNextLine()) {
-                i++;
-                String line = scanner.nextLine();
-                
-                Sensor s = new Sensor(line,t);
 
-            System.out.println("Line " + i + " :  " + line + "  >>  " + "Sensor " + i + s.getString());
-                
-                //faites ici votre traitement
-            
-            }
-            
-            Sensor x = new Sensor("HESESN",t);
-            System.out.println("Sensor " + "X" + x.getString());
-            scanner.close();
-            return 0;
-        
- 
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("ERROR OPENING INPUT FILE");
-        }
-        
-        
-        
-        return 1;
-    }
-    
-    
     
     /////////////////////////////////////////////////////
     ////////////////  MAIN ///////////////
@@ -83,18 +45,22 @@ public class Tester {
         //System.out.println("\n\nCREATING SENSORS FROM FILE\n");
         //readFile(t);
         
-        Sensor s = new Sensor("WEEAEN",t);
+        SensorList s = new SensorList();
+        s.fromFile(t);
         
-        System.out.println(s.getString());
+        System.out.println("Sensor 7 : " + s.getSensor(7).getString().toString());
+        // SET WILDCARD
+        s.getSensor(7).setToken("*", 3);
+        System.out.println("Sensor 7 : " + s.getSensor(7).getString().toString());
         
-        PredatorEnvironment predatorEnvironment = new PredatorEnvironment();
-        PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);
-        PredatorAgent prey = (PredatorAgent)predatorEnvironment.addPredatorAgent(3,3,PredatorAgent.PREY);
-        
-        Percep a = pred.getPercep();
-        System.out.println(a);
+//        PredatorEnvironment predatorEnvironment = new PredatorEnvironment();
+//        PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);
+//        PredatorAgent prey = (PredatorAgent)predatorEnvironment.addPredatorAgent(3,3,PredatorAgent.PREY);
+//        
+//        Percep a = pred.getPercep();
+//        System.out.println(a);
 
-        
+       
         //Percep b = (StateGenerator)generateNextState(a,pred.getActionRecord().getAction(0));
     }
     

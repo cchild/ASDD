@@ -53,7 +53,7 @@ public class PredatorEnvState extends GridState {
         //} 
         else {
             //Should throw an exception here. NOT DONE
-            System.out.print("\n tried to create a non-existent object type\n");
+            System.out.print("\nTried to create a non-existent object type\n");
             return null;
         }    
         

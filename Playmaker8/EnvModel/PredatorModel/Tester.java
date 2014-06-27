@@ -11,6 +11,7 @@ import Logging.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import Token.*;
 
 
 
@@ -76,7 +77,7 @@ public class Tester
         
         
         //System.out.println(str.charAt(0));
-        predatorEnvironment.testAgentRecords();
+        //predatorEnvironment.testAgentRecords();
         
         
         
@@ -87,7 +88,14 @@ public class Tester
         ////////////   PERCEP PART   ////////////
         
         //System.out.println("\nPrecep before function : " + pred.getPercep().toString());
-        pred.getPercep().readFromString(str);
+        int n = Logging.LogFiles.getLines();
+        for (int i=0;i<8;i++){
+        System.out.println(pred.getPercepRecord().getPercep(i));
+        
+        }
+        
+        
+        //pred.getPercep().readFromString(str);
         //pred.getPercep().setPercep(0, 0);
         //System.out.println("Precep after function : " + pred.getPercep().toString());
         
@@ -107,7 +115,16 @@ public class Tester
         
         //System.out.println("Action after function : " + action.toString());
         
-        pred.getPercep().readFile(pred);
+        //pred.getPercep().readFile(pred);
+        
+        TokenMap t = new TokenMap();
+        SensorList s = new SensorList ();
+        
+        t.fromFile();
+        s.fromFile(t);
+        
+        
+        System.out.println(s.getSensor(3).getString());
         
         logfile2.closeall();
         

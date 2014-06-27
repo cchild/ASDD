@@ -26,48 +26,10 @@ public class PredatorTester
         ;
     }
     
-    // Counts the number of lines in a file
-    public static int getLines () {
-        String filePath = Logging.LogFiles.INPUT_FILE;
-        int lines = 1;
-         try {
-        
-            Scanner scanner=new Scanner(new File(filePath));
-            
-            
-            while (scanner.hasNextLine()) {
-                lines++;
-                scanner.nextLine();
-            }
-            
-            
-            scanner.close();
-            return lines;
-        
- 
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("ERROR OPENING INPUT FILE");
-        }
-         return 0;
-    }
-    
-    
-    
+  
     
     public static void main (String[] args) {
-//        PrintWriter outfile3 = null;
-//        FileWriter w = null;
-//        try {
-//        
-//        w = new FileWriter("c:\\JAVA Projects\\playmaker8\\Hello.txt", true);
-//       
-//        } catch (IOException e) {
-//                System.out.print("\nCANNOT OPEN LOGFILES");
-//            }
-//        
-//        outfile3 = new PrintWriter (w);
-//        outfile3.print("Hello");
+
         
         
         // READS THE INPUT FILE, LEARNS THE RULES FROM IT
@@ -79,11 +41,15 @@ public class PredatorTester
         PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);
         PredatorAgent prey = (PredatorAgent)predatorEnvironment.addPredatorAgent(3,3,PredatorAgent.PREY);
         int stepsOntop = 0;
-        int NUM_MOVES = 1000;
+        int NUM_MOVES = 500;
+        
+        // READ FROM INPUT >> NUMBER OF LINES IN INPUT
         if (changeFromInput) {
-            NUM_MOVES = getLines();
+            NUM_MOVES = LogFiles.getLines();
         }
-         //will be doubled for turn taking
+        
+        
+         // NUM_MOVES doubled for turn taking
         double totalReward = 0;
         for (int i = 0; i < NUM_MOVES * 2; i++){
             predatorEnvironment.updateEnvironment();
@@ -113,18 +79,6 @@ public class PredatorTester
         System.out.print("\n" + "Total reward: " + totalReward + "\n");
         logfile2.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES,2);
         logfile2.print("\n" + "Total reward: " + totalReward + "\n",2);
-        
-        //logfile2.print("Hello",4);
-        
-        
-        
-        //System.out.println(str.charAt(0));
-        
-        
-        
-        
-        
-        
         
         
         //// TARGET STRING /////
@@ -160,15 +114,15 @@ public class PredatorTester
         if (changeFromInput)
         {
         
-            int lines = getLines();
+            int lines = LogFiles.getLines();
             int i = 0;
 
-             for (int h = 0; h < pred.getActionRecord().size(); h++) {
-
-            //System.out.println("INITIAL PERCEPS : " + pred.getPercepRecord().getPercep(h));
-            //System.out.println("INITIAL ACTIONS : " + pred.getActionRecord().getActionString(h));
-
-             }
+//             for (int h = 0; h < pred.getActionRecord().size(); h++) {
+//
+//                System.out.println("INITIAL PERCEPS : " + pred.getPercepRecord().getPercep(h));
+//                System.out.println("INITIAL ACTIONS : " + pred.getActionRecord().getActionString(h));
+//
+//             }
 
 
             String filePath = Logging.LogFiles.INPUT_FILE;
@@ -200,12 +154,12 @@ public class PredatorTester
 
 
 
-              for (int h = 0; h < pred.getActionRecord().size(); h++) {
-
-
-            //System.out.println("MODIFIED ACTIONS : " + pred.getActionRecord().getActionString(h));
-            //System.out.println("MODIFIED PERCEPS : " + pred.getPercepRecord().getPercepString(h));
-             }
+//              for (int h = 0; h < pred.getActionRecord().size(); h++) {
+//
+//
+//                System.out.println("MODIFIED ACTIONS : " + pred.getActionRecord().getActionString(h));
+//                System.out.println("MODIFIED PERCEPS : " + pred.getPercepRecord().getPercepString(h));
+//             }
               
               // Only does "lines" steps, instead of all the iterations
               predatorEnvironment.testAgentRecords2(lines);
@@ -216,14 +170,21 @@ public class PredatorTester
         predatorEnvironment.testAgentRecords();
         }
         
-        logfile2.println("OUTPUT PERCEPS & ACTIONS : ", 4);
+        
+        
+        
+        
+        
+        
+        
+        logfile2.println("OUTPUT PERCEPS & ACTIONS : ", 1);
          for (int h = 0; h < pred.getActionRecord().size(); h++) {
 
 
             //System.out.println("MODIFIED ACTIONS : " + pred.getActionRecord().getActionString(h));
             //System.out.println("MODIFIED PERCEPS : " + pred.getPercepRecord().getPercepString(h));
              
-            logfile2.println(h + " : " + pred.getPercepRecord().getPercep(h).toString() + pred.getActionRecord().getAction(h).toString(), 4);
+            logfile2.println(h + " : " + pred.getPercepRecord().getPercep(h).toString() + pred.getActionRecord().getAction(h).toString(), 1);
          }
 //        NodeList nodes = new NodeList();
 //        RuleStateGenerator R = new RuleStateGenerator(nodes);

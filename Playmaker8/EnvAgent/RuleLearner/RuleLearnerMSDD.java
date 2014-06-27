@@ -250,6 +250,7 @@ public class RuleLearnerMSDD extends RuleLearner {
                             LogFiles logfile = LogFiles.getInstance();
                            logfile.print("\nPruned " + child.toString(),1);
                            System.out.println("\nPruned " + child.toString());
+                          
                         }
                     }
                    

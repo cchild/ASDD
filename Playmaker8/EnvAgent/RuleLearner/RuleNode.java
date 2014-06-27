@@ -127,8 +127,12 @@ public class RuleNode extends Object implements Cloneable, Serializable  {
     }
 
     public String toString() {
-        return precursor.toString() + successor.toString() + " Prob: " + getProbability();
+        return precursor.toString() + ">" + successor.toString() + " Prob: " + getProbability();
     }
+    
+    public String translation() {
+        return precursor.toString() + successor.toString() + " Prob: " + getProbability();
+    }    
 
     public boolean getHeuristicEvaluated() {
         return getDatabaseOccurrencesCounted();

@@ -38,6 +38,14 @@ public class Token {
         this.reference = t.getReference(position, str);
     }
     
+    public Token(int reference, int position, TokenMap t)
+    {
+        
+        this.tokenMap = t;
+        this.position = position;
+        this.reference = reference;
+    }
+    
     
     
 //    public Token(String str, Sensor S)
@@ -48,11 +56,15 @@ public class Token {
     
     public String toString () {
         
-        if (reference == -1)
+        if (reference == 0)
         {
             return "*";
         }
-        Object res = tokenMap.getToken(position).get(reference-1);
+        if (reference == -1)
+        {
+            return "?";
+        }
+        Object res = tokenMap.getTokenList(position).get(reference-1);
         return String.valueOf(res);
     }
     
@@ -61,12 +73,61 @@ public class Token {
         return reference;
     }
     
+    public void setReference (int ref) {
+        
+        reference = ref;
+    }
+    
     public int getPosition () {
         
         return position;
     }
     
+    public void setPosition (int ref) {
+        
+        position = ref;
+    }
     
+    
+    public boolean isWildcard () {
+        
+        return (reference == 0);
+    }
+    
+     public boolean isNotWildcard () {
+        
+        return (!isWildcard());
+    }
+     
+     
+     public boolean match (Token target) {
+         
+         if (target.isWildcard())
+             return true;
+         
+         if (this.isWildcard())
+             return true;
+         
+         
+         
+         if(this.toString().compareTo(target.toString()) != 0)
+             return false;
+         
+         
+         return true;
+     }
+     
+     
+     public boolean match_exact (Token target) {
+         
+        
+         
+         if(this.toString().compareTo(target.toString()) != 0)
+             return false;
+         
+         
+         return true;
+     }
 }    
     
 

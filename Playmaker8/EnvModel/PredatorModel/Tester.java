@@ -11,13 +11,14 @@ import Logging.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import Token.*;
 
 
 
-public class PredatorTester
+public class Tester
 {   
   
-    PredatorTester() {
+    Tester() {
         ;
     }
     
@@ -40,7 +41,7 @@ public class PredatorTester
         PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);
         PredatorAgent prey = (PredatorAgent)predatorEnvironment.addPredatorAgent(3,3,PredatorAgent.PREY);
         int stepsOntop = 0;
-        int NUM_MOVES = 50; //will be doubled for turn taking
+        int NUM_MOVES = 10; //will be doubled for turn taking
         double totalReward = 0;
         for (int i = 0; i < NUM_MOVES * 2; i++){
             predatorEnvironment.updateEnvironment();
@@ -76,7 +77,7 @@ public class PredatorTester
         
         
         //System.out.println(str.charAt(0));
-        predatorEnvironment.testAgentRecords();
+        //predatorEnvironment.testAgentRecords();
         
         
         
@@ -86,10 +87,17 @@ public class PredatorTester
         
         ////////////   PERCEP PART   ////////////
         
-        System.out.println("\nPrecep before function : " + pred.getPercep().toString());
-        pred.getPercep().readFromString(str);
+        //System.out.println("\nPrecep before function : " + pred.getPercep().toString());
+        int n = Logging.LogFiles.getLines();
+        for (int i=0;i<8;i++){
+        System.out.println(pred.getPercepRecord().getPercep(i));
+        
+        }
+        
+        
+        //pred.getPercep().readFromString(str);
         //pred.getPercep().setPercep(0, 0);
-        System.out.println("Precep after function : " + pred.getPercep().toString());
+        //System.out.println("Precep after function : " + pred.getPercep().toString());
         
         //System.out.println(pred.getActionRecord().getActionString(0));
         //System.out.println(pred.getActionRecord().getAction(0).getNumValues());
@@ -101,17 +109,25 @@ public class PredatorTester
         
         Action action = pred.getActionRecord().getAction(0);
   
-        System.out.println("\nAction before function : " + action.toString());
+        //System.out.println("\nAction before function : " + action.toString());
  
         action.readFromString(str);
         
-        System.out.println("Action after function : " + action.toString());
+        //System.out.println("Action after function : " + action.toString());
+        
+        //pred.getPercep().readFile(pred);
+        
+        TokenMap t = new TokenMap();
+        SensorList s = new SensorList ();
+        
+        t.fromFile();
+        s.fromFile(t);
         
         
+        System.out.println(s.getSensor(3).getString());
         
         logfile2.closeall();
         
         
     }
 }
-      

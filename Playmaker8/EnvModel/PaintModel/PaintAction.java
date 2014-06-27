@@ -239,4 +239,8 @@ public class PaintAction extends Action implements Cloneable, Serializable {
      public void readFromString(String str) {
          
      }
+     
+     public void readFromChar(char c) {
+         
+     }
 }

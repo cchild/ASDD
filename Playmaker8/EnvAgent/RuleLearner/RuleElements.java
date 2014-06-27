@@ -165,6 +165,7 @@ public class RuleElements extends Object implements Cloneable, Serializable {
 
         return string;
     }
+    
 
     /*returns true is the rule object has no action and one 
      *of the other elements is not a wildcard*/

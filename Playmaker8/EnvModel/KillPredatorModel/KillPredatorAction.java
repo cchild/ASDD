@@ -360,4 +360,24 @@ public class KillPredatorAction extends Action implements Cloneable, Serializabl
                  break;
          }
      }
+     
+     public void readFromChar(char c) {
+         //System.out.println(str.charAt(str.length()-1));
+         
+         switch (c) {
+             
+             case 'N' : setByValue(0);
+                 break;
+             case 'E' : setByValue(1);
+                 break;
+             case 'S' : setByValue(2);
+                 break;
+             case 'W' : setByValue(3);
+                 break;
+             case 'K' : setByValue(4);
+                 break;
+             default : setByValue(10);
+                 break;
+         }
+     }
 }

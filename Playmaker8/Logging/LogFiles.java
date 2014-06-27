@@ -1,6 +1,7 @@
 package Logging;
 
 import java.io.*;
+import java.util.Scanner;
 
 /*
  * LogFiles.java
@@ -15,11 +16,11 @@ import java.io.*;
  */
 public class LogFiles extends java.lang.Object {
     
-   private  final String FILE_NAME_1 = "c:\\JAVA Projects\\playmaker8\\LogFiles.txt";
-   private  final String FILE_NAME_2 = "c:\\JAVA Projects\\playmaker8\\LogFilesResults.txt";
-   private  final String FILE_NAME_3 = "c:\\JAVA Projects\\playmaker8\\LogFilesValueTable.txt";
-   private  final String FILE_NAME_4 = "c:\\JAVA Projects\\playmaker8\\LogFilesOutput.txt";
-   public static String INPUT_FILE = "c:\\JAVA Projects\\playmaker8\\LogFilesInput.txt";
+   private  static final String FILE_NAME_1 = "c:\\JAVA Projects\\playmaker8\\LogFiles.txt";
+   private  static final String FILE_NAME_2 = "c:\\JAVA Projects\\playmaker8\\LogFilesResults.txt";
+   private  static final String FILE_NAME_3 = "c:\\JAVA Projects\\playmaker8\\LogFilesValueTable.txt";
+   private  static final String FILE_NAME_4 = "c:\\JAVA Projects\\playmaker8\\LogFilesOutput.txt";
+   public static String INPUT_FILE = "c:\\JAVA Projects\\playmaker8\\InputFile.txt";
    private  PrintWriter outfile1;
    private  PrintWriter outfile2;
    private  PrintWriter outfile3;
@@ -27,12 +28,14 @@ public class LogFiles extends java.lang.Object {
    public static final boolean OUTPUT_LOG0 = true;
    public static final boolean OUTPUT_LOG1 = true;
    public static final boolean OUTPUT_LOG2 = true;
+   public static final boolean ERASE_FILES = true;
 
    private static LogFiles instance;
    
    
    protected LogFiles() {
       
+       
        FileWriter w1 = null;
        FileWriter w2 = null;
        FileWriter w3 = null;
@@ -77,28 +80,15 @@ public class LogFiles extends java.lang.Object {
        
    }
    
-//   public ~LogFiles() {
-//       
-//       outfile1 = null;
-//       outfile2 = null;
-//       outfile3 = null;
-//       
-//       
-//       
-//   }
-   
-   protected void finalize ()  {
-        
-       outfile1 = null;
-       outfile2 = null;
-       outfile3 = null;
-       
-        }
+
    
    public static LogFiles getInstance() {
       
       
             if(instance == null) {
+                if (ERASE_FILES) {
+                    eraseFiles();
+                }
                 instance = new LogFiles();
             }           
             return instance;    
@@ -166,5 +156,89 @@ public class LogFiles extends java.lang.Object {
             outfile3.println(line);
         if (number == 4)
             outfile4.println(line);
+    }
+    
+    
+    
+    public static int eraseFiles () {
+        try{
+ 
+    		File file = new File(FILE_NAME_1);
+ 
+    		file.delete();
+ 
+    	}catch(Exception e){
+ 
+    		System.out.println("ERASING LOGFILE 1 FAILED");
+                return 1;
+ 
+    	}
+        
+        try{
+ 
+    		File file2 = new File(FILE_NAME_2);
+ 
+    		file2.delete();
+ 
+    	}catch(Exception e){
+ 
+    		System.out.println("ERASING LOGFILE 2 FAILED");
+                return 2;
+ 
+    	}
+        
+        try{
+ 
+    		File file3 = new File(FILE_NAME_3);
+ 
+    		file3.delete();
+ 
+    	}catch(Exception e){
+ 
+    		System.out.println("ERASING LOGFILE 3 FAILED");
+                return 3;
+ 
+    	}
+        
+        try{
+ 
+    		File file4 = new File(FILE_NAME_4);
+ 
+    		file4.delete();
+ 
+    	}catch(Exception e){
+ 
+    		System.out.println("ERASING LOGFILE 4 FAILED");
+                return 4;
+ 
+    	}
+        
+        return 0;
+    }
+    
+    // Counts the number of lines in a file
+    public static int getLines () {
+        String filePath = Logging.LogFiles.INPUT_FILE;
+        int lines = 1;
+         try {
+        
+            Scanner scanner=new Scanner(new File(filePath));
+            
+            
+            while (scanner.hasNextLine()) {
+                lines++;
+                scanner.nextLine();
+            }
+            
+            
+            scanner.close();
+            return lines;
+        
+ 
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("ERROR OPENING INPUT FILE");
+        }
+         return 0;
     }
 }

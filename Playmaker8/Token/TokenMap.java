@@ -15,14 +15,14 @@ import java.util.*;
  */
 public class TokenMap {
     
-    public ArrayList <ArrayList> TokenTypes;
+    public ArrayList <ArrayList <String> > TokenTypes;
     public int id;
     
     public TokenMap()
     {
         //String [][] a = {{""}};
         this.id = 0;
-        this.TokenTypes = new ArrayList <ArrayList> ();
+        this.TokenTypes = new ArrayList <ArrayList <String> > ();
     }
     
     
@@ -38,7 +38,7 @@ public class TokenMap {
                 
                 String line = scanner.nextLine();
                 
-                System.out.println("Adding Line " + i + " (" + line + ")");
+                //System.out.println("Adding Line " + i + " (" + line + ")");
                 
                 for (int j = 0; j < (line.length()); j++) {
                     setToken(String.valueOf(line.charAt(j)),j);
@@ -46,10 +46,11 @@ public class TokenMap {
                 
 
                 
-                System.out.println("TokenMap is : " + this.TokenTypes.toString());
+                //System.out.println("TokenMap is : " + this.TokenTypes.toString());
                 //faites ici votre traitement
                 i++;
             }
+            System.out.println("\nTokenMap created : (" + i + " lines) " + this.TokenTypes.toString());
             scanner.close();
             return 0;
         
@@ -125,10 +126,15 @@ public class TokenMap {
     }
     
     
-     public ArrayList getToken (int position) {
+     public ArrayList getTokenList (int position) {
          
          return this.TokenTypes.get(position);
      }
+     
+//     public Token getToken (int position,int reference) {
+//         
+//         return this.TokenTypes.get(position).get(reference);
+//     }
      
      
      public List getPosition (String str)  {
@@ -182,7 +188,18 @@ public class TokenMap {
      
      
      
-     
+      public int getRefMax (int position) {
+          return this.TokenTypes.get(position).size();
+      }
+      
+      
+      public String getToken (int position, int reference) {
+          //if ((position >= 0) && (position <= this.TokenTypes.size()))
+          return this.TokenTypes.get(position).get(reference);
+          
+          
+            //return "LOL";
+      }
     
  }
      

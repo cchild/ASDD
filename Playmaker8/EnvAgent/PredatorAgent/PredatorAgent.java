@@ -46,7 +46,7 @@ public class PredatorAgent extends Agent {
         USE_REINFORCEMENT_POLICY = false;
         USE_BELLMAN = true;
         USE_STATE_ACTION_LOTS = false;
-        USE_CLAUSE_VALUES = true;
+        USE_CLAUSE_VALUES = false;
         USE_CLAUSE_APRIORI_VALUES = false;
         USE_RULE_APRIORI_VALUES = false;
 
@@ -85,7 +85,7 @@ public class PredatorAgent extends Agent {
 
         LEARN_RULES_MSDD = true;
         LEARN_RULES_APRIORI = false;
-        LEARN_CLAUSES_ASDD = false;
+        LEARN_CLAUSES_ASDD = true;
         //set USE_SET_BASED_APRIORI_COUNTING in ClauseLearnerASDD
 
            String aprioriClaueseFileExt = "";
@@ -130,7 +130,7 @@ public class PredatorAgent extends Agent {
                 if (LEARN_RULES_MSDD || LEARN_RULES_APRIORI || !USE_SAVED_STATE_ACTION_MAP)
                     learnRules();
                 //if (LEARN_CLAUSES_ASDD || LEARN_RULES_MSDD || LEARN_RULES_APRIORI)
-                    learnClauses();
+                        learnClauses();
             }
         } else {
             realThinker = false;

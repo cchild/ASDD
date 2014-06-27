@@ -49,9 +49,13 @@ public abstract class RuleObject extends Object implements Cloneable, Serializab
         s.defaultReadObject();
     }
     
+    @Override
     public abstract String toString();
+    public abstract String translation();
+    
+    
     public String getRuleString() {
-        return toString();
+        return translation();
     }
     
     /*Set the rule object to a don't care state which will match with anything (e.g. "*")

@@ -11,6 +11,7 @@ import EnvModel.*;
 import EnvAgent.*;
 import EnvAgent.RuleLearner.*;
 import EnvAgent.ClauseLearner.*;
+import EnvAgent.PredatorAgent.PredatorAgent;
 
 import java.io.*;
 
@@ -294,5 +295,40 @@ public class KillPredatorAgentPercep extends Percep implements Cloneable, Serial
         }
         //System.out.println(str.charAt(i));
     }
+    }
+    
+    
+    public int readFile (PredatorAgent pred) {
+        String filePath = Logging.LogFiles.INPUT_FILE;
+ 
+        try {
+        
+            Scanner scanner=new Scanner(new File(filePath));
+            int i = 0;
+            while (scanner.hasNextLine()) {
+                i++;
+                String line = scanner.nextLine();
+                
+                pred.getPercep().readFromString(line);
+
+            System.out.println("Line " + i + " :  " + line + "  >>  " + "Percep " + i + pred.getPercep());
+                
+                //faites ici votre traitement
+            
+            }
+            
+            
+            scanner.close();
+            return 0;
+        
+ 
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("ERROR OPENING INPUT FILE");
+        }
+        
+        
+        
+        return 1;
     }
 }

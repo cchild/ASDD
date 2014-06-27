@@ -85,7 +85,18 @@ public class Fluent extends RuleObject implements Cloneable, Serializable {
         if (currentValue == numValues)
             return "*"; //don't care symbol
         return 
+             
             String.valueOf(currentValue);
+        
+    }
+    
+    public String translation() {
+        if (currentValue == numValues)
+            return "*"; //don't care symbol
+        
+        return      
+            String.valueOf(currentValue);
+        
     }
     
     //Set the rule object to a don't care state which will match with anything (e.g. "*")

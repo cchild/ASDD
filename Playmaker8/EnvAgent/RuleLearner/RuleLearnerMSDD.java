@@ -10,7 +10,7 @@ import EnvAgent.*;
 
 public class RuleLearnerMSDD extends RuleLearner {
     
-   
+  
     
     /** Creates new RuleLearner */
     public RuleLearnerMSDD(Percep agentPercep, Action agentAction, PercepRecord percepRecord, ActionRecord actionRecord) {
@@ -239,7 +239,8 @@ public class RuleLearnerMSDD extends RuleLearner {
                         if(LogFiles.OUTPUT_LOG0)
                         {
                             LogFiles logfile = LogFiles.getInstance();
-                            logfile.print("\n added " + child.toString(),1);
+                            logfile.print("\nAdded " + child.toString(),1);
+                            System.out.println("\nAdded " + child.toString());
                         }
                         children.add(child);
                     }
@@ -247,7 +248,9 @@ public class RuleLearnerMSDD extends RuleLearner {
                         if(LogFiles.OUTPUT_LOG0)
                         {
                             LogFiles logfile = LogFiles.getInstance();
-                           logfile.print("\n pruned " + child.toString(),1);
+                           logfile.print("\nPruned " + child.toString(),1);
+                           System.out.println("\nPruned " + child.toString());
+                          
                         }
                     }
                    

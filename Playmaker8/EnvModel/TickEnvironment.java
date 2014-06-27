@@ -96,6 +96,46 @@ public abstract class TickEnvironment extends Environment
             
         
     }
+    
+    
+    public void testAgentRecords2(int limit) {
+        Agent agent = agents.getAgent(0);
+        if (!agent.getRealThinker()) {
+            agent = agents.getAgent(1);
+        }
+        ActionRecord actionRecord = agent.getActionRecord();
+        PercepRecord percepRecord = agent.getPercepRecord();
+
+        if (agent.LEARN_CLAUSES_ASDD || agent.LEARN_RULES_APRIORI)
+        {
+            //only print out this big file if we're not doing the enormous one
+            for (int i = 0; i < limit; i++) {
+                System.out.print("\n" + i);
+                System.out.print(percepRecord.getPercep(i).toString());
+                System.out.print(" ");
+                System.out.print(actionRecord.getAction(i).toString());
+            }
+        }
+        
+        System.out.print("\n");
+        System.out.flush();
+        
+        agent.savePrecepActionRecord();
+        
+        
+        if (!agent.USE_REINFORCEMENT_POLICY) {
+            //agent.learnRules();
+            if (agent.LEARN_RULES_MSDD || agent.LEARN_RULES_APRIORI || !agent.USE_SAVED_STATE_ACTION_MAP)
+                agent.learnRules();
+            if (agent.LEARN_CLAUSES_ASDD)
+                agent.learnClauses();
+        }
+            
+        
+    }
+    
+    
+    
         
     
     /*move everything in the environment along by "time" given
@@ -103,7 +143,7 @@ public abstract class TickEnvironment extends Environment
      *advanced*/
     public void updateEnvironment() {
        
-        for (int i = 0; i < agents.size(); i ++) {
+        for (int i = 0; i < agents.size(); i++) {
             Agent current = agents.getAgent(i);
             boolean currentAgentsTurn =agents.getAgentsTurn(current);
             agents.updateAgentsTurn(current);

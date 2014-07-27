@@ -3,6 +3,8 @@
 package EnvModel.PredatorModel;
 
 
+import V_Sensors.TokenMap;
+import V_Sensors.SensorList;
 import EnvAgent.PredatorAgent.*;
 import EnvAgent.ClauseLearner.*;
 import EnvModel.*;
@@ -11,7 +13,6 @@ import Logging.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import Token.*;
 
 
 

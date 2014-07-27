@@ -6,7 +6,8 @@
 
 package EnvAgent.RuleLearner;
 
-import Token.*;
+import V_Sensors.TokenMap;
+import V_Sensors.SensorList;
 import EnvAgent.*;
 import EnvAgent.PredatorAgent.PredatorAgent;
 import EnvModel.PredatorModel.PredatorEnvironment;

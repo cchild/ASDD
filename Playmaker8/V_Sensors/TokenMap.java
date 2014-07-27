@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package Token;
+package V_Sensors;
 
 import java.io.*;
 import java.util.*;
@@ -22,7 +22,7 @@ public class TokenMap {
     {
         //String [][] a = {{""}};
         this.id = 0;
-        this.TokenTypes = new ArrayList <ArrayList <String> > ();
+        this.TokenTypes = new ArrayList <> ();
     }
     
     
@@ -50,7 +50,7 @@ public class TokenMap {
                 //faites ici votre traitement
                 i++;
             }
-            System.out.println("\nTokenMap created : (" + i + " lines) " + this.TokenTypes.toString());
+            
             scanner.close();
             return 0;
         

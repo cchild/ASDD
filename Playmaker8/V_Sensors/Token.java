@@ -4,12 +4,9 @@
  * and open the template in the editor.
  */
 
-package Token;
+package V_Sensors;
 
 
-import java.io.*;
-import java.util.*;
-import EnvAgent.RuleLearner.RuleLearnerMSDD_Sensor;
 /**
  *
  * @author virgile
@@ -29,6 +26,14 @@ public class Token {
     int reference;
     int position;
     static TokenMap tokenMap = null;
+    
+    
+    public Token(TokenMap t)
+    {
+        this.tokenMap = t;
+        this.position = 0;
+        this.reference = 0;
+    }
     
     
     public Token(String str, int position, TokenMap t)
@@ -64,6 +69,7 @@ public class Token {
         {
             return "?";
         }
+        
         Object res = tokenMap.getTokenList(position).get(reference-1);
         return String.valueOf(res);
     }

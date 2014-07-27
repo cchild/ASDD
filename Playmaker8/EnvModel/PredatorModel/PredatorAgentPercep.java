@@ -12,8 +12,8 @@ import EnvAgent.*;
 import EnvAgent.RuleLearner.*;
 import EnvAgent.ClauseLearner.*;
 import EnvAgent.PredatorAgent.PredatorAgent;
-import Token.Sensor;
-import Token.TokenMap;
+import V_Sensors.Sensor;
+import V_Sensors.TokenMap;
 
 import java.io.*;
 

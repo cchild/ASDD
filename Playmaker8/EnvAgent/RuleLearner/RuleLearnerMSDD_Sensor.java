@@ -6,10 +6,11 @@
 
 package EnvAgent.RuleLearner;
 
+import V_Sensors.TokenMap;
+import V_Sensors.SensorList;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-import Token.*;
 import EnvModel.*;
 import Logging.*;
 

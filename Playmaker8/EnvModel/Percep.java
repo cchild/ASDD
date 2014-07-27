@@ -2,7 +2,7 @@ package EnvModel;
 
 import EnvAgent.ClauseLearner.*;
 import EnvAgent.PredatorAgent.PredatorAgent;
-import Token.Sensor;
+import V_Sensors.Sensor;
 import java.io.*;
 import java.util.*;
 

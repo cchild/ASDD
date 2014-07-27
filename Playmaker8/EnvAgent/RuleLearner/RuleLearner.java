@@ -280,7 +280,7 @@ public abstract class RuleLearner {
 
                 RuleObject databaseOutput = postconditionsFromDatabase.get(outputFluentNo);
 
-                for (int outputCount = 0; outputCount < outputFluents.size(); outputCount ++) {
+                for (int outputCount = 0; outputCount < outputFluents.size(); outputCount ++) { 
                     if (((RuleObject)outputFluents.get(outputCount)).isEqual(databaseOutput)) {
                         outputCounts[outputCount] += 1;
                         break;

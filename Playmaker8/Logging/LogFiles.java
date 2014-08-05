@@ -21,7 +21,7 @@ public class LogFiles extends java.lang.Object {
    public  static final String FILE_NAME_3 = "c:\\JAVA Projects\\playmaker8\\RSList_MSDD.txt";
    private  static final String FILE_NAME_4 = "c:\\JAVA Projects\\playmaker8\\LogFilesOutput.txt";
    public  static final String FILE_NAME_5 = "c:\\JAVA Projects\\playmaker8\\Rules_MSDD.txt";
-   public  static final String FILE_NAME_6 = "c:\\JAVA Projects\\playmaker8\\ImpossibleList.txt";   
+   public  static final String FILE_NAME_6 = "c:\\JAVA Projects\\playmaker8\\StateTable.txt";   
    public static String INPUT_FILE = "c:\\JAVA Projects\\playmaker8\\InputFile.txt";
    private  PrintWriter outfile1, outfile2, outfile3, outfile4, outfile5, outfile6;
    public static final boolean OUTPUT_LOG0 = true;
@@ -227,6 +227,7 @@ public class LogFiles extends java.lang.Object {
                 
     		File file = new File(str);
  
+                System.out.println("Erasing file : " + number);
     		file.delete();
  
     	}catch(Exception e){

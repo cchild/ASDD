@@ -25,7 +25,7 @@ public class Token {
     
     int reference;
     int position;
-    static TokenMap tokenMap = null;
+    public static TokenMap tokenMap = null;
     
     
     public Token(TokenMap t)
@@ -52,6 +52,13 @@ public class Token {
     }
     
     
+    public Token copy () {
+        
+        
+        Token a  = new Token (this.reference, this.position, this.tokenMap);
+        
+        return a;
+    }
     
 //    public Token(String str, Sensor S)
 //    {

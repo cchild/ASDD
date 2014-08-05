@@ -501,15 +501,7 @@ public class SensorList {
     
     
     
-    public void export () {
-        
-        LogFiles logFiles = LogFiles.getInstance();
-        
-        for (int i = 0; i < this.size(); i++) {
-            
-            logFiles.println(this.getSensor(i+1).toString(), 6);
-        }
-    }
+
     
  }
      

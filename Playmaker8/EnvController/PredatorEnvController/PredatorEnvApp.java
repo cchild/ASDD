@@ -51,7 +51,12 @@ public class PredatorEnvApp extends EnvApp {
  
     
    public void run1Cycle() {
-        getPredatorEnvironment().updateEnvironment();
+       // OLD VERSION
+        //getPredatorEnvironment().updateEnvironment();
+        
+        
+        // NEW VERSION
+        getPredatorEnvironment().updateEnvironmentFromRL();
       
         /*Force a repaint*/      
         getEnvViewPanel().repaint();
@@ -120,6 +125,7 @@ public class PredatorEnvApp extends EnvApp {
      */
     public static void main(String args[]) {
         //create a new preator environment with turn based updates
+        
         new PredatorEnvApp(new PredatorEnvironment()).show();
     }
     

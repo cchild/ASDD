@@ -41,7 +41,7 @@ public class PredatorTester
         PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);
         PredatorAgent prey = (PredatorAgent)predatorEnvironment.addPredatorAgent(3,3,PredatorAgent.PREY);
         int stepsOntop = 0;
-        int NUM_MOVES = 8000;
+        int NUM_MOVES = 100000;
         
         // READ FROM INPUT >> NUMBER OF LINES IN INPUT
         if (changeFromInput) {
@@ -167,7 +167,8 @@ public class PredatorTester
         
         
         else {
-        //predatorEnvironment.testAgentRecords();
+        
+            predatorEnvironment.testAgentRecords();
 
 //            
 //            for (int i=0; i< pred.getPercepRecord().size(); i++) {

@@ -372,7 +372,7 @@ public void clean (SensorList impList) {
         double a = 0.0;
         for (int i = 0; i < this.size(); i++) {
             
-            if (this.getSensor(i).isWinningSensor())
+            if (this.getSensor(i).isRewarded())
                 a = a + this.getProb(i);
         }
         

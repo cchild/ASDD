@@ -483,7 +483,7 @@ public class Sensor {
     
     
     
-    public boolean isWinningSensor () {
+    public boolean isRewarded () {
         
         if (this.getToken(this.size()-2).getReference() == 2)
             return true;

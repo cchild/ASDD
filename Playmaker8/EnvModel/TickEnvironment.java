@@ -4,6 +4,12 @@ package EnvModel;
 import EnvAgent.*;
 import EnvAgent.PredatorAgent.*;
 import Logging.*;
+import V_ReinforcementLearner.StateTable;
+import V_Sensors.Sensor;
+import V_Sensors.Token;
+import V_Sensors.TokenMap;
+import V_StateGenerator.MSDD_StateGenerator_Maps;
+import V_StateGenerator.MSDD_StateGenerator_Rules;
 
 //This is a clock tick based environment. Rather than float action timers this
 //environment works in clock ticks and is therefore easier to debug.
@@ -145,13 +151,17 @@ public abstract class TickEnvironment extends Environment
        
         for (int i = 0; i < agents.size(); i++) {
             Agent current = agents.getAgent(i);
+            //System.out.println("Agent : " + current);
             boolean currentAgentsTurn =agents.getAgentsTurn(current);
             agents.updateAgentsTurn(current);
             
+            
             if ((turnBasedPerceptions && currentAgentsTurn)
                 || !turnBasedPerceptions) {
-                if (current.getRealThinker())
+                if (current.getRealThinker()) {
                     current.perceive();
+                    //System.out.println("1");
+                }
             }
             
             if ((turnBasedPerceptions && currentAgentsTurn) 
@@ -159,6 +169,167 @@ public abstract class TickEnvironment extends Environment
             {
                 Action action = current.deliberate();
                 current.act(action);
+                //System.out.println("Action : " + action);
+                //System.out.println("Position : " + current.getPercep());
+                //KILL_LOG
+                /*if (current.getRealThinker()) {
+                    Singleton logfile = Singleton.getInstance();
+                    logfile.print(action.toString() + " \n");
+                     
+                }*/
+
+                
+//                                if (i == 0) {
+//                
+//                    
+//                    System.out.println("/////////////////////");
+//        
+//                    TokenMap tokenMap = new TokenMap ();
+//                
+//                    //tokenMap.fromFile();
+//                    
+//                    
+//                    StateTable nop = new StateTable ();
+//        
+//                    //nop = nop.fromFile(tokenMap);
+//        
+//                    //nop.printTable("IMPORTED");
+//                    System.out.println("\nPercep : " + current.getPercep());
+//           
+//
+//                    
+//                    System.out.println("Action : " + action);
+//
+//                    String str = current.getPercep().translation() + "*";
+//                
+//
+//                
+//                    Sensor currentState = new Sensor (str, tokenMap );
+//                
+//                    System.out.println("Current State : " + currentState);
+//                    
+//                    if (currentState.isRewarded())
+//                        System.out.println("REWARD");
+//                }
+            }
+            
+          
+        }
+        
+        /*Note: There are currently no turn based environment actions*/
+            
+        /*advance all objects and elements of environment state by one step*/
+        state.advanceStep();
+        /*Output the current state to standard io*/
+        //state.outputState();
+    }
+    
+    
+    
+    
+    public void updateEnvironmentFromRL() {
+       
+        for (int i = 0; i < agents.size(); i++) {
+            Agent current = agents.getAgent(i);
+            //System.out.println("Agent : " + current);
+            boolean currentAgentsTurn =agents.getAgentsTurn(current);
+            agents.updateAgentsTurn(current);
+            
+            
+            if (i == 0) {
+            
+                 }
+            
+            
+            if ((turnBasedPerceptions && currentAgentsTurn)
+                || !turnBasedPerceptions) {
+                if (current.getRealThinker()) {
+                    current.perceive();
+                    //System.out.println("1");
+                }
+            }
+            
+            if ((turnBasedPerceptions && currentAgentsTurn) 
+                || !turnBasedMoves)
+            {
+                Action action = current.deliberate();
+                
+                
+                // INTERCEPTS THE ACTION
+                if (i == 0) {
+                
+                    
+                    System.out.println("/////////////////////");
+        
+                    TokenMap tokenMap = new TokenMap ();
+                
+                    tokenMap.fromFile();
+                    
+                    
+                    StateTable nop = new StateTable ();
+        
+                    nop = nop.fromFile(tokenMap);
+        
+                    //nop.printTable("IMPORTED");
+                    System.out.println("\nPercep : " + current.getPercep());
+           
+
+                    
+                    System.out.println("Action : " + action);
+
+                    String str = current.getPercep().translation() + "*";
+                
+
+                
+                    Sensor currentState = new Sensor (str, tokenMap );
+                
+                    System.out.println("Current State : " + currentState);
+                    
+                    if (currentState.isRewarded())
+                        System.out.println("REWARD");
+                    
+                    
+                    MSDD_StateGenerator_Maps sGen = new MSDD_StateGenerator_Maps ();
+                    
+                    Token chosenAction = sGen.generateActionFromTable(currentState, nop);
+                    
+                    
+                    System.out.println("Chosen Action : " + chosenAction);
+                    
+                    
+                    // 6 MOVE NORTH
+                    // 7 MOVE EAST
+                    // 8 MOVE SOUTH
+                    // 9 MOVE WEST
+                    
+                    
+                    switch (chosenAction.toString()) {
+                        case "W":  System.out.println("West ?");
+                            action.setByValue(9);
+                            break;
+                        case "E":  System.out.println("East ?");
+                            action.setByValue(7);
+                            break;
+                        case "S":  System.out.println("South ?");
+                            action.setByValue(8);
+                            break;
+                        case "N":  System.out.println("North ?");
+                            action.setByValue(6);
+                            break;
+                        default : System.out.println("What ? ");
+                    }
+                }
+                
+                
+                
+                
+                
+                System.out.println("Acting :  " + action);
+                current.act(action);
+                
+                
+                
+                
                 
                 //KILL_LOG
                 /*if (current.getRealThinker()) {
@@ -178,7 +349,9 @@ public abstract class TickEnvironment extends Environment
         /*Output the current state to standard io*/
         //state.outputState();
     }
-    
+        
+        
+        
     public  boolean getAgentsTurn(Agent agent) {
          return agents.getAgentsTurn(agent);
     }

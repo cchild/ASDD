@@ -90,12 +90,12 @@ public class Rule {
     public boolean sensorMatch (Sensor s, Sensor expression) {
         boolean res = true;
         
-        if (s.tokens.size() != expression.tokens.size()) {
+        if (s.tokenList.size() != expression.tokenList.size()) {
             res = false;
             return res;
         }
         
-        for (int i = 0; i < s.tokens.size(); i++) {
+        for (int i = 0; i < s.tokenList.size(); i++) {
             
             if(!s.getToken(i).match(expression.getToken(i))) {
                 //System.out.println();
@@ -130,7 +130,8 @@ public class Rule {
     
     @Override
     public String toString () {
-        return (this.precondition.getString().toString() + this.postcondition.getString().toString());
+        
+        return (this.getPrecondition().toString() + this.getPostcondition().toString());
     }
     
     

@@ -39,26 +39,6 @@ public NodeList learnRules()
     }
 
 
-public static void main (String[] args) {
-
-    TokenMap t = new TokenMap();
-    
-    t.fromFile();
-    
-    SensorList s = new SensorList();
-    
-    s.fromFile(t);
-    
-    
-    System.out.println(s.getSensor(1).getString());
-    
-    System.out.println(s.getSensor(1).getActionString());
-    
-    //  ACTION IS ABSTRACT CANNOT BE INSTANTIATED
-    //Action a = new Action();
-    
-    
-    
-}    
+  
 }
 

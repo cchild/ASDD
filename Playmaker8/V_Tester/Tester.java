@@ -1,7 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * 
+ * 
+ * 
  */
 
 package V_Tester;
@@ -21,49 +21,41 @@ import java.util.ArrayList;
  */
 public class Tester {
     
+
     
-    // ENABLE TO PRINT EVERYTHING
-    static boolean debug_mode = false;
+    // GENERAL SETTINGS
+    static final boolean silent_mode = false;
     
+
     
-    // ENABLE TO ONLY SEE IMPORTANT STEPS
-    static boolean silent_mode = false;
-    
-    
-    // ENABLE TO USE THE LAST SAVED DATABASE
-    // DISABLE TO CREATE AND SAVE A DATABASE
-    static boolean read_database = true;
-    
-    
-    static boolean MSDD = true;
+    // MSDD SETTINGS
+    static final boolean MSDD = false;
+    static final boolean load_MSDD_rules = true;
+    static final boolean save_MSDD_rules = !load_MSDD_rules;
+    static final int maxnodes = 50000;
     
     
+
+    // REINFORCEMENT LEARNING SETTINGS
+    static final boolean Reinforcement_Learning = true;
+    static final int Reinforcement_Learning_steps = 200000; 
+    static final boolean use_decision_tables = false;
+    static final boolean save_Reinforcement_Learning_results = Reinforcement_Learning; 
+    static final boolean load_Reinforcement_Learning_results = !save_Reinforcement_Learning_results;
+    static final boolean use_Value_Table = true;
+    static final boolean use_Action_Value_Table = !use_Value_Table;
+    static final boolean use_Dynamic_Programming = true;
     
-    // SET TO 1 TO USE Rules
-    // SET TO 2 TO USE Maps
-    static int method = 2;
     
-    // SET TO 1 FOR 100% RANDOM
-    // SET TO 2 FOR 23% RANDOM (PICKING)
-    static int gen_method = 1;
+    // MAPS & RULES SETTINGS
+    static final boolean use_Maps = true;
+    static final boolean use_Rules = !use_Maps;
+    
+    
     
     
 
     
-    // MSDD MAXNODES PARAMETER
-    // ONLY USED IF read_database IS SET TO FALSE
-    static int maxnodes = 25000;
-    
-    // REINFOCEMENT LEARNING ?
-    static final boolean RL = true;
-  
-    // LIMIT FOR REINFORCEMENT LEARNING
-    static int RL_limit = 1000000;   
-    
-    static final boolean export_table = RL;
-    
-    static boolean read_table = !export_table;
- 
     
     
     
@@ -72,11 +64,15 @@ public class Tester {
     
     
     
-    
+    // MAIN
     public static void main (String[] args) {
 
 
     
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////        
+////////////////////////////////////////////////////////////////////////////////
+        
         
         System.out.println("INITIALIZING...");
         
@@ -92,141 +88,137 @@ public class Tester {
                 tokenMap.fromFile();
                 if (!silent_mode)
                     System.out.println(" OK");
-                System.out.println(tokenMap.TokenTypes);
+                
             
         // SENSORLIST (DATABASE)    
-            SensorList sList = new SensorList();
+            SensorList sensorList = new SensorList();
                 if (!silent_mode)
                     System.out.print("Building SensorList ...");
-                sList.fromFile(tokenMap);
+                sensorList.fromFile(tokenMap);
                 if (!silent_mode)
                     System.out.println(" OK");
             
             
         // SENSORMAP  
-            SensorMap sMap = new SensorMap(tokenMap);
+            SensorMap sensorMap = new SensorMap(tokenMap);
                 if (!silent_mode)
                     System.out.print("Building SensorMap ...");
-                sMap.fromFile();
+                sensorMap.fromFile();
                 if (!silent_mode)
                     System.out.println(" OK");
             
-            
-        // RULEMAP
-            RuleMap rMap = new RuleMap(tokenMap);
-                if (!silent_mode)
-                    System.out.print("Building RuleMap ...");
-                rMap.fromFile(sList);
-                if (!silent_mode)
-                    System.out.println(" OK");
                 
-         // INIT IMPOSSIBLELIST
+        // INIT IMPOSSIBLELIST
                 if (!silent_mode)
                     System.out.print("Building Impossible List...");
-                SensorList impossibleList = sList.getImpossibleList(sMap);
+                SensorList impossibleList = sensorList.getImpossibleList(sensorMap);
          
                 if (!silent_mode)
                     System.out.println(" OK");
          
        // STATEMAP
                 if (!silent_mode)                 
-                    System.out.print("\nBuilding StateMap...");
-                StateMap stMap = new StateMap();
-                stMap.fromFile(tokenMap);
+                    System.out.print("Building StateMap...");
+                StateMap stateMap = new StateMap();
+                stateMap.fromFile(tokenMap);
                 if (!silent_mode)
                     System.out.println(" OK");
-                
-                stMap.printMap();
+
+                    
+        // RULEMAP
+            RuleMap ruleMap = new RuleMap(tokenMap);
+                if (!silent_mode)
+                    System.out.print("Building RuleMap ...");
+                ruleMap.fromFile(sensorList);
+                if (!silent_mode)
+                    System.out.println(" OK");                
                 
         // CLOSEDLIST        
             RuleList closedList = new RuleList();
         
             
         // RULESETLIST    
-            RuleSetList rsList = new RuleSetList(closedList, sList);
+            RuleSetList ruleSetList = new RuleSetList(closedList, sensorList);
       
         
         // OTHERS    
-            ArrayList rules = new ArrayList ();
-            rules.add(closedList);        
-            rules.add(rsList);
-            StateTable sTable = new StateTable ();
-            
-        
+            ArrayList MSDD_rules = new ArrayList ();
+            MSDD_rules.add(closedList);        
+            MSDD_rules.add(ruleSetList);
+            StateActionValueTable stateActionValueTable;
+            StateValueTable stateValueTable;
 
+            
         // LOGFILES
         LogFiles logfiles = getInstance();
         
-        // IF CREATING A NEW DATABASE, ERASES THE OLD ONE
-        if (!read_database) {
+        // IF CREATING A NEW MSDD DATABASE, ERASES THE OLD ONE
+        if (save_MSDD_rules) {
 
              logfiles = getInstance(5);
-             logfiles = getInstance(3);
-             
-             
+             logfiles = getInstance(3);    
          }        
         
-        if (export_table)
+        // IF CREATING A NEW REINFORCEMENT LEARNING DATABASE, ERASES THE OLD ONE
+        if (save_Reinforcement_Learning_results)
             logfiles = getInstance(6);
         
         
-        ///////////////////////////
-        // MSDD - LEARNING RULES //
-        ///////////////////////////
-        if ( (!read_database) && (MSDD) ) {
+        
+        
+        
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////        
+////////////////////////////////////////////////////////////////////////////////        
+        
+        
+        
+        
+        ////////////////////////
+        // MSDD - LEARN RULES //
+        ////////////////////////
+        if ( (!load_MSDD_rules) && (MSDD) ) {
+            
             System.out.println("\n\nLEARNING MSDD RULES ...");
 
-            rules = RuleLearnerMSDD_Sensor.learnRulesMSDD(tokenMap, sMap, rMap, sList, rsList, silent_mode, read_database, maxnodes);
+
+            MSDD_rules = RuleLearnerMSDD_Sensor.learnRulesMSDD(tokenMap, sensorMap, ruleMap, sensorList, ruleSetList, silent_mode, maxnodes);
 
 
-            closedList = (RuleList) rules.get(0);
+            closedList = (RuleList) MSDD_rules.get(0);
 
-            rsList = (RuleSetList) rules.get(1);
+            ruleSetList = (RuleSetList) MSDD_rules.get(1);
         
             
-            System.out.println("\n");
-            
-            System.out.println("\n" + closedList.size() + " Rules successfully learned. " + rsList.size() + " RuleSets.");
+            System.out.println("\n\n" + closedList.size() + " Rules successfully learned. " + ruleSetList.size() + " RuleSets were created.");
         
         }
         
         
         
         
-        //////////////////////////
-        // MSDD - LOADING RULES //
-        //////////////////////////
-        if ( (read_database) && (MSDD)) {
+        ///////////////////////
+        // MSDD - LOAD RULES //
+        ///////////////////////
+        if ( (load_MSDD_rules) && (MSDD)) {
+            
                 System.out.println("\n\nLOADING MSDD RULES ...");
              
-                closedList.fromFile(sList, tokenMap);
-             
-             
-                rsList.fromFile();
+                closedList.fromFile(sensorList, tokenMap);
+                         
+                ruleSetList.fromFile();
 
                 
-                System.out.println("\n" + closedList.size() + " Rules successfully learned. " + rsList.size() + " RuleSets.");
+                System.out.println("\n" + closedList.size() + " Rules successfully learned. " + ruleSetList.size() + " RuleSets were created.");
         
         }
         
-        
-        
-        ///////////
-        // DEBUG //
-        ///////////
-        if (debug_mode)
-            closedList.printList("CLOSEDLIST");
 
-        if (debug_mode)
-            rsList.printsoft();
-    
-    
-        
-        
-        /////////////////////
-        // EXPORT DATABASE //
-        /////////////////////        
-        if (!read_database) {
+
+        ///////////////////////
+        // MSDD - SAVE RULES //
+        ///////////////////////        
+        if ( (save_MSDD_rules) && (MSDD)) {
             
             System.out.print("\nExporting ClosedList...");
             
@@ -238,7 +230,7 @@ public class Tester {
             
             System.out.print("\nExporting RuleSetList...");
             
-            rsList.export();
+            ruleSetList.export();
                         
             System.out.println(" OK");
             
@@ -250,6 +242,10 @@ public class Tester {
 
         
         
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////        
+////////////////////////////////////////////////////////////////////////////////
+        
         
         
         
@@ -260,201 +256,145 @@ public class Tester {
         
         
         
-        // DEFAULT CASE
-        // STATEGENERATOR IS CHANGED BELOW ACCORDING TO THE SELECTED METHOD
+        // DEFAULT STATE GENERATOR : MAPS
         StateGenerator stateGenerator = new MSDD_StateGenerator_Maps ();
         
-        if (method == 1) {
+        // RULES STATE GENERATOR
+        if (use_Rules) {
+            
             stateGenerator = new MSDD_StateGenerator_Rules ();
             System.out.println("\nRules State Generator selected.");
         }
         
-        if (method == 2) {
+        // MAPS STATE GENERATOR
+        if (use_Maps) {
+            
             stateGenerator = new MSDD_StateGenerator_Maps ();
             
             System.out.println("\nMaps State Generator selected.");
-            
-            
-            
-            //stMap.printMap();
         }
-        
-        
-        
-        if (gen_method == 1) {
-   
-            System.out.println("Random State Generation selected.");
-        }
-        
-        if (gen_method == 2) {
-            
-            System.out.println("Q-Learning State Generation selected.");
-            
-        }
+
         
         
         // SOURCE STATE
-        String str = "EEAEE*";
+        String str = "EEEEE*";
         Sensor currentState= new Sensor(str,tokenMap);
         
 
         
-
-        //SensorList res = new SensorList ();
-        //res.addSensor(currentState);
+        
+        
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////        
+////////////////////////////////////////////////////////////////////////////////        
         
         
         
-        
-        int won = 0;
-        
-        //System.out.println("\nSOURCE STATE : " + currentState);
-
-        int number = 0;
-         
-        if (RL) {
+        ////////////////////////////
+        // REINFORCEMENT LEARNING //
+        ////////////////////////////          
+        if (Reinforcement_Learning) {
             
-            //for (int y = 1; y < 16; y++) {
-            
-                System.out.println("\nREINFORCEMENT LEARNING...");
+                System.out.println("\n\nREINFORCEMENT LEARNING...\n");
         
-        
+                if (use_Value_Table) 
+                    System.out.println("Using Value Table");
+                
+                if (use_Action_Value_Table) 
+                    System.out.println("Using Action Value Table");
+                
+                if (use_Dynamic_Programming)
+                    System.out.println("Dynamic Programming enabled");
+                
+                
+                
+                
                 ReinforcementLearner rLearner = new ReinforcementLearner ();
         
-                //number = number + rLearner.createTable(RL_limit, stateGenerator, gen_method, currentState, sList, sMap, rsList, impossibleList, stMap);
-                sTable = rLearner.createTable(RL_limit, stateGenerator, gen_method, currentState, sList, sMap, rsList, impossibleList, stMap);
-        
-            //}
-            sTable.printTable("STATETABLE");
-            
-            if (export_table)
-                sTable.export();
-////            for (int y = 0; y < 20; y ++) {
-////            
-////                Token tok = stateGenerator.generateActionFromTable(currentState, sTable);
-////                
-////                
-////                System.out.println(tok);
-////            }
-            
-            
 
-            
-        }
-
-        
-
-        
-
-
-        //stMap.printMap_soft("From File");
-
-        SensorList res = new SensorList ();
-        
-        ArrayList actions = new ArrayList ();
-
-        StateTable nop = new StateTable ();
-       
-        if (read_table) {
-        
-            System.out.println("\nImporting sTable...");
-        
-            
-        
-            nop = nop.fromFile(tokenMap);
-        
-            nop.printTable("IMPORTED");
-   
-        }
                 
-                
-                
-        int rewards = 0;
-        
-        if (!RL) {
-            if(gen_method == 1) {
-
-                System.out.println("\nGENERATING 50 SAMPLES...");
-                
-                for (int i = 0 ; i < 50; i++) {
-
-                    ArrayList <Sensor> zou = stateGenerator.generateState_random(currentState, sList, sMap, rsList, impossibleList, stMap);
-
-                    res.addSensor(zou.get(0));
-
-                    actions.add(zou.get(1));
+                if (use_Value_Table) {
                     
-                    
-                    //System.out.println("State " + i + " : " + zou.get(0));
-                    //System.out.println("Action : " + zou.get(1));
+                    stateValueTable = rLearner.createStateValueTable(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
+            
                 }
-            }
-            if (gen_method == 2) {
-
-                System.out.println("\nGENERATING 50 SAMPLES...");
                 
-                stMap.printMap("Hello");
                 
-                System.out.println();
-                
-                Sensor old_state = currentState.copy();
-                
-                for (int i = 0 ; i < 100000; i++) {
-
-                     //ArrayList <Sensor> zou = stateGenerator.generateState_random(currentState, sList, sMap, rsList, impossibleList, stMap);
-
-                    //ArrayList <Sensor> zou = stateGenerator.generateState_bestAction(currentState, rsList, impossibleList, nop, stMap);
-
-                    //if (zou.size() > 0) {
+                if (((use_Action_Value_Table) && (use_Dynamic_Programming))) {
                     
-                        //System.out.println("Current State : " + currentState);
-                        
-                        
-                        Sensor nextState = stateGenerator.generateState_bestAction(old_state, sList, sMap, rsList, impossibleList, nop, stMap);
+                    stateActionValueTable = rLearner.createStateActionValueTable_dynamic(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
+                    
+                }
+                
+                
+                if (((use_Action_Value_Table) && (!use_Dynamic_Programming))) {
+                    
+                    stateActionValueTable = rLearner.createStateActionValueTable(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
+               
+                }
 
-                        res.addSensor(nextState);
+                
+                
+                
+                
+                if (use_decision_tables) {
+                    
+                    DecisionTable decision_table = new DecisionTable ();
 
-                        //int index = nop.findSensor(currentState);
-                        
-                        
+                    
+                    if (use_Action_Value_Table)
+                        decision_table = decision_table.fromStateActionValueTable(stateActionValueTable);
+                    
+                    if (use_Value_Table)
+                        decision_table = decision_table.fromStateValueTable(stateValueTable, stateMap);
 
-                        //actions.add(stateGenerator.generateRandomAction(currentState, nop.getAction(index)));
-                        if (nextState.isRewarded()) {
-                            System.out.println("Rewarded State : " + nextState + " from " + old_state + " step " + i);
-                            rewards++;
+
+                    if (save_Reinforcement_Learning_results) 
+                        decision_table.export();
+                    
+                    
+                    System.out.println("\nDecision Table successfully exported (" + decision_table.size() + " entries).");
+                
+                
+                }
+                
+                else {
+                    
+                    if (save_Reinforcement_Learning_results) {
+                    
+                        if (use_Value_Table) {
+                        
+                            stateValueTable.export();
+                        
+                            System.out.println("\nState Value Table successfully exported (" + stateValueTable.size() + " entries).");
                         }
                         
-                        old_state = nextState.copy();
-                    }
-                    //System.out.println(" Action : " + zou.get(1));
-                }
-            }
+                        if (use_Action_Value_Table) {
+                            
+                            stateActionValueTable.export();
+                            
+                            System.out.println("\nState Action Value Table successfully exported (" + stateActionValueTable.size() + " entries).");
+                        }
+                        
+                    } 
+                    
+                } // Decision Tables (else)
             
-            
-            System.out.println(rewards + " Rewards");
-//            for (int i = 0; i < actions.size(); i++) {
-//                
-//                System.out.println("Action : " + actions.get(i));
-//            }
-//            
-//            for (int i = 0; i < res.size(); i++) {
-//                
-//                System.out.println("State : " + res.getSensor(i+1));
-//            }
-        
-        
-        
-        
+        } // Reinforcement Learning (if)
+
 
         
         
         
         
         
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////        
+////////////////////////////////////////////////////////////////////////////////        
         
         
         
-        System.out.println("Closing Files...");
+        System.out.println("\nClosing Files...");
         
         logfiles.closeall();
 } 

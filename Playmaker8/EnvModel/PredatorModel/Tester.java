@@ -24,18 +24,7 @@ public class Tester
     }
     
     public static void main (String[] args) {
-//        PrintWriter outfile3 = null;
-//        FileWriter w = null;
-//        try {
-//        
-//        w = new FileWriter("c:\\JAVA Projects\\playmaker8\\Hello.txt", true);
-//       
-//        } catch (IOException e) {
-//                System.out.print("\nCANNOT OPEN LOGFILES");
-//            }
-//        
-//        outfile3 = new PrintWriter (w);
-//        outfile3.print("Hello");
+
         
         
         PredatorEnvironment predatorEnvironment = new PredatorEnvironment();
@@ -73,11 +62,7 @@ public class Tester
         logfile2.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES,2);
         logfile2.print("\n" + "Total reward: " + totalReward + "\n",2);
         
-        //logfile2.print("Hello",4);
-        
-        
-        
-        //System.out.println(str.charAt(0));
+ 
         //predatorEnvironment.testAgentRecords();
         
         
@@ -88,35 +73,23 @@ public class Tester
         
         ////////////   PERCEP PART   ////////////
         
-        //System.out.println("\nPrecep before function : " + pred.getPercep().toString());
+        
         int n = Logging.LogFiles.getLines();
         for (int i=0;i<8;i++){
         System.out.println(pred.getPercepRecord().getPercep(i));
         
         }
-        
-        
-        //pred.getPercep().readFromString(str);
-        //pred.getPercep().setPercep(0, 0);
-        //System.out.println("Precep after function : " + pred.getPercep().toString());
-        
-        //System.out.println(pred.getActionRecord().getActionString(0));
-        //System.out.println(pred.getActionRecord().getAction(0).getNumValues());
-        //System.out.println(pred.getActionRecord().);
-        
+
         
         
         ///////////    ACTION PART  ///////////
         
         Action action = pred.getActionRecord().getAction(0);
   
-        //System.out.println("\nAction before function : " + action.toString());
- 
+
         action.readFromString(str);
         
-        //System.out.println("Action after function : " + action.toString());
-        
-        //pred.getPercep().readFile(pred);
+
         
         TokenMap t = new TokenMap();
         SensorList s = new SensorList ();
@@ -125,7 +98,7 @@ public class Tester
         s.fromFile(t);
         
         
-        System.out.println(s.getSensor(3).getString());
+        
         
         logfile2.closeall();
         

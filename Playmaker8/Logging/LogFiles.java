@@ -227,7 +227,7 @@ public class LogFiles extends java.lang.Object {
                 
     		File file = new File(str);
  
-                System.out.println("Erasing file : " + number);
+                //System.out.println("Erasing file : " + number);
     		file.delete();
  
     	}catch(Exception e){

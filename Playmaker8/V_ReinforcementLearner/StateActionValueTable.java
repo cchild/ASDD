@@ -17,14 +17,14 @@ import java.util.Scanner;
  *
  * @author virgile
  */
-public class StateTable {
+public class StateActionValueTable {
     
     public ArrayList <ArrayList> list ;
     
     
     
     
-    public StateTable () {
+    public StateActionValueTable () {
         
         list = new ArrayList();
     }
@@ -150,11 +150,11 @@ public class StateTable {
     
     public void printTable (String str) {
         
-        System.out.println("\nPRITING " + str + " STATETABLE ("+ this.size() + " entries.)");
+        System.out.println("\nPRITING " + str + " State Action Value Table ("+ this.size() + " entries.)");
         
         for (int i = 0; i < this.size(); i ++) {
             
-            System.out.println("SENSOR " + (i+1) + " " + this.getSensor(i) + " Actions : " + this.getAction(i)  + " Values : " + this.getValue(i));
+            System.out.println("SENSOR " + (i+1) + " " + this.getSensor(i) + " Actions : " + this.getAction(i)  + " Values : " + this.getValue(i) + " max : " + this.getAction(i).get(this.findMaxValueIndex(i)));
         }
         
     }
@@ -307,9 +307,9 @@ public class StateTable {
     
     
     
-    public StateTable sort () {
+    public StateActionValueTable sort () {
         
-        StateTable res = new StateTable (); 
+        StateActionValueTable res = new StateActionValueTable (); 
         
         ArrayList <Token> actionsOrder = new ArrayList ();
         
@@ -424,12 +424,47 @@ public class StateTable {
     }
     
     
+    
+    public StateActionValueTable fromStateMap (StateMap stMap) {
+        
+        
+        StateActionValueTable s33 = new StateActionValueTable ();
+        
+        for (int i = 0; i < stMap.size(); i++) {
+            
+            Sensor sen = stMap.getSensor(i);
+            //System.out.println("State : " + sen);
+            
+            for (int j = 0; j < stMap.getActions(j).size(); j++) {
+                
+                Token action = stMap.getActions(i).get(j);
+                
+                //System.out.println("Action : " + action);
+                
+                
+                if (j == 0)
+                    s33.addSensor(sen, action, 0.0);
+                
+                else 
+                    s33.addActionAndValue(i, action, 0.0);
+            }
+        }
+        
+        return s33;
+    }
+    
+    
+    
+    
+    
+    
+    
 
-    public StateTable fromFile (TokenMap t) {
+    public StateActionValueTable fromFile (TokenMap t) {
         
         String filePath = Logging.LogFiles.FILE_NAME_6;
         
-        StateTable sTable = new StateTable ();
+        StateActionValueTable sTable = new StateActionValueTable ();
         
         try {
         

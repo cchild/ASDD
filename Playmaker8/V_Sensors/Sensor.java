@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package V_Sensors;
 
@@ -18,34 +13,38 @@ import java.util.*;
  */
 public class Sensor {
     
-    public ArrayList <Token> tokens;
+    public ArrayList <Token> tokenList;
     
     public  TokenMap tokenMap = null;
 
     
     
-    // CREATES AN EMPTY SENSOR OF THE SIZE OF TOKENMAP
+    // CREATES AN EMPTY SENSOR OF TOKENMAP'S SIZE
+    // ALL TOKENS ARE WILDCARDS
     public Sensor(TokenMap t) {    
         
         
         this.tokenMap = t;
-        this.tokens = new ArrayList ();
+        this.tokenList = new ArrayList ();
         
-        int i = t.TokenTypes.size();
+        int i = t.TokenList.size();
         
         for (int j=0; j<i ; j++) {
+            
             Token empty = new Token(0,j,t);
-            tokens.add(empty);
+            tokenList.add(empty);
         }
         
         
     }
     
+    
+    // Creates a sensor from "str", using the TokenMap to define Tokens
     public Sensor(String str, TokenMap t) {    
         
         
         this.tokenMap = t;
-        this.tokens = new ArrayList ();
+        this.tokenList = new ArrayList ();
         
         
         
@@ -53,16 +52,16 @@ public class Sensor {
         
         for (int i = 0; i < (n); i++)
         {
-            if (String.valueOf(str.charAt(i)).compareTo("*")==0) {
+            if (String.valueOf(str.charAt(i)).compareTo("*") == 0) {
+                
                 Token a = new Token(0,i,t);
-                this.tokens.add(a);
+                this.tokenList.add(a);
                 continue;
             }
+            
             Token a = new Token(String.valueOf(str.charAt(i)), i, t);
-            //System.out.println("Char "+ i + " : " + str.charAt(i));
-            //System.out.println("Token "+ i + " : (text)" + a.toString() + " (Pos) : " + a.position +" (Ref) : " + a.reference );
-            //System.out.println("Token Ref "+ i + " : " + a.reference);
-            this.tokens.add(a);
+
+            this.tokenList.add(a);
         }
         
        
@@ -71,8 +70,7 @@ public class Sensor {
     }
     
 
-    
-    
+    // Sets a Token inside a Sensor, at "position"
     public int setToken (String str, int position) {
         
         int a = tokenMap.getReference(position, str);
@@ -82,25 +80,20 @@ public class Sensor {
             return 1;
         }
         
-        this.tokens.get(position).setReference(a);
+        this.tokenList.get(position).setReference(a);
         return 0;
         
     }
-    
-    
-    
-    public ArrayList getString () {
         
-        return tokens;
-        
-    }
-    
+
+    // Returns a copy of the Sensor
     public Sensor copy () {
-        int n = this.tokens.size();
+        
+        int n = this.tokenList.size();
         
         Sensor a = new Sensor(this.tokenMap);
         for (int i = 0; i < n; i++) {
-            a.tokens.set(i, this.getToken(i));
+            a.tokenList.set(i, this.getToken(i));
         }
         
         return a;
@@ -110,18 +103,20 @@ public class Sensor {
     
     public Token getToken (int position) {
         
-        return this.tokens.get(position);
+        return this.tokenList.get(position);
     }
     
     public String getActionString() {
-        return this.tokens.get(this.tokens.size()-1).toString();
+        
+        return this.tokenList.get(this.tokenList.size()-1).toString();
     }
     
     
     public boolean equals (Sensor s2) {
+        
         boolean res = false;
         
-        int a = this.getString().toString().compareTo(s2.getString().toString());
+        int a = this.toString().compareTo(s2.toString());
         if (a==0){
             res = true;
         }
@@ -135,7 +130,7 @@ public class Sensor {
         
        SensorList sMap = new SensorList ();
         
-        if ((position >= this.tokens.size() ) || (position <0) || this.tokens.get(position).isNotWildcard()) {
+        if ((position >= this.tokenList.size() ) || (position <0) || this.tokenList.get(position).isNotWildcard()) {
             return sMap;
         }
        
@@ -146,11 +141,11 @@ public class Sensor {
             Sensor a = this.copy();
             Token tok = new Token(this.tokenMap.getToken(position, i),position,this.tokenMap);
             //System.out.println(this.tokenMap.getToken(position, i));
-            //System.out.println("Copied Sensor : " + a.tokens);
-            a.tokens.set(position, tok);
+            //System.out.println("Copied Sensor : " + a.tokenList);
+            a.tokenList.set(position, tok);
             sMap.addSensor(a);
             //System.out.println("Adding " + a.getString());
-            //System.out.println("Added >> " + a.tokens);
+            //System.out.println("Added >> " + a.tokenList);
             
         }
         
@@ -165,7 +160,7 @@ public class Sensor {
        SensorList sMap = new SensorList ();
         //sMap.addSensor(this);
         
-        if ((position >= this.tokens.size() ) || (position <0) || this.tokens.get(position).isWildcard()) {
+        if ((position >= this.tokenList.size() ) || (position <0) || this.tokenList.get(position).isWildcard()) {
             return sMap;
         }
         
@@ -178,13 +173,13 @@ public class Sensor {
             Sensor a = this.copy();
             Token tok = new Token(this.tokenMap.getToken(position, i),position,this.tokenMap);
             //System.out.println(this.tokenMap.getToken(position, i));
-            //System.out.println("Copied Sensor : " + a.tokens);
+            //System.out.println("Copied Sensor : " + a.tokenList);
             if (!tok.match_exact(this.getToken(position))){
-                a.tokens.set(position, tok);
+                a.tokenList.set(position, tok);
                 sMap.addSensor(a);
             }
             //System.out.println("Adding " + a.getString());
-            //System.out.println("Added >> " + a.tokens);
+            //System.out.println("Added >> " + a.tokenList);
             
         }
         
@@ -214,19 +209,20 @@ public class Sensor {
     @Override
     public String toString () {
         
-        return this.tokens.toString();
+        return this.tokenList.toString();
     }
     
     
     public boolean sensorMatch (Sensor expression) {
+        
         boolean res = true;
         
-        if (this.tokens.size() != expression.tokens.size()) {
+        if (this.tokenList.size() != expression.tokenList.size()) {
             res = false;
             return res;
         }
         
-        for (int i = 0; i < this.tokens.size(); i++) {
+        for (int i = 0; i < this.tokenList.size(); i++) {
             
             if(!this.getToken(i).match(expression.getToken(i))) {
                 res = false;
@@ -238,14 +234,15 @@ public class Sensor {
     
     
     public boolean sensorMatch_exact (Sensor expression) {
+        
         boolean res = true;
         
-        if (this.tokens.size() != expression.tokens.size()) {
+        if (this.tokenList.size() != expression.tokenList.size()) {
             res = false;
             return res;
         }
         
-        for (int i = 0; i < this.tokens.size(); i++) {
+        for (int i = 0; i < this.tokenList.size(); i++) {
             
             if(!this.getToken(i).match_exact(expression.getToken(i))) {
                 res = false;
@@ -259,6 +256,7 @@ public class Sensor {
     
          @Override
     public boolean equals(Object obj){
+        
          if(obj == null)
            return false;
          if(this==obj)
@@ -272,13 +270,14 @@ public class Sensor {
     
     public int size() {
         
-        return this.tokens.size();
+        return this.tokenList.size();
         
     }
     
     
     // RETURNS THE FIRST EXPANDABLE SPOT, OR -1
     public int isExpandable () {
+        
         for (int i=0; i<this.size(); i++) {
             if (this.getToken(i).isWildcard())
                 return i;
@@ -350,12 +349,16 @@ public class Sensor {
         return res;
     }
 
+    
+    
     public int chooseNextRuleSet (RuleSetList rsList) {
 
             ArrayList a = new ArrayList();
             return chooseNextRuleSet(rsList,a);
     } 
         
+    
+    
     public int chooseNextRuleSet (RuleSetList rsList, ArrayList <Integer> a) {
         
         int score;
@@ -395,15 +398,7 @@ public class Sensor {
                     }
                     
 
-                }
-            
-                // PRINTS OUT ALL CANDIDATES WITH SCORE - DEBUG
-//            if(isCandidate) {
-//                
-//                System.out.println("Candidate : " + rsList.getRuleSet(all.get(i)).getRule(0) + " Score : " + score);
-//
-//            }    
-                //System.out.println("SCORE OF " + all.get(i) + " IS " + score);
+                }  
 
                 if (score == best_score) {
 
@@ -414,7 +409,7 @@ public class Sensor {
 
                     chosen = all.get(i);
                     best_score = score;
-                    //System.out.println("BEST SCORE SET TO : " + best_score + " by RS" + chosen);
+                    
                 }
             }
         }
@@ -466,6 +461,7 @@ public class Sensor {
         
         return res;
     }
+    
     
     
     public String simple () {

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package V_Sensors;
 
@@ -18,14 +13,9 @@ package V_Sensors;
 public class Token {
     
     
-    
-    public static final int
-	TEST_TOKEN = 1;
-    
-    
     int reference;
     int position;
-    public static TokenMap tokenMap = null;
+    public TokenMap tokenMap;
     
     
     public Token(TokenMap t)
@@ -42,6 +32,7 @@ public class Token {
         this.position = position;
         this.reference = t.getReference(position, str);
     }
+    
     
     public Token(int reference, int position, TokenMap t)
     {
@@ -60,41 +51,45 @@ public class Token {
         return a;
     }
     
-//    public Token(String str, Sensor S)
-//    {
-//        this.reference = str;
-//        this.position = ;
-//    }
+
     
+    @Override
     public String toString () {
         
+        // Wildcard
         if (reference == 0)
         {
             return "*";
         }
+        // Unknown
         if (reference == -1)
         {
             return "?";
         }
         
+        // Classic Token
         Object res = tokenMap.getTokenList(position).get(reference-1);
         return String.valueOf(res);
     }
+    
     
     public int getReference () {
         
         return reference;
     }
     
+    
     public void setReference (int ref) {
         
         reference = ref;
     }
     
+    
     public int getPosition () {
         
         return position;
     }
+    
     
     public void setPosition (int ref) {
         
@@ -107,13 +102,15 @@ public class Token {
         return (reference == 0);
     }
     
-     public boolean isNotWildcard () {
+    
+    public boolean isNotWildcard () {
         
         return (!isWildcard());
     }
      
-     
-     public boolean match (Token target) {
+    
+    // Comparing Strings, could be speeded up by comparing references and positions
+    public boolean match (Token target) {
          
          if (target.isWildcard())
              return true;
@@ -128,10 +125,10 @@ public class Token {
          
          
          return true;
-     }
+    }
      
      
-     public boolean match_exact (Token target) {
+    public boolean match_exact (Token target) {
          
         
          
@@ -140,7 +137,7 @@ public class Token {
          
          
          return true;
-     }
+    }
 }    
     
 

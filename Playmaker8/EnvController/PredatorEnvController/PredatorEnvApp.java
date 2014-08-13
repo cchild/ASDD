@@ -56,16 +56,22 @@ public class PredatorEnvApp extends EnvApp {
         
         
         // NEW VERSION
-        getPredatorEnvironment().updateEnvironmentFromRL();
+        //getPredatorEnvironment().updateEnvironmentFromRL();
       
+        // 3rd Version
+        //getPredatorEnvironment().updateEnvironmentFromStateValueTable();
+       
+        
+        // 4th Version
+        getPredatorEnvironment().updateEnvironmentFromDecisionTable();
         /*Force a repaint*/      
         getEnvViewPanel().repaint();
     }
      
     public void startRunning() {
         /*Start the app running here*/
-        timer = new Timer(100, this);
-        timer.setInitialDelay(190);
+        timer = new Timer(10, this);
+        timer.setInitialDelay(10);
         timer.start();
     }
       

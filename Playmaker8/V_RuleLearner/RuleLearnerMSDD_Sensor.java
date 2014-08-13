@@ -29,7 +29,7 @@ public class RuleLearnerMSDD_Sensor {
     }
     
     
-public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, RuleMap rMap, SensorList sList, RuleSetList rulesetlist, boolean silent , boolean read, int maxnodes)
+public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, RuleMap rMap, SensorList sList, RuleSetList rulesetlist, boolean silent, int maxnodes)
     {
         
         
@@ -63,10 +63,9 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
          
 
          
-         boolean export_closedList = !read;
-         boolean read_closedList = !export_closedList;
-         boolean export_RSList = export_closedList;
-         boolean read_RSList = read_closedList;
+         boolean export_closedList = true;
+         boolean read_closedList = false;
+
                
          
          

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package V_Sensors;
 
@@ -15,17 +10,21 @@ import java.util.*;
  */
 public class TokenMap {
     
-    public ArrayList <ArrayList <String> > TokenTypes;
-    public int id;
+    public ArrayList <ArrayList <String> > TokenList;
+
+    
+    
     
     public TokenMap()
     {
-        //String [][] a = {{""}};
-        this.id = 0;
-        this.TokenTypes = new ArrayList <> ();
+        
+        this.TokenList = new ArrayList <> ();
     }
     
     
+    // BUILDS THE TOKENMAP FROM THE INPUT FILE
+    //
+    // FILE : LogFiles.INPUT_FILE
     public int fromFile () {
         
         String filePath = Logging.LogFiles.INPUT_FILE;
@@ -33,22 +32,16 @@ public class TokenMap {
         try {
         
             Scanner scanner=new Scanner(new File(filePath));
-            int i = 0;
+
             while (scanner.hasNextLine()) {
                 
                 String line = scanner.nextLine();
                 
-                //System.out.println("Adding Line " + i + " (" + line + ")");
-                
                 for (int j = 0; j < (line.length()); j++) {
+                    
                     setToken(String.valueOf(line.charAt(j)),j);
                 }
-                
 
-                
-                //System.out.println("TokenMap is : " + this.TokenTypes.toString());
-                //faites ici votre traitement
-                i++;
             }
             
             scanner.close();
@@ -66,117 +59,96 @@ public class TokenMap {
     
     
     
+    
+    // SETS THE TOKEN AT "position" TO "str"
     public int setToken (String str, int position) {
         
-        if (this.TokenTypes.isEmpty())
+        if (this.TokenList.isEmpty())
         {  
-                //System.out.println("Is Empty");
-                
+
                 for (int j = 0 ; j < position ; j++)
                 {
                     ArrayList a = new ArrayList();
-                    this.TokenTypes.add(j,a);
+                    this.TokenList.add(j,a);
                 }
 
                 ArrayList b = new ArrayList();
                 b.add(str);
-                this.TokenTypes.add(position, b);
+                this.TokenList.add(position, b);
                 return 0;
         }
         else {
-            if (this.TokenTypes.size() < position)
-            {
-                //System.out.println("Position " + position + " is not reachable, Index max : " + (this.TokenTypes.size()-1));
-                
-                for (int i = (this.TokenTypes.size()) ; i < position ; i++)
-                {
+            
+            if (this.TokenList.size() < position) {
+         
+                for (int i = (this.TokenList.size()) ; i < position ; i++) {
+                    
                     ArrayList a = new ArrayList();
-                    this.TokenTypes.add(i,a);
+                    this.TokenList.add(i,a);
                 }
                 
                 ArrayList d = new ArrayList();
                 d.add(str);
-                this.TokenTypes.add(position, d);
+                this.TokenList.add(position, d);
                 return 2;
             }
 
-            if (this.TokenTypes.size() > position)
+            if (this.TokenList.size() > position)
             
             {
-                if ((this.TokenTypes.get(position).contains(str)))
+                // CHECKS IF STR IS ALREADY IN THE TOKENMAP
+                if ((this.TokenList.get(position).contains(str)))
                 {
-                    //System.out.println(str + " found at index " + position + "! Not adding ");
+                   
                     return 3;
                 }
                 else
                 {
-                    this.TokenTypes.get(position).add(str);
+                    this.TokenList.get(position).add(str);
                     return 4;
                     
                 }
             
             }
+            
             ArrayList test = new ArrayList();
-            this.TokenTypes.add(position, test);
-            this.TokenTypes.get(position).add(str);
+            this.TokenList.add(position, test);
+            this.TokenList.get(position).add(str);
                        
         }
-    return 0;
+        
+        return 0;
         
     }
     
     
-     public ArrayList getTokenList (int position) {
+    // RETURNS POSSIBLE TOKENS AT POSITION "POSITION"
+    public ArrayList getTokenList (int position) {
          
-         return this.TokenTypes.get(position);
-     }
+        return this.TokenList.get(position);
+    }
      
-//     public Token getToken (int position,int reference) {
-//         
-//         return this.TokenTypes.get(position).get(reference);
-//     }
-     
-     
-     public List getPosition (String str)  {
-         if (this.TokenTypes.isEmpty())
-         {
-             List m = new ArrayList();
-             return m;
-         }
+
+    // Returns the reference of String "str", at the position "position"
+    //
+    // NOTICE the value is the index + 1. 
+    // 0 reserved to Wildcards
+    // If not found, returns -1 
+    public int getReference (int position, String str) {
          
          
-         List s = new ArrayList();
          
-         for (int i = 0; (i < this.TokenTypes.size()-1); i++)
-         {
-           if (this.TokenTypes.get(i).contains(str))  
-           {
-             
-             s.add(i);
-           }
-         }
-         
-         return s;
-     }
-    
-     
-     public int getReference (int position, String str) {
-         
-         // Returns the spot of the String, at the position specified
-         // NOTICE the value is the index + 1. 0 reserved to Wildcards
-         // If not found, returns (0)
-         
-         if (this.TokenTypes.isEmpty())
+         if (this.TokenList.isEmpty())
          {
              
              return -1;
          }
          
-         if (position >= this.TokenTypes.size()) { 
+         if (position >= this.TokenList.size()) { 
              return -1;
          }
          
-         int res = this.TokenTypes.get(position).indexOf(str);
+         int res = this.TokenList.get(position).indexOf(str);
          
          if (res != -1)
          {
@@ -188,18 +160,18 @@ public class TokenMap {
      
      
      
-      public int getRefMax (int position) {
-          return this.TokenTypes.get(position).size();
-      }
+    public int getRefMax (int position) {
+          
+        return this.TokenList.get(position).size();
+    }
       
       
-      public String getToken (int position, int reference) {
-          //if ((position >= 0) && (position <= this.TokenTypes.size()))
-          return this.TokenTypes.get(position).get(reference);
+    // RETURNS THE TOKEN AT POSITION "position" AND REF "reference"
+    public String getToken (int position, int reference) {
           
-          
-            //return "LOL";
-      }
+        return this.TokenList.get(position).get(reference);
+
+    }
     
  }
      

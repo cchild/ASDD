@@ -9,10 +9,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import static java.lang.Math.min;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
+
 
 /**
  *
@@ -29,7 +27,7 @@ public class RuleList {
         
     }
     
-    
+    // Returns a copy of this RuleList
     public RuleList copy () {
         
         RuleList res = new RuleList();
@@ -47,6 +45,7 @@ public class RuleList {
         return this.rulelist.get(i);
     }
     
+    // Returns the Rule with unique ID "id"
     public Rule getRuleByID (int id) {
         for (int i = 0; i < this.size(); i++) {
             if (this.rulelist.get(i).id == id)
@@ -54,6 +53,7 @@ public class RuleList {
         }
         
         // IF ID DOES NOT EXIST, WHAT SHOULD WE RETURN ?
+        // Never happens anyway
         return null; 
     }    
     
@@ -68,7 +68,8 @@ public class RuleList {
     }
     
     
-    public int add (RuleList rulelist) {
+    // Adds all Rules from input RuleList
+    public int addRuleList (RuleList rulelist) {
         int a = 0;
         for (int i=0; i<rulelist.size(); i++) {
             if (!this.containsRule(rulelist.getRule(i))) {
@@ -80,6 +81,12 @@ public class RuleList {
         return a;
     }
     
+    
+    // Old version was using SensorList
+    //
+    // This new one uses SensorMap & RuleMap
+    //
+    // To return to the old version, just uncomment old b and c calls
     public int addWithCheck (RuleList rulez, SensorList sList, SensorMap sMap, RuleMap rMap) {
         int a = 0;
         int b ;
@@ -89,31 +96,21 @@ public class RuleList {
             
             //b = sList.indexesOfRule(rulez.getRule(i)).size();
             b = rMap.getMatchingOccurencies(rulez.getRule(i));
-            //if (sList.containsRule_fast(rulez.getRule(i)) > 0) {
+
             if (b>0) {
-            //c = rulez.getRule(i).prec_occurrencies;
-                //System.out.println(" C  :" + c);
+
                 c = sMap.getMatchingOccurencies(rulez.getRule(i).getPrecondition());
                 //c = sList.indexesOfSensor(rulez.getRule(i).getPrecondition()).size();
                 if ((!this.containsRule(rulez.getRule(i))) ) {
-////                    // EXPLICIT PRINTING OF RULE W**E**S
-////                    if ( (rulez.getRule(i).precondition.getToken(0).getReference() == 1) && (rulez.getRule(i).precondition.getToken(5).getReference() == 3) && (rulez.getRule(i).precondition.getToken(3).getReference() == 1) ) {
-////                        System.out.println("Adding : " + rulez.getRule(i) + " from ");
-////                        //rulez.printList();
-////                        //System.out.println();
-////                    }
-                    Rule rule = new Rule (rulez.getRule(i).precondition,rulez.getRule(i).postcondition, sList);
+
+                    Rule rule = new Rule (rulez.getRule(i).precondition,rulez.getRule(i).postcondition);
                     rule.occurrencies = b;
                     rule.prec_occurrencies = c;
                     this.addRule(rule);
                     a++;
-                    continue;
+                    
                 }
-            }
-
-                //System.out.println("Rule : " + rulez.getRule(i).precondition + " " + rulez.getRule(i).postcondition + " was pruned. (B " + b + ") >> " + this.containsRule(rulez.getRule(i))) ;
-
-
+            }  
 
         }
         
@@ -127,35 +124,9 @@ public class RuleList {
         return 0;
     }
     
+
     
-    public int findRuleOcc (Rule rule) {
-        
-        int occurrences = Collections.frequency(this.rulelist, rule);
-        return occurrences;
-    }
-    
-    
-     public int findRuleOcc_exact (Rule rule) {
-        
-        int occurrences = exactfrequency(this.rulelist, rule);
-        return occurrences;
-    }
-    
-    public static int exactfrequency(Collection<?> c, Object o) {
-        int result = 0;
-        if (o == null) {
-            for (Object e : c)
-                if (e == null)
-                    result++;
-        } else {
-            for (Object e : c)
-                if (o.hashCode() == e.hashCode())
-                    result++;
-        }
-        return result;
-    }
-    
-    
+    // Returns the index of input Rule in this RuleList
     public int findRuleIndex (Rule rule) {
         int i = 0;
         
@@ -172,39 +143,20 @@ public class RuleList {
     }
     
         
-    public int findRuleId (Rule rule) {
-        
-        int index = findRuleIndex(rule);
-        if (index == -1)
-            return -1;
-        
-        return this.getRule(index).id;
-        
-    }
-    
-    public int findRuleIdFromSensors (Sensor s1, Sensor s2) {
-        
-        for (int i =0; i < this.size(); i ++) {
-            
-            if ((this.getRule(i).precondition.sensorMatch_exact(s1)) && (this.getRule(i).postcondition.sensorMatch_exact(s2)))
-                return this.getRule(i).id;
-        }
-        
-        return -1;
-        
-    }    
-    
+
+
+    // Returns the Rule with unique ID "id"
     public Rule findRuleById (int id) {
         
         for (int i = 0; i<this.size(); i++) {
             
             if (this.getRule(i).id == id) { 
-                //System.out.println("RULE " + this.getRule(i).id + " found.");
+                
                 return this.getRule(i);
             }
         }
         
-        //System.out.println("Rule "+ id + " not found.");
+       
         return null;
     }
     
@@ -234,113 +186,45 @@ public class RuleList {
         return 0;
     }
     
-    
-    public int printListByWithProb (String str, SensorList sList, int number, LogFiles logfiles) {
-        return printListByWithProb (str, sList, number, this.size(),logfiles);
-    }
-    
-    public int printListByWithProb (String str, SensorList sList, int number, int limit, LogFiles logfiles) {
 
-        
-        int n = min(this.rulelist.size(),limit);
-        System.out.println("\nPRINTING "+ str + " RULELIST (SIZE:" + n + ")");
-        
-        //LogFiles logfile = getInstance();
-        
-        for (int i = 0; i < n; i++) {
-            if ((i % number) ==0) {
-         
-                System.out.println((i+1) + " " + this.getRule(i).toString() + " " + this.getRule(i).occurrencies + "x out of " + this.getRule(i).prec_occurrencies + " PROB :" + this.getRule(i).getProb());
-                // PRINTING IN RULES_MSDD.TXT
-                logfiles.println((i+1) + " " + this.getRule(i).toString() + " " + this.getRule(i).occurrencies + "x out of " + this.getRule(i).prec_occurrencies + " PROB :" + this.getRule(i).getProb(), 5);
-            }
-        }
-        
-        
-        System.out.println("RULELIST " + str + " SIZE : " + n);
-        return 0;
-    }
     
-        
-        
-        public int getMostFrequentRuleIndex () {
-            double max = 0;
-            int index = 0;
-            for (int i=0; i<this.rulelist.size(); i++) {
-                if (this.rulelist.get(i).occurrencies > max) {
-                    max = this.rulelist.get(i).occurrencies;
-                    index = i;
-                }
+    // Returns the occurrences of the most occurring Rule
+    public int getMaxOcc () {
+        int max = 0;
+        for (int i=0; i<this.rulelist.size(); i++) {
+            if (this.rulelist.get(i).occurrencies > max) {
+                max = this.rulelist.get(i).occurrencies;
             }
-            
-            return index;
         }
+
+        return max;
+    }
         
-        public int getMaxOcc () {
-            int max = 0;
-            for (int i=0; i<this.rulelist.size(); i++) {
-                if (this.rulelist.get(i).occurrencies > max) {
-                    max = this.rulelist.get(i).occurrencies;
-                }
+      
+    // Returns the indexes of Rules that occurs the same numer of time then ruleOcc
+    public ArrayList getRuleIndexes (int ruleOcc) {
+
+        ArrayList indexes = new ArrayList ();
+        
+        for (int i=0; i<this.rulelist.size(); i++) {
+            if (this.rulelist.get(i).occurrencies == ruleOcc) {
+
+                indexes.add(i);
             }
-            
-            return max;
         }
-        
-        
-        public ArrayList getRuleIndexes (int ruleOcc) {
-            
-            ArrayList indexes = new ArrayList ();
-            for (int i=0; i<this.rulelist.size(); i++) {
-                if (this.rulelist.get(i).occurrencies == ruleOcc) {
-                    
-                    indexes.add(i);
-                }
-            }
-            
-            return indexes;
-        }
+
+        return indexes;
+    }
         
 
-        
-        public Rule getMostFrequentRule () {
-    
-            
-            return this.rulelist.get(this.getMostFrequentRuleIndex());
-        }
-        
-        
-        
-        
+  
     public int size () {
             
             return this.rulelist.size();
         }
         
-        
-    public RuleList removeUnexpandable () {
-        
-        RuleList copy = new RuleList();
-        for(int i=0; i<this.size(); i++) {
-            if (this.getRule(i).isExpandable())
-                copy.addRule(this.getRule(i));
-        } 
-        
-        return copy;
-    }
-//
-//    public RuleList removeUnseenRules (SensorList sList) {
-//        
-//        RuleList copy = new RuleList();
-//        for(int i=0; i<this.size(); i++) {
-//            if (sList.containsRule(this.getRule(i)))
-//                copy.addRule(this.getRule(i));
-//        } 
-//        
-//        return copy;
-//    }
-    
-    
+ 
+    // Sorts the OpenList for MSDD Algorithm
     public RuleList sort () {
         RuleList copy = new RuleList();
         int max = this.getMaxOcc();
@@ -358,6 +242,7 @@ public class RuleList {
     }
     
     
+    // Returns true if input Rule is in the RuleList
     public boolean containsRule (Rule rule) {
         
         for (int i=0; i<this.size(); i++) {
@@ -367,6 +252,8 @@ public class RuleList {
         return false;
     }
     
+    
+    // Removes all of the Rules that have "root" Post.
     public RuleList removeWildcardSuccessors () {
         
         RuleList res = new RuleList();
@@ -383,11 +270,13 @@ public class RuleList {
     }
     
    
-    
-public ArrayList findFreeloaders (SensorList sList, SensorMap sMap) {
+    // Returns an ArrayList with the Indexes of Freeloaders
+    //
+    // It is then used in removeFreeloaders below
+    public ArrayList findFreeloaders (SensorMap sMap) {
         
         ArrayList res = new ArrayList();
-        int count = 0;
+         
         for (int i = this.size()-1; i > 0; i--) {
             
             if (((this.size()-i)%2000) == 0 )
@@ -396,16 +285,16 @@ public ArrayList findFreeloaders (SensorList sList, SensorMap sMap) {
                 
                  
                 if (this.getRule(i).isMoreGeneralizedRule(this.getRule(j))) {
+                    
                     float a = sMap.Gstatistic(this.getRule(i), this.getRule(j));
-                    //float a = sList.Gstatistic(this.getRule(i), this.getRule(j));
+                    
                     if ( a < 3.841) {
                        //3.841 gives 5% statistical significance
                        //2.706 gives 10%
                        //0.455 gives 50%
                    
-                       count++;
+                      
                        res.add(i);
-                       //System.out.println("Freeloader " + count + " from rule : " + this.getRule(i) + "(ID " + this.getRule(i).id + " at rule : " + this.getRule(j) + " Gstat : " + a);
                        break;
                    }
                } 
@@ -417,17 +306,20 @@ public ArrayList findFreeloaders (SensorList sList, SensorMap sMap) {
     }
 
 
-
+    // Removes the specified Freeloaders
+    //
+    // Backwards to avoid silly mistakes
     public RuleList removeFreeloaders (ArrayList indexesToRemove) {
     
-    for (int i=0; i < indexesToRemove.size(); i++) {
-        this.remove((int) indexesToRemove.get(i));
+        for (int i = indexesToRemove.size() - 1; i >= 0 ; i--) {
+            this.remove((int) indexesToRemove.get(i));
+        }
+
+        return this;
     }
-    
-    return this;
-}
 
 
+    // Exports in file 5
     public void export () {
         
         LogFiles logFiles = LogFiles.getInstance();
@@ -439,7 +331,7 @@ public ArrayList findFreeloaders (SensorList sList, SensorMap sMap) {
     }
 
 
-
+    // Builds a RuleList from FILE_NAME_5
     public int fromFile (SensorList sList, TokenMap t) {
         
         String filePath = Logging.LogFiles.FILE_NAME_5;
@@ -454,16 +346,10 @@ public ArrayList findFreeloaders (SensorList sList, SensorMap sMap) {
                 
                 String [] a = line.split(" ");
                 
-                
-//                System.out.println("Line " + i + " : " + line );
-//                
-//                for (int i2 = 0; i2 < a.length; i2++) {
-//                    
-//                    System.out.println(a[i2]);
-//                }
+
                 Sensor s1 = new Sensor(a[0], t);
                 Sensor s2 = new Sensor(a[1], t);
-                Rule r1 = new Rule(s1, s2, sList);
+                Rule r1 = new Rule(s1, s2);
                 r1.id = Integer.parseInt(a[2]);
                 r1.ruleset_id = Integer.parseInt(a[3]);
                 r1.prec_occurrencies = Integer.parseInt(a[4]);

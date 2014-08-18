@@ -31,191 +31,72 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
      //   
      // OF COURSE, STATELIST 1 CORRESPONDS TO ACTION 1    
      @Override
-     public ArrayList  generateStates (Sensor s1, SensorList sList, SensorMap sMap, RuleSetList rulesetlist, SensorList impossibleList, boolean hard_clean_statelist, StateMap stMap) {
+     public ArrayList  generateAllPossibleStates (Sensor s1, SensorList sList, SensorMap sMap, RuleSetList rulesetlist, SensorList impossibleList, boolean hard_clean_statelist, StateMap stMap) {
          
 
-        /*
         ArrayList stateLists = new ArrayList ();
         ArrayList actionsList = new ArrayList ();
         
-        
-        ArrayList res = new ArrayList ();
-        
-        
-        Token action;
-        SensorList numbers = new SensorList (); 
-
-        StateList possibleList = sList.getPossibleList(s1, sMap);
-
-        
-        if (s1.getToken(s1.size()-1).isWildcard()) {
-            
-            numbers.addSensorList(s1.expand(s1.size()-1));
-        }
-        
-        else { numbers.addSensor(s1); }
-            
-        
-        numbers.printList("STUDY LIST");
-        
-        for (int i = 0; i < numbers.size(); i++) {
-
-                System.out.print("GENERATING STATES FOR " + numbers.getSensor(i+1) + "...");
-
-                action = numbers.getSensor(i+1).getToken(s1.size()-1).copy();
-                
-                ArrayList <Integer> aList = new ArrayList();
-                //ArrayList <Integer> chosenRuleSets = new ArrayList();
-                StateList stateList = new StateList();
-
-
-                while ( (aList.size()+1)!= s1.size()) {
-
-                    //System.out.println("\nCHOOSING NEXT RULESET...");
-                    int chosen = numbers.getSensor(i+1).chooseNextRuleSet(rulesetlist, aList);
-                    //System.out.println("CHOSEN RULESET : " + chosen);
-                    //rulesetlist.getRuleSet(chosen).print();
-
-                    aList.addAll(rulesetlist.getRuleSet(chosen).detectNonWildcardedSpots());
-
-                    //chosenRuleSets.add(chosen);
-                    //System.out.println("CHOSEN RULESET LIST IS : " + chosenRuleSets);
-
-                    //System.out.println("UPDATING STATELIST... ");
-                    stateList.update(rulesetlist.getRuleSet(chosen), impossibleList);
-
-                }
-
-                if (hard_clean_statelist) {
-                    //System.out.println("\nHARD CLEANING STATELIST ");
-                    stateList.clean_hard(impossibleList, possibleList);
-                }
-                else {
-                    //System.out.println("\nCLEANING STATELIST ");
-                    stateList.clean(impossibleList);
-
-                }
-                
-                System.out.println(" OK");
-                ArrayList temp = new ArrayList ();
-                stateLists.add(stateList);
-                
-                actionsList.add(action);
-
-            }
-
-            //System.out.println("GENERATED " + numbers.size() + " StateLists.");
-                
-            
-            res.add(stateLists);
-            res.add(actionsList);
-            
-            
-            return res;
-                     
-     }
-     */
-
-     
-
-        
-        
-        ArrayList stateLists = new ArrayList ();
-        ArrayList actionsList = new ArrayList ();
-        
-        
-        ArrayList res = new ArrayList ();
         
         ArrayList container = new ArrayList ();
          
         
-        SensorList numbers = new SensorList (); 
+        SensorList current_state_with_expanded_actions = new SensorList (); 
+
 
         
-        
-        //StateList possibleList = sList.getPossibleList(s1, sMap);
-
-        
-        // IN ORDER TO PICK AN ACTION, WE LIST THE SENSORS FORMED BY
-        // MERGING S1 TO EVERY ACTION, THIS LIST IS CALLED NUMBERS
+        // Expanding current_state with possible actions
         if (s1.getToken(s1.size()-1).isWildcard()) {
             
-            numbers.addSensorList(s1.expand(s1.size()-1));
+            current_state_with_expanded_actions.addSensorList(s1.expand(s1.size()-1));
         }
         
-        else { numbers.addSensor(s1); }
+        else { current_state_with_expanded_actions.addSensor(s1); }
         
+
         
-        //numbers.printList("STUDY LIST");
-        //int size_of_actions_list = numbers.size();
-        
-        //double soal = (double) size_of_actions_list;
-        //System.out.println("Sizes " + size_of_actions_list + " " + soal);
-        //double rand = Math.random();
-        
-        //rand = rand * soal;
-        //System.out.println(rand);
-        //int final_rand = (int) rand;
-        
-        //if (final_rand == 0)
-            //final_rand = 1;
-        
-        for (int final_rand = 0; final_rand < numbers.size(); final_rand++) {
-            //System.out.println("Final rand : " + final_rand);
+        for (int i = 0; i < current_state_with_expanded_actions.size(); i++) {
+            
+            
             StateList possible_states = new StateList ();
-            Token random_action = new Token (s1.tokenMap);
+            Token random_action;
             
             // SETTING REF OF OUR RANDOM ACTION
-            random_action = numbers.getSensor(final_rand + 1).getToken(s1.size()-1).copy();
+            random_action = current_state_with_expanded_actions.getSensor(i + 1).getToken(s1.size()-1).copy();
             
-            //System.out.println("Rand Action : " + random_action);
-
-                    // GENERATES ALL STATES FROM STATE S1 AND ACTION random_action
-                    ArrayList <Integer> aList = new ArrayList();
-                    ArrayList <Integer> chosenRuleSets = new ArrayList();
-
-
-
-                    while ( (aList.size()+1)!= s1.size()) {
-
-                        //System.out.println("\nCHOOSING NEXT RULESET...");
-                        //System.out.println("Sensor : " + numbers.getSensor(final_rand));
-                        int chosen = numbers.getSensor(final_rand + 1).chooseNextRuleSet(rulesetlist, aList);
-                        //System.out.println("CHOSEN RULESET : " + chosen);
-                        //rulesetlist.getRuleSet(chosen).print();
-
-                        aList.addAll(rulesetlist.getRuleSet(chosen).detectNonWildcardedSpots());
-
-                        chosenRuleSets.add(chosen);
-
-                        //System.out.println("UPDATING STATELIST... ");
-
-                        possible_states.update(rulesetlist.getRuleSet(chosen), impossibleList);
-
-                    }
-
-                    possible_states.clean(impossibleList);
-
-                    //System.out.print("State : " + s1 + " action : " + random_action);
-             
-                    //System.out.println("CHOSEN RULESET LIST IS : " + chosenRuleSets);
+            
+            // GENERATES ALL STATES FROM STATE S1 AND ACTION random_action
+            ArrayList <Integer> aList = new ArrayList();
+            ArrayList <Integer> chosenRuleSets = new ArrayList();
 
 
 
+            while ( (aList.size()+1)!= s1.size()) {
+
+                int chosen_ruleset = current_state_with_expanded_actions.getSensor(i + 1).chooseNextRuleSet(rulesetlist, aList);
+
+                aList.addAll(rulesetlist.getRuleSet(chosen_ruleset).detectNonWildcardedSpots());
+
+                chosenRuleSets.add(chosen_ruleset);
+
+                possible_states.update(rulesetlist.getRuleSet(chosen_ruleset), impossibleList);
+
+            }
+
+            possible_states.clean(impossibleList);
 
 
+            stateLists.add(possible_states);
 
-             stateLists.add(possible_states);
-
-             actionsList.add(random_action);
+            actionsList.add(random_action);
              
              
         }
          
-         res.add(stateLists);
-         res.add(actionsList);
+         container.add(stateLists);
+         container.add(actionsList);
 
-        return res;
+        return container;
      }
     
     
@@ -224,693 +105,195 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
      
      
 
-    // CHOOSES A RANDOM ACTION, AND RETURNS AN ARRAYLIST WITH :
+    // CHOOSES A RANDOM ACTION, AND GENERATES A STATE 
+    // RETURNS AN ARRAYLIST WITH :
     // INDEX 0 : GENERATED STATE (SENSOR)
     // INDEX 1 : CHOSEN ACTION (TOKEN)
     @Override
-    public ArrayList generateState_random (Sensor s1, RuleSetList rulesetlist, SensorList impossibleList, StateMap stMap) {
+    public ArrayList generateRandomActionAndPseudoRandomState (Sensor s1, RuleSetList rulesetlist, SensorList impossibleList, StateMap stMap) {
          
          
        
-        ArrayList a = new ArrayList ();
+        ArrayList container = new ArrayList ();
 
         
-        SensorList numbers = new SensorList (); 
+        SensorList s1_with_actions_expand = new SensorList (); 
 
-        Sensor res = new Sensor (s1.tokenMap);
+        Sensor new_state = new Sensor (s1.tokenMap);
         
         
-        Token t;
+        Token action;
         
-        
-        double rand;
-        
+
+        // Used to resolve some cases where the same RuleSet needs to be used again
         int forceRuleSet = -1;
         
         
 
-        
+        // Generates all the possible full Sensors (with action included)
         if (s1.getToken(s1.size()-1).isWildcard()) {
             
-            numbers.addSensorList(s1.expand(s1.size()-1));
+            s1_with_actions_expand.addSensorList(s1.expand(s1.size()-1));
         }
         
-        else { numbers.addSensor(s1); }
+        else { s1_with_actions_expand.addSensor(s1); }
             
-        
-        //numbers.printList("STUDY LIST");
         
 
-            ArrayList <Integer> aList;
+        ArrayList <Integer> covered_indexes;
+
+
+        // SELECTS A RANDOM ACTION
+        double rand = Math.random();
+
+        // A RAND BETWEEN 0 AND numers.size
+        if (s1_with_actions_expand.size() > 1)
+            rand = Math.round(rand * s1_with_actions_expand.size());
+
+        else 
+            rand = 0;
+
+
+        covered_indexes = new ArrayList();
+
+
+        // While we have not cover all the indexes of new_state
+        while ( (covered_indexes.size()+1)!= s1.size()) {
+
+            // A state is Valid when all of its indexes are covered, except the action slot
+            boolean isValid = false;
+
             
+            while (!isValid) {
+
+                // Copying
+                Sensor copy = new_state.merge(new_state);
+                ArrayList <Integer> copy2 = new ArrayList ();
                 
-            // SELECTS A RANDOM ACTION
-            rand = Math.random();
+                for (int i = 0; i < covered_indexes.size(); i++) {
 
-            if (numbers.size() > 1)
-                // A RAND BETWEEN 0 AND numers.size
-                rand = Math.round(rand * numbers.size());
+                    copy2.add(covered_indexes.get(i));
 
-            else 
-                rand = 0;
-
-            
-                    aList = new ArrayList();
-
-
-
-                    while ( (aList.size()+1)!= s1.size()) {
-
-                        boolean isValid = false;
-
-                        //System.out.println("\nCHOOSING NEXT RULESET...");
-                        
-                        //System.out.println("COPY S : " + copy + " & COPY LIST : " + copy2);
-                        while (!isValid) {
-                            
-                            
-                            Sensor copy = res.merge(res);
-                            ArrayList <Integer> copy2 = new ArrayList ();
-                            for (int i = 0; i < aList.size(); i++) {
-                            
-                                copy2.add(aList.get(i));
-                                
-                            }
-                        
-
-                            
-                            
-                            //System.out.println("Rand : " + chosenAction + " action : " + numbers.getSensor((int)chosenAction+1).getToken(5));
-                            
-                            int chosen;
-                            if (forceRuleSet == -1)
-                                chosen = numbers.getSensor((int) rand +1).chooseNextRuleSet(rulesetlist, aList);
-                            else {
-                                chosen = forceRuleSet;
-                                forceRuleSet = -1;
-                            }
-                            //System.out.println("CHOSEN RULESET : " + chosen);
-                            //rulesetlist.getRuleSet(chosen).print();
-
-                            //System.out.println("ALIST : " + aList);
-                            aList.addAll(rulesetlist.getRuleSet(chosen).detectNonWildcardedSpots());
-
-                            
-                            Sensor bb = rulesetlist.getRuleSet(chosen).chooseRandomRule().getPostcondition();
-                            //System.out.println("Merging " + res + " with " + bb);
-                            res = res.merge(bb);
-
-                            //System.out.println("RES : " + res);
-                            //System.out.println("ALIST : " + aList);
-                            
-                            int rr = impossibleList.findSensor2(res);
-                            
-                            //System.out.println(" COUNT IS : " + rr);
-                            
-                            if ( rr == 0) {
-                                
-                                if (res.numberOfWildcards() == 1) {
-                                 
-                                    isValid = true;
-                                }
-                                
-                     
-                                
-                            }
-                            
-                            else {
-                                
-                                //System.out.println("IMP STATE : " + res);
-                                    
-                                    res = copy;
-                                //System.out.println("RESET RES TO : " + res);    
-                                    aList.clear();
-                                    for (int o = 0; o < copy2.size(); o++) {
-                                        
-                                        aList.add(copy2.get(o));
-                                    }
-                                //System.out.println("RESET ALIST TO : " + aList);
-                                
-                                forceRuleSet = chosen;
-                                
-                            }
-                        }
-
-                    }
-                    
-                    
-                    
-                    t = numbers.getSensor((int) rand +1).getToken(numbers.getSensor((int) rand +1).size()-1);
-                    
-                    
-                    a.add(res);
-                    
-                    a.add(t);
-
-         
-        return a;
-        
-     }
-    
-    
-    
-    
-    
-    
-    
-    // CHOOSES AN ACTION (BEST POSSIBLE ACTION) OR RAND (23%), AND RETURNS AN ARRAYLIST WITH :
-    // INDEX 0 : GENERATED STATE (SENSOR)
-    // INDEX 1 : CHOSEN ACTION (TOKEN)    
-    
-    @Override
-    public ArrayList generateState_picking (Sensor s1, RuleSetList rulesetlist, SensorList impossibleList, StateActionValueTable sTable, StateMap stMap) {
-         
-         
-       
-        ArrayList a = new ArrayList ();
-
-        
-        SensorList numbers = new SensorList (); 
-
-        Sensor res = new Sensor (s1.tokenMap);
-        
-        
-        Token t;
-        
-        
-        int chosenAction = 0;
-        
-        Token chosenActionToken;
-        
-        int forceRuleSet = -1;
-        
-        
-        
-        ArrayList sourceTokens = s1.tokenMap.getTokenList(s1.size()-1);
-        
-        ArrayList availableToken = new ArrayList ();
-        
-        for (int i = 0; i < sourceTokens.size(); i++) {
-            
-            Token tok = new Token ((String) sourceTokens.get(i), s1.size()-1, s1.tokenMap); 
-            
-            availableToken.add(tok);
-        }
-        
-        
-
-        
-        if (s1.getToken(s1.size()-1).isWildcard()) {
-            
-            numbers.addSensorList(s1.expand(s1.size()-1));
-        }
-        
-        else { numbers.addSensor(s1); }
-            
-        
-        //numbers.printList("STUDY LIST");
-        
-
-            ArrayList <Integer> aList;
-            
-                
-            // SELECTS A RANDOM ACTION
-            
-            int temp = sTable.findSensor(s1);
-            
-            if (numbers.size() > 3) {
-                
-                
-            
-                //System.out.println("Index of Sensor : " + temp);
-                
-                if (temp != -1) {
-                    
-                    if (sTable.getAction(temp).size() == 4) {
-                        
-                        double rand2 = Math.random();
-                        
-                        if (rand2 > 0.2) {
-                            int stock = sTable.findMaxValueIndex(temp);
-
-                            //System.out.println("Actions : " + sTable.getAction(temp) + " Values : " + sTable.getValue(temp));
-                            //System.out.println("Max Value Index : " + action_index);
-                            chosenActionToken = sTable.getAction(temp).get(stock);
-                            //System.out.println("Action Token : " + chosenActionToken);
-
-
-                            for (int i = 0; i < numbers.size(); i++) {
-
-                                if (chosenActionToken.match_exact(numbers.getSensor(i+1).getToken(s1.size()-1))) {
-                                    chosenAction = i;
-                                    //System.out.println("Selecting : " + numbers.getSensor(i+1));
-                                }
-                            }
-                        }
-                        else {
-                            //System.out.println("RANDOM ACTION 4");
-                            chosenActionToken = generateRandomAction (s1, availableToken);
-                            
-                            for (int i = 0; i < numbers.size(); i++) {
-
-                                if (chosenActionToken.match_exact(numbers.getSensor(i+1).getToken(s1.size()-1))) {
-                                    chosenAction = i;
-                                    //System.out.println("Selecting : " + numbers.getSensor(i+1));
-                                }
-                            }
-                        }
-                    }
-                    
-                    else {
-                        //System.out.println("RANDOM ACTION 3");
-                        chosenActionToken = generateRandomAction (s1, availableToken);
-                            
-                            for (int i = 0; i < numbers.size(); i++) {
-
-                                if (chosenActionToken.match_exact(numbers.getSensor(i+1).getToken(s1.size()-1))) {
-                                    chosenAction = i;
-                                    //System.out.println("Selecting : " + numbers.getSensor(i+1));
-                                }
-                            }
-                    }
                 }
-               
+
+
+                int chosen_ruleset;
+                
+                
+                if (forceRuleSet == -1)
+                    chosen_ruleset = s1_with_actions_expand.getSensor((int) rand +1).chooseNextRuleSet(rulesetlist, covered_indexes);
                 else {
-                        //System.out.println("RANDOM ACTION");
-                        chosenActionToken = generateRandomAction (s1, availableToken);
-                            
-                            for (int i = 0; i < numbers.size(); i++) {
-
-                                if (chosenActionToken.match_exact(numbers.getSensor(i+1).getToken(s1.size()-1))) {
-                                    chosenAction = i;
-                                    //System.out.println("Selecting : " + numbers.getSensor(i+1));
-                                }
-                            }
-                }   
-               
+                    chosen_ruleset = forceRuleSet;
+                    forceRuleSet = -1;
+                }
                 
-
-            }
-            
-            else {
                 
-                //System.out.println("RANDOM ACTION 2");
-                chosenActionToken = generateRandomAction (s1, availableToken);
-                            
-                            for (int i = 0; i < numbers.size(); i++) {
+                covered_indexes.addAll(rulesetlist.getRuleSet(chosen_ruleset).detectNonWildcardedSpots());
 
-                                if (chosenActionToken.match_exact(numbers.getSensor(i+1).getToken(s1.size()-1))) {
-                                    chosenAction = i;
-                                    //System.out.println("Selecting : " + numbers.getSensor(i+1));
-                                }
-                            }
+
+                Sensor bb = rulesetlist.getRuleSet(chosen_ruleset).chooseRandomRule().getPostcondition();
                 
-                if (numbers.size() == 1)
-                    chosenAction = 0;
-            }
                 
-            
-            if (numbers.size() == -1)
-                chosenAction = 0;
-             //System.out.println("Index : " + temp + " Action : " + chosenAction );
-        
-            //System.out.println("RAND IS : " + chosenAction);
-            
-            //for (int i = 0; i < numbers.size(); i++) {
+                new_state = new_state.merge(bb);
 
-//////                    System.out.print("    GENERATING STATE FOR " + numbers.getSensor((int) chosenAction) + "...");
+                
+                int impossible_state_index = impossibleList.findSensor2(new_state);
 
-                    
+                //System.out.println(" COUNT IS : " + impossible_state_index);
 
-                    aList = new ArrayList();
+                if ( impossible_state_index == 0) {
 
+                    if (new_state.numberOfWildcards() == 1) {
 
-
-                    while ( (aList.size()+1)!= s1.size()) {
-
-                        boolean isValid = false;
-
-                        //System.out.println("\nCHOOSING NEXT RULESET...");
-                        
-                        //System.out.println("COPY S : " + copy + " & COPY LIST : " + copy2);
-                        while (!isValid) {
-                            
-                            
-                            Sensor copy = res.merge(res);
-                            ArrayList <Integer> copy2 = new ArrayList ();
-                            for (int i = 0; i < aList.size(); i++) {
-                            
-                                copy2.add(aList.get(i));
-                                
-                            }
-                        
-
-                            
-                            
-                            //System.out.println("Rand : " + chosenAction + " action : " + numbers.getSensor((int)chosenAction+1).getToken(5));
-                            
-                            int chosen;
-                            if (forceRuleSet == -1)
-                                chosen = numbers.getSensor((int) chosenAction +1).chooseNextRuleSet(rulesetlist, aList);
-                            else {
-                                chosen = forceRuleSet;
-                                forceRuleSet = -1;
-                            }
-                            //System.out.println("CHOSEN RULESET : " + chosen);
-                            //rulesetlist.getRuleSet(chosen).print();
-
-                            //System.out.println("ALIST : " + aList);
-                            aList.addAll(rulesetlist.getRuleSet(chosen).detectNonWildcardedSpots());
-
-                            
-                            Sensor bb = rulesetlist.getRuleSet(chosen).chooseRandomRule().getPostcondition();
-                            //System.out.println("Merging " + res + " with " + bb);
-                            res = res.merge(bb);
-
-                            //System.out.println("RES : " + res);
-                            //System.out.println("ALIST : " + aList);
-                            
-                            int rr = impossibleList.findSensor2(res);
-                            
-                            //System.out.println(" COUNT IS : " + rr);
-                            
-                            if ( rr == 0) {
-                                
-                                if (res.numberOfWildcards() == 1) {
-                                 
-                                    isValid = true;
-                                }
-                                
-                     
-                                
-                            }
-                            
-                            else {
-                                
-                                //System.out.println("IMP STATE : " + res);
-                                    
-                                    res = copy;
-                                //System.out.println("RESET RES TO : " + res);    
-                                    aList.clear();
-                                    for (int o = 0; o < copy2.size(); o++) {
-                                        
-                                        aList.add(copy2.get(o));
-                                    }
-                                //System.out.println("RESET ALIST TO : " + aList);
-                                
-                                forceRuleSet = chosen;
-                                
-                            }
-                        }
-                        
-                        
-                        //System.out.println("CHOSEN RULESET LIST IS : " + chosenRuleSets);
-
-                        //System.out.println("UPDATING STATELIST... ");
-                        //stateList.update(rulesetlist.getRuleSet(chosen), impossibleList);
-
-                    
+                        isValid = true;
                     }
-                    
-                    
-                    
-                    t = numbers.getSensor((int) chosenAction +1).getToken(numbers.getSensor((int) chosenAction +1).size()-1);
-                    
-                    
-                    a.add(res);
-                    
-                    a.add(t);
-
-        return a;
-     }    
-    
-    
-    
-     // PICKS A RANDOM ACTION, GENERATES ALL THE CORRESPONDING STATES
-     // RETURNS ARRAYLIST WITH : 
-     // INDEX 0 : STATELIST (POSSIBLE STATES)
-     // INDEX 1 : THE RANDOM CHOSEN ACTION
-     @Override
-     public ArrayList generateStates2 (Sensor s1, RuleSetList rulesetlist, SensorList impossibleList, StateMap stMap, SensorList sList, SensorMap sMap) {
-         
-         ArrayList container = new ArrayList ();
-         
-        Token random_action = new Token (s1.tokenMap);
-        
-        SensorList numbers = new SensorList (); 
-
-        StateList possible_states = new StateList ();
-        
-        //StateList possibleList = sList.getPossibleList(s1, sMap);
-
-        
-        // IN ORDER TO PICK AN ACTION, WE LIST THE SENSORS FORMED BY
-        // MERGING S1 TO EVERY ACTION, THIS LIST IS CALLED NUMBERS
-        if (s1.getToken(s1.size()-1).isWildcard()) {
-            
-            numbers.addSensorList(s1.expand(s1.size()-1));
-        }
-        
-        else { numbers.addSensor(s1); }
-        
-        int size_of_actions_list = numbers.size();
-        
-        double soal = (double) size_of_actions_list;
-        //System.out.println("Sizes " + size_of_actions_list + " " + soal);
-        double rand = Math.random();
-        
-        rand = rand * soal;
-        //System.out.println(rand);
-        int final_rand = (int) rand;
-        
-        //if (final_rand == 0)
-            //final_rand = 1;
-        
-        //System.out.println("Final rand : " + final_rand);
-        // SETTING REF OF OUR RANDOM ACTION
-        random_action.setReference(numbers.getSensor(final_rand + 1).getToken(s1.size()-1).getReference());
-        random_action.setPosition(numbers.getSensor(final_rand + 1).getToken(s1.size()-1).getPosition());
-        
-        //System.out.println("Rand Action : " + random_action);
-        
-                // GENERATES ALL STATES FROM STATE S1 AND ACTION random_action
-                ArrayList <Integer> aList = new ArrayList();
-                ArrayList <Integer> chosenRuleSets = new ArrayList();
-                
-
-
-                while ( (aList.size()+1)!= s1.size()) {
-
-                    //System.out.println("\nCHOOSING NEXT RULESET...");
-                    //System.out.println("Sensor : " + numbers.getSensor(final_rand));
-                    int chosen = numbers.getSensor(final_rand + 1).chooseNextRuleSet(rulesetlist, aList);
-                    //System.out.println("CHOSEN RULESET : " + chosen);
-                    //rulesetlist.getRuleSet(chosen).print();
-
-                    aList.addAll(rulesetlist.getRuleSet(chosen).detectNonWildcardedSpots());
-
-                    chosenRuleSets.add(chosen);
-                    
-                    //System.out.println("UPDATING STATELIST... ");
-                    
-                    possible_states.update(rulesetlist.getRuleSet(chosen), impossibleList);
 
                 }
 
-                possible_states.clean(impossibleList);
+                else {
 
-                
-                System.out.println("CHOSEN RULESET LIST IS : " + chosenRuleSets);
+                    // Sensor is Impossible, we go back to the previous stage
 
-                
-        
-        
-         
-         
-         container.add(possible_states);
-         
-         container.add(random_action);
-         
-         
-         return container;
-     }
-    
-    
-    
-    // GENERATES A STATE BY PICKING THE BEST ACTION (STATEMAP) 
-    //
-    // ONCE THE ACTION HAS BEEN CHOSEN, GENERATES A STATE USING THE STATEMAP, 
-    // ACCORDING TO THE STATEMAP PROBABILITIES 
-    @Override
-    public Sensor generateState_bestAction (Sensor s1, SensorList sList, SensorMap sMap, RuleSetList rulesetlist, SensorList possibleList, StateActionValueTable sTable, StateMap stMap) {
-    
-        
+                    new_state = copy;
+                   
+                    covered_indexes.clear();
+                        
+                    for (int o = 0; o < copy2.size(); o++) {
 
-        int state_index = sTable.findSensor(s1);
-        
-        //System.out.println("State : " + s1);
-        
-        int max_value_index = sTable.findMaxValueIndex(state_index);
-        
-        
-        Token best_action = sTable.getAction(state_index).get(max_value_index);
-        
-        //System.out.println("Best Action : " + best_action);
-        
-        int state_index_in_map = stMap.findSensor(s1);
-        
-        //System.out.println("state_index_in_map : " + state_index_in_map);
-        
-        
-        int action_index_in_map = stMap.findActionIndex(state_index_in_map, best_action);
-        
-        //System.out.println("action_index_in_map : " + action_index_in_map);
+                        covered_indexes.add(copy2.get(o));
+                    }
+                   
 
-        ArrayList possible_states = (ArrayList) stMap.getReferencies(state_index_in_map).get(action_index_in_map);
-        
-        //System.out.println("Possible States : " + possible_states);
-        
-        int occurencies = (int) stMap.getOccurencies(state_index_in_map).get(action_index_in_map);
-        
-        double occ = (double) occurencies;
-        //System.out.println("Size : " + possible_states_size);
-        
-        double rand = Math.random();
-       
-        
-        rand = rand * occ;
-        
-        int pick = (int) rand;
-        
-        //System.out.println("Pick is : " + pick);
+                    // But we use the same RuleSet
+                    forceRuleSet = chosen_ruleset;
 
-        int d = 0;
-        
-        int sensor_to_pick = 0;
-        
-        for (int i = 0; i < possible_states.size(); i++) {
-            
-            ArrayList couple = (ArrayList) possible_states.get(i);
-            
-            int occ_of_couple = (int) couple.get(1);
-            
-            d = d + occ_of_couple;
-            
-            if ( d > pick) {
-                
-                sensor_to_pick = (int) couple.get(0);
-                break;
+                }
             }
-                
+
         }
 
-        //System.out.println("Sensor is : " + sensor_to_pick);
         
-        Sensor new_state = stMap.getSensor(sensor_to_pick);
+        action = s1_with_actions_expand.getSensor((int) rand +1).getToken(s1_with_actions_expand.getSensor((int) rand +1).size()-1);
 
-        
-        //System.out.println("Pick : " + sensor_to_pick);
-        
-        //System.out.println(s1 + " led to " + new_state);
-        
-        return new_state;
 
+        container.add(new_state);
+
+        container.add(action);
+
+         
+        return container;
+        
      }
     
+
     
     
-    
-    
-    // CHOOSES AN ACTION (BEST POSSIBLE ACTION FROM STATETABLE)  
-    // RANDOM PART ? CURRENTLY 20%
+    // CHOOSES THE BEST POSSIBLE ACTION FROM Action Value Table  
     @Override
     public Token generateActionFromStateActionValueTable (Sensor s1, StateActionValueTable sTable) {
          
-        
-        ArrayList a = new ArrayList ();
-        
-        int chosenAction = 0;
-        
+
         Token action = s1.getToken(s1.size()-1);
-        
-        double rand2 = Math.random();
-        
-        
-            int state_index = sTable.findSensor(s1);
 
-            if (state_index != -1) {
+        int state_index = sTable.findSensor(s1);
+       
+        if (state_index != -1) {
+                    
+            // Finds the best best_action index (which is the best value index as well)
+            int best_action_index = sTable.findMaxValueIndex(state_index);
 
-                int action_index = sTable.findMaxValueIndex(state_index);
-                
-                //System.out.println("Max value of : " + sTable.getAction(state_index) + " " + sTable.getValue(state_index) + " is : " + action_index);
-                
-                //System.out.println("Sum is : " + sTable.getSumOfRow(state_index));
+            if (best_action_index != -1) 
+                action = sTable.getAction(state_index).get(best_action_index);
+                          
+            else {
+                        // RANDOM, never happens
+                        action = this.generateRandomAction(s1, sTable.getAction(state_index));
+                }   
 
-                if (action_index != -1) 
-                    action = sTable.getAction(state_index).get(action_index);
-                                //System.out.println("Action Token : " + chosenActionToken);  
-
-            }
-        
-        
-//        else {
-//            
-//            double rand = Math.random();
-//            chosenAction = (int) Math.round(rand * sTable.getAction(0).size()) -1;
-//            if (chosenAction == -1)
-//                chosenAction = 0;
-//
-//            System.out.println("Random !");
-//            action = sTable.getAction(0).get(chosenAction);
-//        }
+        }
             
         
-     return (Token) action;
+     return action;
 
      }  
     
     
     
-    @Override
-    public Token generateRandomAction (Sensor s1, ArrayList actions) {
-        
-        int size = actions.size();
-        
-        
-        double rand = Math.random();
-        
-        double size2 = (double) size;
-        
-        rand = rand * size2;
-        
-        int res = (int) rand;
-        
-        return (Token) actions.get(res);
-    }
-
     
-    
-// RETURNS AN ARRAYLIST OF ALL THE POSSIBLE STATES
-     //    
-     // INDEX 0 : ARRAYLIST CONTAINING THE STATELISTS
-     // INDEX 1 : ARRAYLIST CONTAINING THE ACTIONS (TOKENS)
-     //   
-     // OF COURSE, STATELIST 1 CORRESPONDS TO ACTION 1   
-     
-     public ArrayList  generateStates_maps (Sensor s1, StateMap stMap) {
+    // Same function than in Maps
+    // Accelerates the process to find possible States
+    // Only used in some specific cases
+    public ArrayList  generateStates_maps (Sensor s1, StateMap stMap) {
          
 
          ArrayList stateLists = new ArrayList ();
          ArrayList actionsList = new ArrayList ();
          
          
-         ArrayList res = new ArrayList ();
-         
-         
-         
-         Token actions = s1.getToken(s1.size()-1).copy();
-         
-         
+         ArrayList container = new ArrayList ();
+
+         Token actions;
+
          // Index of State
          int index_of_state_in_map = stMap.findSensor(s1);
          
@@ -922,14 +305,12 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
              
              int index = stMap.findSensor(s1);
 
-            //System.out.println("Action rand : " + action);
-            //System.out.println("Action : " + stMap.getActions(index).get(action));
 
             ArrayList <ArrayList> possibleStates = (ArrayList) stMap.getReferencies(index).get(action);
 
             actions = stMap.getActions(index).get(action).copy();
 
-             // Getting occ. to compute probs
+             // Getting occurrencies_double. to compute probs
              int total_occurencies_of_state_and_action = (int) stMap.getOccurencies(index_of_state_in_map).get(action);
 
              double toostaa = (double) total_occurencies_of_state_and_action;
@@ -952,86 +333,98 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
 
 
                  possible_states.addSensor(state, prob);
-                 
 
              }
 
-             //possible_states.printList("Adding");
              stateLists.add(possible_states);
              actionsList.add(actions);
-             
-             
          }
          
-         res.add(stateLists);
-         res.add(actionsList);
+         container.add(stateLists);
+         container.add(actionsList);
          
-         return res;
-     
-            
-            
+         return container;
+
      }    
     
     
+     
     
     
-    
+    // CHOOSES THE BEST ACTION FROM Value Table   
     @Override
     public Token generateActionFromStateValueTable (Sensor s1, StateMap stMap, StateValueTable sValTab) {
          
         
-        ArrayList a = new ArrayList ();
-        
-        int chosenAction = 0;
-        
-        Token action = s1.getToken(s1.size()-1);
 
-        int index_of_current_state = sValTab.findSensor(s1);
-       
-        ArrayList container = new ArrayList ();
+        Token best_action = s1.getToken(s1.size()-1);
+
+        // Generates all the possible states and actions
+        ArrayList container = this.generateStates_maps(s1, stMap);
         
-        container = this.generateStates_maps(s1, stMap);
+        ArrayList statelists = (ArrayList) container.get(0);
         
-        ArrayList ps = (ArrayList) container.get(0);
+        ArrayList actions = (ArrayList) container.get(1);
         
         double max_value = 0.0;
         
         
-        
-        for (int i = 0; i < ps.size(); i++) {
+        // Goes through every StateLists
+        for (int i = 0; i < statelists.size(); i++) {
             
+            // If the score of container statelist is high, its action is container "good" action
             double score = 0.0;
             
-            StateList b = (StateList) ps.get(i);
+            StateList possible_states = (StateList) statelists.get(i);
             
-            for (int j = 0; j < b.size(); j++) {
+            for (int j = 0; j < possible_states.size(); j++) {
                 
-                int index_of_state = sValTab.findSensor(b.getSensor(j));
+                int index_of_state = sValTab.findSensor(possible_states.getSensor(j));
                 
-                score = score + b.getProb(j) * sValTab.getValue(index_of_state);
+                score = score + possible_states.getProb(j) * sValTab.getValue(index_of_state);
             }
             
-            ArrayList ps2 = (ArrayList) container.get(1);
-                
-            Token saved_action = (Token) ps2.get(i);
             
-            //System.out.println("State " + s1 + " going " + saved_action + " score : " + score);
-            
+            // Is it the best action yet ?    
             if (score > max_value) {
                 
                 max_value = score;
                 
                 
-                action = (Token) ps2.get(i);
+                best_action = (Token) actions.get(i);
             }
         }
         
-        
-            
-        
-     return action;
+
+     return best_action;
 
      } 
     
     
-} // END FILE
+    
+    
+    
+    
+    
+    
+    // Selects container random action from the input ArrayList
+    @Override
+    public Token generateRandomAction (Sensor s1, ArrayList actions) {
+        
+        int size = actions.size();
+        
+        
+        double rand = Math.random();
+        
+        double size2 = (double) size;
+        
+        rand = rand * size2;
+        
+        int res = (int) rand;
+        
+        return (Token) actions.get(res);
+    }
+    
+    
+    
+} // END OF FILE

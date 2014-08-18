@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package V_Sensors;
 
@@ -15,6 +10,9 @@ import java.util.ArrayList;
  */
 public class StateList {
     
+    // A StateList is defined like this : 
+    //
+    // Sensor + Probability (double)
     public ArrayList <ArrayList> list ;
     
     
@@ -54,21 +52,24 @@ public class StateList {
     }
     
     
-    public void remove (int i) {
+    public void remove (int index) {
         
-        this.list.remove(i);
+        this.list.remove(index);
     }
     
-    public void setProb (int i, double value) {
+    
+    public void setProb (int index, double value) {
         
-        this.addSensor(this.getSensor(i), value, i);
+        this.addSensor(this.getSensor(index), value, index);
         
-        this.remove(i+1);
+        this.remove(index+1);
     }
+    
     
     public void printList () {
         this.printList("");
     }
+    
     
     public void printList (String str) {
         
@@ -83,38 +84,64 @@ public class StateList {
     }
     
     
-    
+    // See below
+    public void init (RuleSet RS) {
+        
+        for (int i = 0; i < RS.size(); i++) {
+            
+            this.addSensor(RS.getSuccessor(i), RS.getRule(i).getProb());
+        }
+    }
+        
+        
+    // Updates the StateList by adding the RuleSet information to it.
+    //
+    // The new RuleSet brings at least one new Non-Wildcarded index
+    //
+    // We merge all the existing Sensors with the ones found in the RuleSet
+    //
+    // Then we delete the old ones
     public void update (RuleSet RS, SensorList impList) {
         
         StateList problems = new StateList ();
         
+        // If this is empty, creates an entry with RS (see init)
         if (this.size() == 0)
             this.init(RS);
         
         else {
+            
             double prob;
             int size = this.size();
-            double remove = 0;
+            
+            // If the generated Sensor is Impossible, we report its probability 
+            // to the other Sensors that could have fit, according to their
+            // respective probs
+            double lost_probability = 0;
+            
             for (int i = 0; i < size; i ++) {
 
                 for (int j = 0; j < RS.size(); j++) {
                     
+                    // Merging
+                    Sensor sensor = RS.getSuccessor(j).merge(this.getSensor(i));
                     
-                    Sensor a = RS.getSuccessor(j).merge(this.getSensor(i));
-                    
-                    //System.out.println("Merging " + RS.getSuccessor(j) + " with " + this.getSensor(i) + " into " + a);
-                    //if (impList.findSensor(a) == 0) {
+                    // Obtaining proba
                     prob = RS.getRule(j).getProb() * this.getProb(i);
-                    if (remove != 0.0) {
-                        prob = prob + remove;
-                        remove = 0.0;
+                    
+                    // Reports lost prob
+                    if (lost_probability != 0.0) {
+                        prob = prob + lost_probability;
+                        lost_probability = 0.0;
                     }
+                    
                     prob = Math.round(prob * 1000);
                     prob = prob/1000;
 
-      
-                      if (impList.findSensor2(a) > 0) {
-                            //System.out.println("Impossible State : " + a + " prob : " + prob);
+                    
+                    // Checks if the Sensor is Impossible
+                    if (impList.findSensor2(sensor) > 0) {
+
                             int toc = problems.findSensor_exact(RS.getSuccessor(j));
                             if (toc > -1) {
                                 problems.setProb(toc, problems.getProb(toc)+prob);
@@ -122,17 +149,16 @@ public class StateList {
                             else {
                             problems.addSensor(RS.getSuccessor(j), prob);
                             }
-                            remove = prob;
+                            lost_probability = prob;
                             continue;
-                      }
-                      
-                      if ( (prob > 0) ) {
-                            this.addSensor(a, prob);
-                            //System.out.println("Adding : " + a);
-                      }
-                      
-                      
-                    //}
+                    }
+
+                    if ( (prob > 0) ) {
+                        
+                            this.addSensor(sensor, prob);
+                            
+                    }
+
                 }
             }
 
@@ -140,42 +166,32 @@ public class StateList {
             // REMOVING SENSORS USED TO BUILD NEW ONES
             for(int i = size-1; i >= 0; i--) {
                 
-               //System.out.println("Removing " + i + this.getSensor(i)) ;
                this.remove(i);
             } 
             
             
 
-            //problems.printList("PROBLEMS :");            
-            
-            
-            // FIXING PROBLEMS
+            // Determining which Sensors could have fit an Impossible one
             for (int h = 0; h < problems.size(); h++) {
                 
                 ArrayList <Integer> a = this.findSensor(problems.getSensor(h));
+                
                 double prob2 = problems.getProb(h)/a.size();
                 
                 for (int j = 0; j < a.size(); j++) {
                     
                     this.setProb(a.get(j), prob2+this.getProb(a.get(j)));
-                    //System.out.println("PROB : Adding " + prob2 + " from " + problems.getSensor(h) + " to " + this.getSensor(a.get(j)));
+                    
                 }
                 
                 
             }
             
-            
-            
-            
-            
-            
-            
 
-            
-            
-            if ( (remove != 0.0) && (Math.abs(this.getTotalProb()-1.0) < 0.999)) {
+            // If we didn't found any fitting Sensor, adding to the last generated one
+            if ( (lost_probability != 0.0) && (Math.abs(this.getTotalProb()-1.0) < 0.999)) {
                 
-                double r = this.getProb(this.size()-1)+remove;
+                double r = this.getProb(this.size()-1)+lost_probability;
                 r = Math.round(r * 1000);
                 r = r/1000;
                 this.setProb(this.size()-1, r);
@@ -187,6 +203,8 @@ public class StateList {
               
     }
     
+    
+    // Cleaning by deleting every Sensor Impossible or Not contained in the Possible List
     public void clean_hard (SensorList impList, StateList posList) {
         
         
@@ -214,8 +232,8 @@ public class StateList {
     }
     
 
-    
-public void clean (SensorList impList) {
+    // Cleans using the Impossible List
+    public void clean (SensorList impList) {
         
         
         for (int u = this.size()-1; u >= 0; u--) {
@@ -229,6 +247,7 @@ public void clean (SensorList impList) {
         }
         
         double lastProb = this.getTotalProb();
+        
         for (int i = 0; i  < this.size(); i++) {
             
             double b =  this.getProb(i) / lastProb;            
@@ -251,12 +270,16 @@ public void clean (SensorList impList) {
         return (Sensor) this.list.get(i).get(0);
     }
     
+    
     public double getProb (int i) {
         
         return (Double) this.list.get(i).get(1);
     } 
     
     
+    // Sums the Probs
+    //
+    // Used to see if we've got 1 for Total Prob
     public double getTotalProb () {
         
         double res = 0.0;
@@ -270,15 +293,10 @@ public void clean (SensorList impList) {
         return res;
     } 
     
-    public void init (RuleSet RS) {
-        
-        for (int i = 0; i < RS.size(); i++) {
-            
-            this.addSensor(RS.getSuccessor(i), RS.getRule(i).getProb());
-        }
-    }
     
+
     
+    // Returns true if sen occurs in the StateList
     public boolean hasSensor (Sensor sen) {
         
         for (int i = 0; i < this.size(); i++) {
@@ -292,7 +310,7 @@ public void clean (SensorList impList) {
     }
     
     
-    
+    // Returns the indexes of Sensors matching sen in the StateList
     public ArrayList <Integer> findSensor (Sensor sen) {
         
         ArrayList <Integer> res = new ArrayList <> ();
@@ -307,7 +325,7 @@ public void clean (SensorList impList) {
     }
     
     
-    
+    // Returns the indexes of sen in the StateList
     public int findSensor_exact (Sensor sen) {
         
         for (int i = 0; i < this.size(); i++) {
@@ -320,63 +338,6 @@ public void clean (SensorList impList) {
         return -1;
     }
     
-    
-    
-    
-    
-    public StateList generateStates (SensorList numbers, Sensor s1, RuleSetList rulesetlist, int i, SensorList impossibleList, StateList possibleList, boolean hard_clean_statelist) {
-        
-        ArrayList <Integer> aList = new ArrayList();
-        ArrayList <Integer> chosenRuleSets = new ArrayList();
-           
-        
-            
-            while ( (aList.size()+1)!= s1.size()) {
 
-                //System.out.println("\nCHOOSING NEXT RULESET...");
-                int chosen = numbers.getSensor(i+1).chooseNextRuleSet(rulesetlist, aList);
-                //System.out.println("CHOSEN RULESET : " + chosen);
-                //rulesetlist.getRuleSet(chosen).print();
-
-                aList.addAll(rulesetlist.getRuleSet(chosen).detectNonWildcardedSpots());
-
-                chosenRuleSets.add(chosen);
-                //System.out.println("CHOSEN RULESET LIST IS : " + chosenRuleSets);
-
-                //System.out.println("UPDATING STATELIST... ");
-                this.update(rulesetlist.getRuleSet(chosen), impossibleList);
-
-            }
-
-            if (hard_clean_statelist) {
-                //System.out.println("\nHARD CLEANING STATELIST ");
-                this.clean_hard(impossibleList, possibleList);
-            }
-            else {
-                //System.out.println("\nCLEANING STATELIST ");
-                this.clean(impossibleList);
-
-            }
-    
-            
-            return this;
-            
-            
-    }
-    
-    
-    
-    
-    public double getScore () {
-        
-        double a = 0.0;
-        for (int i = 0; i < this.size(); i++) {
-            
-            if (this.getSensor(i).isRewarded())
-                a = a + this.getProb(i);
-        }
-        
-        return a;
-    }
     
 }

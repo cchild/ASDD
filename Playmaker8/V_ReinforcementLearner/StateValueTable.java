@@ -23,7 +23,12 @@ public class StateValueTable {
     
     
     
-    
+    // A State Value Table looks like : 
+    //
+    // STATE 1 [E, W, W, E, A, *] Value : 1.71
+    // STATE 2 [E, E, W, W, A, *] Value : 1.66
+    // STATE 3 [E, W, A, E, E, *] Value : 1.64
+
     public StateValueTable () {
         
         list = new ArrayList();

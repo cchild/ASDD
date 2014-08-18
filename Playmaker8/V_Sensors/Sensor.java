@@ -106,32 +106,18 @@ public class Sensor {
         return this.tokenList.get(position);
     }
     
-    public String getActionString() {
-        
-        return this.tokenList.get(this.tokenList.size()-1).toString();
-    }
+
     
-    
-    public boolean equals (Sensor s2) {
-        
-        boolean res = false;
-        
-        int a = this.toString().compareTo(s2.toString());
-        if (a==0){
-            res = true;
-        }
-        return res;
-        
-        
-    }
-    
-    
+    // Expands the index "position"
+    //
+    // If the Token at position is a Wildcard, returns an empty List
+    // If not, returns a list with all possible Tokens according to the tokenMap
     public SensorList expand (int position) {
         
-       SensorList sMap = new SensorList ();
+       SensorList sList = new SensorList ();
         
         if ((position >= this.tokenList.size() ) || (position <0) || this.tokenList.get(position).isNotWildcard()) {
-            return sMap;
+            return sList;
         }
        
         int limit = this.tokenMap.getRefMax(position);
@@ -140,25 +126,23 @@ public class Sensor {
         for (int i = 0; i < limit; i++) {
             Sensor a = this.copy();
             Token tok = new Token(this.tokenMap.getToken(position, i),position,this.tokenMap);
-            //System.out.println(this.tokenMap.getToken(position, i));
-            //System.out.println("Copied Sensor : " + a.tokenList);
+
             a.tokenList.set(position, tok);
-            sMap.addSensor(a);
-            //System.out.println("Adding " + a.getString());
-            //System.out.println("Added >> " + a.tokenList);
+            
+            sList.addSensor(a);
             
         }
         
-        return sMap;
+        return sList;
         
        
     }
 
-    
+    // Expands the position and returns a List of all possible Tokens, except the one already in place
+    // See function below for uses
     public SensorList expandNonWildcard (int position) {
         
        SensorList sMap = new SensorList ();
-        //sMap.addSensor(this);
         
         if ((position >= this.tokenList.size() ) || (position <0) || this.tokenList.get(position).isWildcard()) {
             return sMap;
@@ -189,6 +173,8 @@ public class Sensor {
     }  
     
     
+    // Expand all non-wildcarded indexes
+    // Used to find same Ruleset Rules
     public SensorList expandNonWildcards () {
         
         SensorList res = new SensorList ();
@@ -213,6 +199,7 @@ public class Sensor {
     }
     
     
+    // Returns true if both Sensors match
     public boolean sensorMatch (Sensor expression) {
         
         boolean res = true;
@@ -233,6 +220,7 @@ public class Sensor {
     }
     
     
+    // Returns true is both Sensors are the same, e.g. they exaclty have same tokens
     public boolean sensorMatch_exact (Sensor expression) {
         
         boolean res = true;
@@ -254,19 +242,6 @@ public class Sensor {
     
     
     
-         @Override
-    public boolean equals(Object obj){
-        
-         if(obj == null)
-           return false;
-         if(this==obj)
-           return true;
-         
-         Sensor s = (Sensor) obj;
-         
-         return (this.sensorMatch(s));
-    }
-    
     
     public int size() {
         
@@ -275,7 +250,7 @@ public class Sensor {
     }
     
     
-    // RETURNS THE FIRST EXPANDABLE SPOT, OR -1
+    // RETURNS THE FIRST EXPANDABLE SPOT, OR -1 IF THEY AREN'T ANY
     public int isExpandable () {
         
         for (int i=0; i<this.size(); i++) {
@@ -287,6 +262,7 @@ public class Sensor {
     }
     
     
+    // Returns the number of Wildcards
     public int numberOfWildcards () {
         
         int res = 0;
@@ -299,6 +275,7 @@ public class Sensor {
         return res;
     }
     
+    // Returns the number of Non - Wildcards
     public int numberOfNonWildcards () {
         
         int res = 0;
@@ -312,6 +289,7 @@ public class Sensor {
     }
   
     
+    // Merges two Sensors (By replacing Wildcards from 1 to Tokens from the other
     public Sensor merge (Sensor sen) {
         
         Sensor res = new Sensor(this.tokenMap);
@@ -334,13 +312,13 @@ public class Sensor {
     }
     
     
-    
+    // Returns the list of all RuleSets that match the Sensor
     public ArrayList <Integer> getAllMatchingRuleSets (RuleSetList rsList) {
         
         ArrayList res = new ArrayList ();
         for (int i = 0; i < rsList.size(); i++) {
             
-            if (this.sensorMatch(rsList.getRuleSet(i+1).getPrecursor())) {
+            if (this.sensorMatch(rsList.getRuleSet(i+1).getPrecursorWithID())) {
                 
                 res.add(i+1);
             }
@@ -350,7 +328,7 @@ public class Sensor {
     }
 
     
-    
+    // See below
     public int chooseNextRuleSet (RuleSetList rsList) {
 
             ArrayList a = new ArrayList();
@@ -358,7 +336,11 @@ public class Sensor {
     } 
         
     
-    
+    // Chooses the Next RuleSet using precedences.
+    // The one preceding the most over the other candidates is selected
+    // This is represented by "score"
+    //
+    // A candidate is a matching RuleSet that contains Wildcards at the indexes in the List a
     public int chooseNextRuleSet (RuleSetList rsList, ArrayList <Integer> a) {
         
         int score;
@@ -420,6 +402,7 @@ public class Sensor {
     
     
     // OLD VERSION USING PRECURSOR OCCURENCIES
+    // NOT USED SINCE WE CHOSE PRECEDENCES
     public int getBestMatchingRuleSets (RuleSetList rsList) {
         
         int level = 100000; // TO START, BIG ENOUGH TO ENSURE WE FIND LESS
@@ -430,7 +413,7 @@ public class Sensor {
         // LOOKING FOR MATCHES AND GETTING THE ONE WITH LESS PREC. OCCURRENCIES
         for (int i = 0; i < rsList.size(); i++) {
             
-            if (this.sensorMatch(rsList.getRuleSet(i+1).getPrecursor())) {
+            if (this.sensorMatch(rsList.getRuleSet(i+1).getPrecursorWithID())) {
                 
                 candidate_level = rsList.getRuleSet(i+1).getPrecursorOccurrencies();
                 
@@ -448,7 +431,7 @@ public class Sensor {
     
 
 
-
+    // Returns a List of Common Non-Wildcarded Indexes
     public ArrayList detectCommonNonWilcardedIndexes (Sensor s2) {
         
         ArrayList res = new ArrayList ();
@@ -463,7 +446,7 @@ public class Sensor {
     }
     
     
-    
+    // Simple string representation
     public String simple () {
         
         String str = new String();
@@ -478,7 +461,7 @@ public class Sensor {
     
     
     
-    
+    // Would need to be changed for another game
     public boolean isRewarded () {
         
         if (this.getToken(this.size()-2).getReference() == 2)

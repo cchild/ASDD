@@ -1,19 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package V_ReinforcementLearner;
 
 import Logging.LogFiles;
 import V_Sensors.*;
 import V_StateGenerator.MSDD_StateGenerator_Maps;
-import V_StateGenerator.StateGenerator;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 /**
  *
@@ -25,7 +17,11 @@ public class DecisionTable {
     
     
     
-    
+    // A Decision Table looks like : 
+    // STATE 1 [W, E, E, E, E, *] Action : S
+    // STATE 2 [E, E, A, E, E, *] Action : S
+    // STATE 3 [E, E, E, A, E, *] Action : W
+
     public DecisionTable () {
         
         list = new ArrayList();
@@ -110,6 +106,8 @@ public class DecisionTable {
     }
     
 
+    // Returns the index of sen
+    // If not found, returns -1
     public int findSensor (Sensor sen) {
         
         for (int i = 0; i < this.size(); i++) {
@@ -123,8 +121,8 @@ public class DecisionTable {
     
 
     
-    
-   public DecisionTable fromStateActionValueTable (StateActionValueTable sTab) {
+    // Converts an Action Value Table into a Decision Table
+    public DecisionTable fromStateActionValueTable (StateActionValueTable sTab) {
        
        DecisionTable res = new DecisionTable ();
        
@@ -148,11 +146,12 @@ public class DecisionTable {
        
        
        return res;
-   }
+    }
    
    
    
-   public DecisionTable fromStateValueTable (StateValueTable sTab, StateMap stMap) {
+    // Converts a Value Table into a Decision Table
+    public DecisionTable fromStateValueTable (StateValueTable sTab, StateMap stMap) {
 
     
         DecisionTable res = new DecisionTable ();
@@ -175,25 +174,25 @@ public class DecisionTable {
        return res;
        
        
-   }
+    }
    
    
    
-   
-   public Token chooseAction (Sensor current_state) {
+   // Returns the action to take when seeing current_state
+    public Token chooseAction (Sensor current_state) {
        
        int state_index = this.findSensor(current_state);
        
        
        return this.getAction(state_index);
-   }
+    }
    
    
    
        
     
 
-    
+    // Exports to StateTable.txt
     public void export () {
         
         LogFiles logFiles = LogFiles.getInstance();
@@ -212,6 +211,7 @@ public class DecisionTable {
     
     
     
+    // Imports from StateTable.txt
     public DecisionTable fromFile (TokenMap t) {
         
    

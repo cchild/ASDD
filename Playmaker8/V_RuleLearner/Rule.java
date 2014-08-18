@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package V_RuleLearner;
 
@@ -18,7 +13,6 @@ public class Rule {
     
     protected Sensor precondition;
     protected Sensor postcondition;
-    //public ArrayList <Integer> prec_indexes;
     private SensorList sList;
     public int occurrencies;
     public int prec_occurrencies;
@@ -29,17 +23,13 @@ public class Rule {
     
     
     
-    public Rule (Sensor precondition, Sensor postcondition, SensorList sList) {
+    public Rule (Sensor precondition, Sensor postcondition) {
+        
         this.precondition = precondition;
         this.postcondition = postcondition;
-        //this.prec_indexes = sList.indexesOfSensor(precondition);
-        
-        //this.prec_occurrencies = 0;
+
         this.ruleset_id = -1;
-        this.id = counter.incrementAndGet();
-        
-        //ArrayList <Integer> a = sList.indexesOfSensor(postcondition);
-        
+        this.id = counter.incrementAndGet();       
 
     }
     
@@ -51,19 +41,20 @@ public class Rule {
         return postcondition;
     }
     
-    public int setPrecondition (Sensor s) {
+    public void setPrecondition (Sensor s) {
         
         this.precondition = s;
-        return 0;
+        
     }
     
-    public int setPostcondition (Sensor s) {
+    public void setPostcondition (Sensor s) {
         
         this.postcondition = s;
-        return 0;
+
     }
     
     
+    // Returns the Probability of a Rule
     public double getProb () {
         
         double a = this.occurrencies;
@@ -76,18 +67,19 @@ public class Rule {
     }
     
     
-    
-   public Rule copy () {
+    // Returns a copy of the Rule
+    public Rule copy () {
         
-        Rule copy = new Rule (this.precondition,this.postcondition, this.sList);
+        Rule copy = new Rule (this.precondition,this.postcondition);
         copy.prec_occurrencies = this.prec_occurrencies;
         copy.occurrencies = this.occurrencies;
         return copy;
     }    
     
     
-    
+    // Another way of testing Sensor Matching
     public boolean sensorMatch (Sensor s, Sensor expression) {
+        
         boolean res = true;
         
         if (s.tokenList.size() != expression.tokenList.size()) {
@@ -108,19 +100,22 @@ public class Rule {
     }
     
     
-    
+    // Returns true if both prec and post are matching inputs
     public boolean ruleMatch (Sensor precondition, Sensor postcondition) {
         
         return (sensorMatch(precondition,this.precondition) && sensorMatch(postcondition,this.postcondition));
     
     }
     
+    // Returns true if a Rule matches another one.
+    // E.g. both prec and post match the other one prec. and post.
     public boolean ruleMatch (Rule rule) {
         
         return (rule.precondition.sensorMatch(this.precondition) && rule.postcondition.sensorMatch(this.postcondition));
     
     }
     
+    // Returns true if the two Rules are exactly matching
     public boolean ruleMatch_exact (Rule rule) {
         
         return (rule.precondition.sensorMatch_exact(this.precondition) && rule.postcondition.sensorMatch_exact(this.postcondition));
@@ -134,24 +129,7 @@ public class Rule {
         return (this.getPrecondition().toString() + this.getPostcondition().toString());
     }
     
-    
-     @Override
-    public boolean equals(Object obj){
-         if(obj == null)
-           return false;
-         if(this==obj)
-           return true;
-         
-         Rule rule = (Rule) obj;
-         
-         return (this.ruleMatch(rule));
-    }
-    
-    
-    @Override
-    public int hashCode() {
-         return (this.precondition.hashCode() + this.postcondition.hashCode());
-   }
+
     
     
     public int size () {
@@ -160,67 +138,24 @@ public class Rule {
     }
     
     
+    // Returns true if Prec or Post is Expandable, e.g. has at least One Wildcard
     public boolean isExpandable () {
         return (this.precondition.isExpandable()>(-1) || this.postcondition.isExpandable()>(-1) ) ;
     }
     
     
+  
     
-//////    public RuleList getChildren () {
-//////        RuleList children = new RuleList ();
-//////        
-//////        int length = this.size();
-//////        //System.out.println(length);
-//////        
-//////        
-//////        // SUCCESOR PART
-//////        ////////////////
-//////        for (int i=length/2-2; i>=0; i--) {
-//////            
-//////            if (this.postcondition.getToken(i).isWildcard()) {
-//////                
-//////            
-//////                SensorList a = this.postcondition.expand(i);
-//////            //a.printList();
-//////
-//////                for (int j =0; j < a.size() ; j++) {
-//////                    Rule rule = new Rule(this.precondition,a.getSensor(j+1), this.sList);
-//////                    children.addRule(rule);
-//////                }
-//////            }
-//////        }
-//////        
-//////        
-//////        // PRECURSOR PART
-//////        /////////////////
-//////        for (int i=length/2-1; i>=0; i--) {
-//////            
-//////            if (this.precondition.getToken(i).isWildcard()) {
-//////             
-//////
-//////                SensorList a = this.precondition.expand(i);
-//////            //a.printList();
-//////
-//////                for (int j =0; j < a.size() ; j++) {
-//////                    Rule rule2 = new Rule(a.getSensor(j+1),this.postcondition, this.sList);
-//////                    children.addRule(rule2);
-//////                }
-//////            }
-//////        }
-//////        
-//////        
-//////        return children;
-//////   
-//////    }
-    
-    
+    // Returns MSDD children of a Rule
+    //
+    // See MSDD Algorithm
     public RuleList getChildren () {
+        
         RuleList children = new RuleList ();
         
         int length = this.size();
-        //System.out.println(length);
         
-        
+        ////////////////
         // SUCCESOR PART
         ////////////////
         for (int i=length/2-2; i>=0; i--) {
@@ -230,17 +165,17 @@ public class Rule {
 
 
                     SensorList a = this.postcondition.expand(i);
-                //a.printList();
+                
 
                     for (int j =0; j < a.size() ; j++) {
-                        Rule rule = new Rule(this.precondition,a.getSensor(j+1), this.sList);
+                        Rule rule = new Rule(this.precondition,a.getSensor(j+1));
                         children.addRule(rule);
                     }
                 }
             }
         }
         
-        
+        /////////////////
         // PRECURSOR PART
         /////////////////
         for (int i=length/2-1; i>=0; i--) {
@@ -249,10 +184,10 @@ public class Rule {
              
 
                 SensorList a = this.precondition.expand(i);
-            //a.printList();
+            
 
                 for (int j =0; j < a.size() ; j++) {
-                    Rule rule2 = new Rule(a.getSensor(j+1),this.postcondition, this.sList);
+                    Rule rule2 = new Rule(a.getSensor(j+1),this.postcondition);
                     children.addRule(rule2);
                 }
             }
@@ -263,6 +198,8 @@ public class Rule {
    
     }    
     
+    
+    // Returns true if the input Rule is a more generalized version of this one
     public boolean isMoreGeneralizedRule (Rule prospect) {
         
         
@@ -271,20 +208,18 @@ public class Rule {
             
                 
         if (!this.postcondition.sensorMatch_exact(prospect.postcondition))           
-                return false;
-//        
+                return false;       
         
         for (int i=0; i<this.precondition.size(); i++) {
             
-            if ((this.precondition.getToken(i).isWildcard()) && (prospect.precondition.getToken(i).isNotWildcard())) {
+            if ((this.precondition.getToken(i).isWildcard()) && (prospect.precondition.getToken(i).isNotWildcard())) 
                     return false;
-                }
-                // !this.precondition.getToken(i).match(prospect.precondition.getToken(i)))
+                
+                
             if (!this.precondition.getToken(i).isWildcard() ) {
                 
                 if (!this.precondition.getToken(i).match(prospect.precondition.getToken(i))) {
-                    
-                    
+                                        
                     return false;
                 }
                     
@@ -299,6 +234,9 @@ public class Rule {
     
     
     
+    // Returns true if input Rule belongs to the Same RuleSet.
+    //
+    // e.g. has same Prec, and same Non-Wildcarded indexes in post.
     public boolean isSameRuleSet (Rule prospect) {
         
         if (this.size() != prospect.size())
@@ -333,6 +271,7 @@ public class Rule {
     }
     
     
+    // Generates a RuleList of all the "similar" Rules that should be in the Same RuleSet
     public RuleList getSameRuleSetRules (SensorList sList,RuleList closedList, RuleMap rMap) {
         
         RuleList res = new RuleList ();
@@ -341,7 +280,7 @@ public class Rule {
         
         for (int i = 0; i < expanded.size(); i++) {
             
-            Rule a = new Rule (this.precondition, expanded.getSensor(i+1), this.sList);
+            Rule a = new Rule (this.precondition, expanded.getSensor(i+1));
             a.prec_occurrencies = this.prec_occurrencies;
             a.ruleset_id = this.ruleset_id;
             // USING RMAP

@@ -3,7 +3,6 @@ package V_RuleLearner;
 
 import V_Sensors.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -44,71 +43,67 @@ public class RuleSet {
 
     
     // BUILDS A RULESET FROM TWO RULESETS, IN ORDER TO MEASURE THE ERROR, AND
-    // SET PRECEDENCE FROM ONE OVER ANOTHER , ArrayList precMatches
+    // SET PRECEDENCE FROM ONE OVER ANOTHER 
     public RuleSet (RuleSet RS1, RuleSet RS2, SensorList sList, SensorMap sMap, RuleMap rMap) {
         
-        //System.out.println("\nCREATING COMBINATION RULESET FROM " + RS1.id + " & " + RS2.id + "...");
+        // CREATING COMBINATION RULESET FROM RS1 & RS2
         
         this.references = new ArrayList();
         this.sList = sList;
-        //this.indexesOfPrec =  precMatches;
         this.rulelist = RS1.rulelist;
         this.totalProb = 0.0;
         this.id = counter.incrementAndGet();
-        Sensor precondition = RS1.getPrecursor().merge(RS2.getPrecursor());
-        //this.indexesOfPrec = sList.indexesOfSensor(precondition);
         this.precedences = new ArrayList ();
+        Sensor precondition = RS1.getPrecursorWithID().merge(RS2.getPrecursorWithID());
+
         
-        ArrayList <Integer> a = RS1.getSuccessor().detectCommonNonWilcardedIndexes(RS2.getSuccessor());
-        //System.out.print("DOING size : " + RS1.indexesOfPrec.size() + " size2 : " + RS2.indexesOfPrec.size());
-        //ArrayList <Integer> prec = RS1.getIntersection(RS2);
-        //System.out.println("DONE");
-        //System.out.println("INDEXES : " + a);
-        Sensor root = new Sensor(RS1.getPrecursor().tokenMap);
+        ArrayList <Integer> common_non_wildcarded_indexes = RS1.getSuccessor().detectCommonNonWilcardedIndexes(RS2.getSuccessor());
+
+        Sensor root = new Sensor(RS1.getPrecursorWithID().tokenMap);
         
-        //System.out.print("Mapping " + RS1.id + " & " + RS2.id);
+        int number = common_non_wildcarded_indexes.size();
         
-        //ArrayList <Integer> inter = RS1.getIntersection(RS2);
-        
-        //System.out.println(" OK (size : " + inter.size() + ").");
-        
-        //System.out.println("PRECONDITION : " + precondition);
-        int num = a.size();
         boolean insert;
         
-        if (num >= 1) {
-            SensorList b = root.expand(a.get(0));
-            //b.printList();
-            if (num >= 2) { 
+        // THERE IS A CONFLICT ONLY IF SOME COMMON NON WILDCARDED INDEXES EXIST
+        if (number >= 1) {
+            SensorList conflicted_indexes_list = root.expand(common_non_wildcarded_indexes.get(0));
+            
+            if (number >= 2) { 
                 
-                for (int h = 2; h<=num; h++) {
+                // Expanding the conflicted indexes in ArrayList
+                for (int h = 2; h<=number; h++) {
                     
-                    b.expandListAt(a.get(h-1));
+                    conflicted_indexes_list.expandListAt(common_non_wildcarded_indexes.get(h-1));
                 }
             }
             
-            for (int j = 0; j < b.size(); j++) {
+            for (int j = 0; j < conflicted_indexes_list.size(); j++) {
+                
+                // We only need to insert the Rules with postcondition corresponding to either RS1 or RS2
+                //
+                // So we check for post. matches in the first and then second RuleSet
                 insert = false;
 
-                        // SEARCHING IN FIRST RULESET
+                        // SEARCHING FOR MATCH IN FIRST RULESET
                         for (int h1 = 0; h1 < RS1.size(); h1++) {
                             ///
-                            if (RS1.getSuccessor(h1).sensorMatch(b.getSensor(j+1))) {
+                            if (RS1.getSuccessor(h1).sensorMatch(conflicted_indexes_list.getSensor(j+1))) {
                                 insert = true;
-                                //System.out.println("1st RS good for " + b.getSensor(j+1));
+                                
                                 break;
                             }
                         }
                         
-                        // SEARCHING IN SECOND RULESET
+                        // SEARCHING FOR MATCH IN SECOND RULESET
                         if (!insert) {
                             
                             for (int h2 = 0; h2 < RS2.size(); h2++) {
                             
                                 
-                                if (RS2.getSuccessor(h2).sensorMatch(b.getSensor(j+1))) {
+                                if (RS2.getSuccessor(h2).sensorMatch(conflicted_indexes_list.getSensor(j+1))) {
                                     insert = true;
-                                    //System.out.println("2nd RS good for " + b.getSensor(j+1));
+                                    
                                     break;
                                 }
                                 
@@ -116,125 +111,29 @@ public class RuleSet {
                             }
                         }
                         
+                        // If the Rule postcondition was found in RS1 or RS2, we shall create it
                         if (insert) {
                             
-                            Rule rule = new Rule(precondition, b.getSensor(j+1), this.sList);
+                            Rule rule = new Rule(precondition, conflicted_indexes_list.getSensor(j+1));
                             
                             rule.ruleset_id = this.id;
-                            //rule.prec_occurrencies = sMap.getMatchingOccurencies(precondition);
                             
                             int aa = sMap.getMatchingOccurencies(precondition);
-                            //int bb = sList.indexesOfSensor(precondition).size();
-                            //int cc = inter.size();
-                            //rule.occurrencies = sList.indexesOfRule(rule).size();
+                            
                             int tt  = rMap.getMatchingOccurencies(rule);
-                            //int oo = sList.indexesOfRule(rule).size();
-                            //rule.prec_occurrencies = inter.size();
-////                            HashSet<Integer> map1 = new HashSet<>(sMap.getMatchingIndexes(b.getSensor(j+1)));
-////                            HashSet<Integer> map2 = new HashSet<>(inter);
-////                            HashSet<Integer> map3 = new HashSet<>();
-////                            
-////                            for (Integer ii : map1) {
-////                                    map3.add(ii-1);
-////                            }
-////                            map2.retainAll(map3);
-////                            
-////                            int dd = map2.size();
+                            
                             
                             rule.prec_occurrencies = aa;
                             rule.occurrencies = tt;
                             
-                            
-                            //System.out.println("PrecOcc inter: " + cc + " // PrecOcc sMap : " + aa + " // PrecOcc sList : " + bb);
-                            //System.out.println("Occ inter: " + dd + " // Occ rMap : " + tt + " // Occ sList : " + oo);
-                            //rule.occurrencies = sList.indexesOfRule2(rule).size();   TOO LONG
-                            //rule.occurrencies = sList.indexesOfRuleGivenPrec(rule, prec).size();
-//                            ArrayList b12 = sMap.getMatchingIndexes(precondition);
-//                            ArrayList b13 = sMap.getMatchingIndexes(b.getSensor(j+1));
-//                            
-//                            System.out.print("Called with b12 : " + b12.size() + " and b13 : " + b13.size());
-//                            
-//                            int h = 0;
-//                            boolean finished = false;
-//                            int b12_index = 0;
-//                            int b12_value ;
-//                            int b13_index = 0;
-//                            int b13_value ;
-//                            
-//                           
-//                            while (!finished) {
-//                                
-//                                System.out.println("b12_index : " + b12_index + " b13_index " + b13_index);
-//                                
-//                                if (b12.isEmpty() || b13.isEmpty()) {
-//                                    break;
-//                                }
-//                                b12_value = (int) b12.get(b12_index);
-//                                b13_value = (int) b13.get(b13_index);
-//                                
-//                                
-//                                if (b12_value <= b13_value) {
-//                                    
-//                                    
-//                                    
-//                                    if (b12_value == (b13_value + 1))
-//                                        h++;
-//                                    
-//                                    if(b12.size() > b12_index + 2)
-//                                        b12_index++;
-//                                }
-//                                
-//                                else {
-//                                    
-//                                    if (b12_value == (b13_value + 1))
-//                                        h++;
-//                                    
-//                                    if(b13.size() > b13_index + 2)
-//                                        b13_index++;
-//                                }
-//                                
-//                                if ( (b12_index == (b12.size()-1)) && (b13_index != (b13.size()-1)) ) {
-//                                    
-//                                    while (b13_index != b13.size()-1) {
-//                                        
-//                                        b13_index ++;
-//                                        b13_value = (int) b13.get(b13_index);
-//                                        if (b12_value == (b13_value + 1))
-//                                            h++;
-//                                        
-//                                    }
-//                                }
-//                                
-//                                if ( (b12_index != (b12.size()-1)) && (b13_index == (b13.size()-1)) ) {
-//                                    
-//                                    while (b12_index != b12.size()-1) {
-//                                        
-//                                        b12_index ++;
-//                                        b12_value = (int) b12.get(b12_index);
-//                                        if (b12_value == (b12_value + 1))
-//                                            h++;
-//                                        
-//                                    }
-//                                } 
-//                                
-//                                if ( (b12_index == (b12.size()-1)) && (b13_index == (b13.size()-1)) )
-//                                    finished = true;
-//                            }
-//
-//                            System.out.println(" h : " + h);
-                            //rule.occurrencies = h;
                             this.rulelist.addRule(rule);
                             this.add(rule);
-                            //System.out.println("ADDED : " + rule.getPostcondition());
-                            
+                           
                         }
                     
-
-                    //b.printList();
-                
             }
             
-            }
+        }
         
         
         // UPDATING RULESET PROBABILITY
@@ -247,10 +146,11 @@ public class RuleSet {
                 
             }
         }
+        
     }    
 
 
-    
+    // Custom made Error Algorithm to determine which RuleSet precedes
     public double getError (RuleSet RS) {
         
         double a = -0.0;
@@ -317,11 +217,12 @@ public class RuleSet {
         
     }
     
-    
+    // Returns true if RS1 precedes over RS2, false otherwise
     public boolean precedingOver (RuleSet RS1, RuleSet RS2) {
         
         return (this.getError(RS1) < this.getError(RS2));
     }
+    
     
     public void add (int a) {
         
@@ -330,21 +231,17 @@ public class RuleSet {
     
     public void add (Rule r) {
         
-//        if (this.indexesOfPrec.isEmpty()) {
-//            
-//            this.indexesOfPrec = this.sList.indexesOfSensor(this.getPrecursor());
-//        }
+
         references.add(r.id);
     }
+    
     
     
     public void initIndexes (SensorMap sMap) {
         
         if (this.size() >= 1)
-        indexesOfPrec = sList.indexesOfSensor(this.getPrecursor());
+        indexesOfPrec = sList.indexesOfSensor(this.getPrecursorWithID());
         
-//          if (this.size() >= 1)
-//                indexesOfPrec = sMap.getMatchingIndexes(this.getPrecursor());
     }
     
     
@@ -366,20 +263,18 @@ public class RuleSet {
     }
     
     
-    public Sensor getPrecursor () {
+    // Returns the Precursor of a Rule using IDS
+    public Sensor getPrecursorWithID () {
         
         return this.rulelist.getRuleByID(this.references.get(0)).precondition;
     }
-        
-    public Sensor getPrecursorWithoutId () {
-        
-        return this.rulelist.getRuleByID(this.references.get(0)).precondition;
-    }    
-    
+   
+    // Returns the Precursor Occurrencies of a Rule using IDS
     public int getPrecursorOccurrencies () {
         
         return this.rulelist.getRuleByID(this.references.get(0)).prec_occurrencies;
     }
+    
     
     public Sensor getSuccessor () {
         
@@ -392,17 +287,9 @@ public class RuleSet {
         return this.rulelist.getRuleByID(this.references.get(i)).postcondition;
     }    
     
-//    // WORKS WITH POSITION
-//    public Sensor getSuccessor (int i) {
-//        
-//        return this.rulelist.getRuleByID(this.references.get(i)).postcondition;
-//    }        
+
     
-    
-    
-    /* 
-        RETURNS THE INDEXES OF NON-WILCARDED OUTPUT.
-    */
+    // Returns the Non-Wildcarded Indexes of the Successor 
     public ArrayList <Integer> detectNonWildcardedSpots () {
         
         ArrayList <Integer> res = new ArrayList (); 
@@ -428,9 +315,7 @@ public class RuleSet {
     }
  
     
-    /*
-        MORE DETAILED WAY TO PRINT A RULESET, PRINTING RULES CONTENT INSTEAD OF IDS
-    */
+    // MORE DETAILED WAY TO PRINT A RULESET, PRINTING RULES CONTENT INSTEAD OF IDS
     public void printRules () {
         
         System.out.println("PRINTING RULESET ID : " + this.id + " (" + this.size() + ") entries.");
@@ -443,15 +328,13 @@ public class RuleSet {
     }
  
     
-    /*
-        CHECKS IF A RULESET IS CONFLICTING WITH ANOTHER ONE BY CHECKING SUCCESSORS OUTPUT
-    */
+    // CHECKS IF A RULESET IS CONFLICTING WITH ANOTHER ONE BY CHECKING SUCCESSORS OUTPUT
     public boolean isConflicting (RuleSet ruleset) {
         
         if (this.id == ruleset.id)
             return false; 
         
-        if (!this.getPrecursor().sensorMatch(ruleset.getPrecursor()))
+        if (!this.getPrecursorWithID().sensorMatch(ruleset.getPrecursorWithID()))
             return false;
         
         
@@ -469,11 +352,9 @@ public class RuleSet {
     }
     
     
-    /*
-        MERGING SENSORS FROM RULESETS IN ORDER TO GET ALL THE POSSIBLE COMBINATIONS. 
-    
-        NO CLEANING OR PRUNING IS DONE HERE, WHICH MEANS SOME "IMPOSSIBLE" RULES CAN OCCUR.       
-    */
+    // MERGING SENSORS FROM RULESETS IN ORDER TO GET ALL THE POSSIBLE COMBINATIONS. 
+    //
+    // NO CLEANING OR PRUNING IS DONE HERE, WHICH MEANS SOME "IMPOSSIBLE" RULES CAN OCCUR.       
     public SensorList outputsFromRuleSets (RuleSet ruleset2) {
         
         SensorList res = new SensorList (); 
@@ -492,9 +373,7 @@ public class RuleSet {
     }
 
     
-    /*
-        GETS PROBS OF THE OUTPUTSTATES
-    */
+    //GETS PROBS OF THE OUTPUTSTATES
     public ArrayList <Double> outputsProbFromRuleSets (RuleSet ruleset2) {
         
         ArrayList <Double> res = new ArrayList <> (); 
@@ -514,39 +393,17 @@ public class RuleSet {
         return res;
     } 
     
+   
     
-    
-    public SensorList outputsFromRuleSets () {
-        
-        SensorList res = new SensorList (); 
-
-        for (int i = 0; i < this.size(); i++) {
-            
-            
-            for (int j = 0; j < sList.size(); j++) {
-                
-                Sensor a = this.getSuccessor(i).merge(sList.getSensor(j+1));
-                res.addSensor(a);
-                
-            }
-        }
-        
-        return res;
-    }
-    
-    
-    
-    /*
-        CONSOLIDATES A RULESET BY ADDING MISSING RULES, 
-        IN ORDER TO GET A "COMPLETE" RULESET, I.E. WITH A TOTAL PROB OF 1. 
-        
-        THIS PROCESS TAKES A HUGE TIME, I THINK IT COULD TAKE MUCH LESS TIME 
-        WITH A BIT OF OPTIMIZATION. 
-    */
+    // CONSOLIDATES A RULESET BY ADDING MISSING RULES, 
+    // IN ORDER TO GET A "COMPLETE" RULESET, I.E. WITH A TOTAL PROB OF 1. 
+    //    
+    // THIS PROCESS TOOK A HUGE TIME, WITH A BIT OF OPTIMIZATION WE DRASTICALLY
+    // REDUCED THE EXECUTUION TIME NEEDED
     public int consolidate (RuleList closedList, RuleMap rMap) {
         
         int steps = 0;
-        boolean insert = true;
+        boolean insert;
         // IF THE RULESET IS ALREADY COMPLETE, NO NEED TO FIND RULES
         if (this.totalProb < 0.98) {
 
@@ -572,9 +429,6 @@ public class RuleSet {
 
                             steps++;
                     }
-
-
-                    //System.out.println("CREATED RULE (ID " + r.getRule(i).id + ") : " + r.getRule(i) + " prob : " + r.getRule(i).getProb());
                 }
             }
 
@@ -584,60 +438,39 @@ public class RuleSet {
     }
     
     
+    // Using HashMaps, we are able to quicly determine where
+    // both Rules occur at the same time
     public ArrayList <Integer> getIntersection (RuleSet RS) {
         
         ArrayList <Integer> a = new ArrayList ();
         HashSet<Integer> map1 = new HashSet<>(this.indexesOfPrec);
         HashSet<Integer> map2 = new HashSet<>(RS.indexesOfPrec);
         
-////        //HashMap<Integer, Integer> map2 = new HashMap<>();
-////        
-////        for (int i = 0; i < this.indexesOfPrec.size(); i++) {
-////            
-////                map1.put(i, this.indexesOfPrec.get(i));
-////
-////        }
-////        
-////        for (int i = 0; i < RS.indexesOfPrec.size(); i++) {
-////            
-////                map2.put(i, RS.indexesOfPrec.get(i));
-////
-////        }  
-        
-        
         map1.retainAll(map2);
-//        for (int t = 0; t < map1.size(); t++) {
-//            
-//            if (map2.containsValue(map1.get(t)+1))
-//                a.add(map1.get(t));
-//        }
+
         a.addAll(map1);
         return a;
     }
     
     
-    
+    // Chooses a Rule Pseudo-Randomly according to Probabilities of the RuleSet
     public Rule chooseRandomRule () {
         
         double a = Math.random();
         
         double c = 0.0;
         
-        //System.out.println("Choosing Random Rule : " + a);
-        
         for (int i = 0; i < this.size(); i++) {
             
             c = c + this.getRule(i).getProb();
             
             if (c > a) {
-                //System.out.println("Rule chosen : " + this.getRule(i));
+                
                 return this.getRule(i);
             }
         }
         
         return this.getRule(this.size()-1);
-        
-        
         
     }
     

@@ -20,9 +20,13 @@ import java.util.Scanner;
  */
 public class RuleMap {
     
-    
+    // RuleMaps are defined like this : 
+    //
+    // Rule 1245 [W, E, E, E, A, W][W, E, E, E, A, E] Occurrencies : 4 tab : [4586, 42138, 83673, 90124]
+    //
+    // Rule + Occurrencies + Indexes of Occurrencies
     public ArrayList <ArrayList> map;
-    private TokenMap tokenMap;
+    private final TokenMap tokenMap;
     
     
     
@@ -61,6 +65,7 @@ public class RuleMap {
     }
     
     
+    // Adds a Rule with its indexes at insert_index
     public void addRule (Rule rule, ArrayList indexes, int insert_index) {
         
         
@@ -87,6 +92,7 @@ public class RuleMap {
         this.map.add(a);
     }
     
+    
     public void addRule (Rule rule, int firstIndex) {
         
         ArrayList a = new ArrayList ();
@@ -102,7 +108,7 @@ public class RuleMap {
     }    
     
     
-    
+    // Replace existing Rule at index bu "rule"
     public void setRule (Rule rule, int index) {
         
         
@@ -110,6 +116,7 @@ public class RuleMap {
         
         this.remove(index);
     }
+    
     
     // REPLACE EXISTING INDEXLIST AT (INDEX) BY A
     public void setIndexes (ArrayList a, int index) {
@@ -121,7 +128,8 @@ public class RuleMap {
     }    
     
     
-    public void increaseIndexes (int i, int newindex) {
+    
+    public void addNewIndex (int i, int newindex) {
         
         ArrayList a = (ArrayList) this.map.get(i).get(1);
         
@@ -131,6 +139,7 @@ public class RuleMap {
     } 
     
     
+    // Returns the first exact matching Rule
     public int findRule (Rule rule) {
         
         
@@ -151,7 +160,7 @@ public class RuleMap {
     
     
     
-    
+    // Builds the RuleMap from INPUT_FILE
     public int fromFile (SensorList sList) {
         
 
@@ -171,14 +180,14 @@ public class RuleMap {
 
                 Sensor post = new Sensor(line2,tokenMap);
 
-                Rule r = new Rule(previous,post,sList);
+                Rule r = new Rule(previous,post);
                
                 int tip = this.findRule(r);
                 
                 //System.out.println("FIND : " + tip);
                 if (tip > -1) {
                     
-                    this.increaseIndexes(tip, i);
+                    this.addNewIndex(tip, i);
                 }
                 
                 else {
@@ -214,7 +223,7 @@ public class RuleMap {
     
     
     
-    
+    // Retruns how many times Rule is matched in the RuleMap
     public int getMatchingOccurencies (Rule rule) {
         
         int a = 0;
@@ -231,6 +240,7 @@ public class RuleMap {
     }
     
     
+    // Returns the indexes of matching Rules
     public ArrayList <Integer> getMatchingIndexes (Rule rule) {
         
         ArrayList <Integer> a = new ArrayList ();
@@ -245,56 +255,6 @@ public class RuleMap {
         
         return a;
     }    
-    
-    
-    public int getExactMatchingOccurencies (Rule rule) {
-        
-        int a = 0;
-        
-        for (int i = 0; i < this.size(); i++) {
-            
-            if (this.getRule(i).ruleMatch_exact(rule))
-                return this.getOccurrencies(i);
-        }
-        
-        
-        
-        return a;
-    }
-    
-    public ArrayList getExactMatchingIndexes (Rule rule) {
-        
-        ArrayList a = new ArrayList ();
-        
-        for (int i = 0; i < this.size(); i++) {
-            
-            if (this.getRule(i).ruleMatch_exact(rule))
-                return this.getIndexes(i);
-        }
-        
-        
-        
-        return a;
-    }   
-    
-    
-//    public ArrayList <Integer> indexesOfRule (Rule rule) {
-//        
-//        ArrayList res = new ArrayList ();
-//        ArrayList <Integer> a = this.getMatchingIndexes(rule.getPrecondition());
-//        ArrayList b = this.getMatchingIndexes(rule.getPostcondition());
-//        
-//        
-//        for (int i = 0; i < a.size(); i++) {
-//            
-//            if (b.contains(a.get(i)+1))
-//                res.add(i);
-//        }
-//        
-//        return res;
-//    }
-    
-    
     
     
 }

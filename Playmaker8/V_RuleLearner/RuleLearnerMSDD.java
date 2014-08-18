@@ -15,7 +15,7 @@ import java.util.ArrayList;
  *
  * @author virgile
  */
-public class RuleLearnerMSDD_Sensor {
+public class RuleLearnerMSDD {
     
     public TokenMap tokenMap;
     public SensorList sensorMap;
@@ -23,7 +23,7 @@ public class RuleLearnerMSDD_Sensor {
     static boolean silent_mode = false;
    
     
-    public RuleLearnerMSDD_Sensor(TokenMap t, SensorList s) {
+    public RuleLearnerMSDD(TokenMap t, SensorList s) {
         this.tokenMap = t;
         this.sensorMap = s;
     }
@@ -91,7 +91,7 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
              String str_post = "******";
              Sensor pre = new Sensor(str_pre,t);
              Sensor post = new Sensor(str_post,t);
-             Rule rootRule = new Rule(pre,post, sList);
+             Rule rootRule = new Rule(pre,post);
              rootRule.occurrencies = sList.size();
              //System.out.println(rootRule.prec_indexes);
              openList.addRule(rootRule);
@@ -158,7 +158,7 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
                     number_added = openList.addWithCheck(children,sList, sMap, rMap);
 
                  if(!pruning)
-                     number_added = openList.add(children);
+                     number_added = openList.addRuleList(children);
 
                  // ADDING THE SOURCE RULE TO CLOSEDLIST
                  closedList.addRule(openList.getRule(0));
@@ -234,7 +234,7 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
              
                  if (!silent_mode)
                     System.out.println("\nFILTERING FREELOADERS...");
-                 ArrayList arr = closedList.findFreeloaders(sList,sMap);
+                 ArrayList arr = closedList.findFreeloaders(sMap);
              
                  closedList.removeFreeloaders(arr);
              }
@@ -443,7 +443,7 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
 ////////
 ////////                aList.addAll(rulesetlist.getRuleSet(chosen).detectNonWildcardedSpots());
 ////////
-////////                chosenRuleSets.add(chosen);
+////////                chosenRuleSets.addRuleList(chosen);
 ////////                //System.out.println("CHOSEN RULESET LIST IS : " + chosenRuleSets);
 ////////
 ////////                //System.out.println("UPDATING STATELIST... ");
@@ -462,7 +462,7 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
 ////////            }
 ////////            
 ////////            System.out.println(" OK");
-////////            stateLists.add(stateList);
+////////            stateLists.addRuleList(stateList);
 ////////            
 ////////        }
 ////////        
@@ -566,7 +566,7 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
 //////////            
 //////////            
 //////////            System.out.println(" OK");
-//////////            stateLists.add(stateList);
+//////////            stateLists.addRuleList(stateList);
 //////////            
 //////////        }
 //////////        
@@ -602,19 +602,19 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
          
 //         RuleSet ruleset = new RuleSet(closedList);
 //
-//         ruleset.add(closedList.getRule(7));
+//         ruleset.addRuleList(closedList.getRule(7));
 //         
 //         //ruleset.printRules();
 //         
 //         RuleSet ruleset2 = new RuleSet(closedList);
 //
-//         ruleset2.add(closedList.getRule(5));
+//         ruleset2.addRuleList(closedList.getRule(5));
 //         
 //         //ruleset2.printRules();     
 //         
 //         RuleSet ruleset3 = new RuleSet(closedList);
 //
-//         ruleset3.add(closedList.getRule(9));
+//         ruleset3.addRuleList(closedList.getRule(9));
          
          //ruleset3.print(); 
          
@@ -717,7 +717,7 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
 ////            
 ////            aList.addAll(rulesetlist.getRuleSet(chosen).detectNonWildcardedSpots());
 ////            
-////            chosenRuleSets.add(chosen);
+////            chosenRuleSets.addRuleList(chosen);
 ////            stateList.update(rulesetlist.getRuleSet(chosen));
 ////            
 ////            System.out.println("\nCHOSEN RULESET : " + chosen);

@@ -2,17 +2,10 @@ package EnvModel;
 
 
 import EnvAgent.*;
-import EnvAgent.PredatorAgent.*;
-import Logging.*;
-import V_ReinforcementLearner.DecisionTable;
-import V_ReinforcementLearner.StateActionValueTable;
-import V_ReinforcementLearner.StateMap;
-import V_ReinforcementLearner.StateValueTable;
-import V_Sensors.Sensor;
-import V_Sensors.Token;
-import V_Sensors.TokenMap;
-import V_StateGenerator.MSDD_StateGenerator_Maps;
-import V_StateGenerator.MSDD_StateGenerator_Rules;
+import V_ReinforcementLearner.*;
+import V_Sensors.*;
+import V_StateGenerator.*;
+
 
 //This is a clock tick based environment. Rather than float action timers this
 //environment works in clock ticks and is therefore easier to debug.
@@ -24,7 +17,6 @@ import V_StateGenerator.MSDD_StateGenerator_Rules;
 //We can then also remove the list of actions which the environment has and allow
 //the agent to do things like act directly on its body.
 
-import java.util.*;
 
 public abstract class TickEnvironment extends Environment
 {
@@ -154,7 +146,7 @@ public abstract class TickEnvironment extends Environment
        
         for (int i = 0; i < agents.size(); i++) {
             Agent current = agents.getAgent(i);
-            //System.out.println("Agent : " + current);
+            
             boolean currentAgentsTurn =agents.getAgentsTurn(current);
             agents.updateAgentsTurn(current);
             
@@ -172,48 +164,8 @@ public abstract class TickEnvironment extends Environment
             {
                 Action action = current.deliberate();
                 current.act(action);
-                //System.out.println("Action : " + action);
-                //System.out.println("Position : " + current.getPercep());
-                //KILL_LOG
-                /*if (current.getRealThinker()) {
-                    Singleton logfile = Singleton.getInstance();
-                    logfile.print(action.toString() + " \n");
-                     
-                }*/
 
                 
-//                                if (i == 0) {
-//                
-//                    
-//                    System.out.println("/////////////////////");
-//        
-//                    TokenMap tokenMap = new TokenMap ();
-//                
-//                    //tokenMap.fromFile();
-//                    
-//                    
-//         StateActionValueTableStateActionValueTablee nop = new StateTable ();
-//        
-//                    //nop = nop.fromFile(tokenMap);
-//        
-//                    //nop.printTable("IMPORTED");
-//                    System.out.println("\nPercep : " + current.getPercep());
-//           
-//
-//                    
-//                    System.out.println("Action : " + action);
-//
-//                    String str = current.getPercep().translation() + "*";
-//                
-//
-//                
-//                    Sensor currentState = new Sensor (str, tokenMap );
-//                
-//                    System.out.println("Current State : " + currentState);
-//                    
-//                    if (currentState.isRewarded())
-//                        System.out.println("REWARD");
-//                }
             }
             
           
@@ -230,7 +182,7 @@ public abstract class TickEnvironment extends Environment
     
     
     
-    public void updateEnvironmentFromRL() {
+    public void updateEnvironmentFromStateActionValueTable() {
        
         for (int i = 0; i < agents.size(); i++) {
             Agent current = agents.getAgent(i);

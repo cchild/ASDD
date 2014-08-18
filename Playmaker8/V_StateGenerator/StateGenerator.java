@@ -22,15 +22,9 @@ public abstract class StateGenerator {
 
     
     
-    public abstract ArrayList  generateStates (Sensor s1, SensorList sList, SensorMap sMap, RuleSetList rulesetlist, SensorList impossibleList, boolean hard_clean_statelist, StateMap stMap);
+    public abstract ArrayList  generateAllPossibleStates (Sensor s1, SensorList sList, SensorMap sMap, RuleSetList rulesetlist, SensorList impossibleList, boolean hard_clean_statelist, StateMap stMap);
     
-    public abstract ArrayList generateStates2 (Sensor s1, RuleSetList rulesetlist, SensorList impossibleList, StateMap stMap, SensorList sList, SensorMap sMap);
-    
-    public abstract ArrayList generateState_random (Sensor s1, RuleSetList rulesetlist, SensorList impossibleList, StateMap stMap);
-    
-    public abstract ArrayList generateState_picking (Sensor s1, RuleSetList rulesetlist, SensorList impossibleList, StateActionValueTable sTable, StateMap stMap);
-    
-    public abstract Sensor generateState_bestAction (Sensor s1, SensorList sList, SensorMap sMap, RuleSetList rulesetlist, SensorList impossibleList, StateActionValueTable sTable, StateMap stMap);
+    public abstract ArrayList generateRandomActionAndPseudoRandomState (Sensor s1, RuleSetList rulesetlist, SensorList impossibleList, StateMap stMap);
     
     public abstract Token generateActionFromStateActionValueTable (Sensor s1, StateActionValueTable sTable);
     
@@ -38,8 +32,5 @@ public abstract class StateGenerator {
             
     public abstract Token generateRandomAction (Sensor s1, ArrayList <Token> actions);
     
-    //public abstract ArrayList generateState2 (Sensor s1, SensorList sList, SensorMap sMap, RuleSetList rulesetlist, SensorList impossibleList);
-    
-    //public abstract Sensor generateStateWithCheck (Sensor s1, SensorList sList, SensorMap sMap, RuleSetList rulesetlist, SensorList impossibleList);
-    
+   
 }

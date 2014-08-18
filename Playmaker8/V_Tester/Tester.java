@@ -29,27 +29,31 @@ public class Tester {
 
     
     // MSDD SETTINGS
-    static final boolean MSDD = false;
+    static final boolean MSDD = true;
     static final boolean load_MSDD_rules = true;
     static final boolean save_MSDD_rules = !load_MSDD_rules;
     static final int maxnodes = 50000;
     
     
+    
+    // STATE GENERATOR SETTINGS
+    static final boolean use_Maps = true;
+    static final boolean use_Rules = !use_Maps;    
 
+    
+    
     // REINFORCEMENT LEARNING SETTINGS
     static final boolean Reinforcement_Learning = true;
-    static final int Reinforcement_Learning_steps = 200000; 
-    static final boolean use_decision_tables = false;
+    static final int Reinforcement_Learning_steps = 10000;  // MAPS CAN GO TO 2 Millions, Rules around 15K
+    static final boolean use_decision_tables = true;
     static final boolean save_Reinforcement_Learning_results = Reinforcement_Learning; 
     static final boolean load_Reinforcement_Learning_results = !save_Reinforcement_Learning_results;
-    static final boolean use_Value_Table = true;
+    static final boolean use_Value_Table = false;
     static final boolean use_Action_Value_Table = !use_Value_Table;
     static final boolean use_Dynamic_Programming = true;
     
     
-    // MAPS & RULES SETTINGS
-    static final boolean use_Maps = true;
-    static final boolean use_Rules = !use_Maps;
+
     
     
     
@@ -132,7 +136,7 @@ public class Tester {
                 ruleMap.fromFile(sensorList);
                 if (!silent_mode)
                     System.out.println(" OK");                
-                
+             ruleMap.printList("");
         // CLOSEDLIST        
             RuleList closedList = new RuleList();
         
@@ -182,7 +186,7 @@ public class Tester {
             System.out.println("\n\nLEARNING MSDD RULES ...");
 
 
-            MSDD_rules = RuleLearnerMSDD_Sensor.learnRulesMSDD(tokenMap, sensorMap, ruleMap, sensorList, ruleSetList, silent_mode, maxnodes);
+            MSDD_rules = RuleLearnerMSDD.learnRulesMSDD(tokenMap, sensorMap, ruleMap, sensorList, ruleSetList, silent_mode, maxnodes);
 
 
             closedList = (RuleList) MSDD_rules.get(0);

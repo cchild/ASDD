@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package V_RuleLearner;
 
@@ -20,17 +15,18 @@ import java.util.Scanner;
  */
 public class RuleSetList {
     
-    
+    // The RuleSetList contains all RuleSets
+    // It could be called our Rule Database
     public ArrayList <RuleSet> rulesetlist;
-    private RuleList rulelist;
-    private SensorList sList;
+    private final RuleList rulelist;
+    private final SensorList sensorList;
     
     
     public RuleSetList (RuleList rulelist, SensorList sList) {
         
         this.rulesetlist = new ArrayList <> ();
         this.rulelist = rulelist;
-        this.sList = sList;
+        this.sensorList = sList;
     }
     
     
@@ -39,28 +35,32 @@ public class RuleSetList {
         this.rulesetlist.add(ruleset);
     }
     
-    
+    // Adds a new empty RuleSet to the RuleSetList
     public void add () {
-        //TODO
-        RuleSet ruleset = new RuleSet (this.rulelist, this.sList);
+
+        RuleSet ruleset = new RuleSet (this.rulelist, this.sensorList);
         this.rulesetlist.add(ruleset);
     }
     
+    // Adds a Rule to a RuleSet
+    // Then adds this RuleSet to the RuleSetList
     public void add (Rule rule) {
-        //TODO
-        RuleSet ruleset = new RuleSet (this.rulelist, this.sList);
+   
+        RuleSet ruleset = new RuleSet (this.rulelist, this.sensorList);
         rule.ruleset_id = ruleset.id;
         ruleset.add(rule);
         this.rulesetlist.add(ruleset);
     }
+    
     
     public RuleSet getRuleSet (int number) {
         
         return this.rulesetlist.get(number -1);
     }
     
+    
     public void addRuleToRuleSet (Rule rule, int number) {
-        //TODO
+        
         if (number < this.rulesetlist.size()) {
         RuleSet ruleset = this.rulesetlist.get(number);
         rule.ruleset_id = ruleset.id;
@@ -72,33 +72,26 @@ public class RuleSetList {
 
 
     
+  
     
-    public void print () {
-        
-        System.out.println("\nPRINTING RULESETLIST");
-        for (int i = 0; i < this.size(); i++) {
-            
-            System.out.println("RULESET ID : " + this.rulesetlist.get(i).id + " " + this.rulesetlist.get(i) + " totalprob : " + this.rulesetlist.get(i).totalProb);
-        }
-    }
     
+    // Soft Printing
     public void printsoft () {
         
         System.out.println("\nPRINTING RULESETLIST");
         for (int i = 0; i < this.size(); i++) {
             
             System.out.println("RULESET ID : " + this.rulesetlist.get(i).id + " " + this.rulesetlist.get(i).references + " totalprob : " + this.rulesetlist.get(i).totalProb);
-            //this.rulesetlist.get(i).printRules();
         }
     }
     
     
+    // Exhaustive printing
     public void printall () {
         
         System.out.println("\nPRINTING RULESETLIST");
         for (int i = 0; i < this.size(); i++) {
             
-            //System.out.println("RULESET ID : " + this.rulesetlist.get(i).id + " " + this.rulesetlist.get(i) + " totalprob : " + this.rulesetlist.get(i).totalProb);
             this.rulesetlist.get(i).printRules();
         }
     }
@@ -110,16 +103,16 @@ public class RuleSetList {
     }
     
     
+    // Builds the RuleSetList from the ClosedList in MSDD Algorithm
     public void buildFromClosedList () {
         
         
         Rule current = this.rulelist.getRule(0);
         this.add(current);
-        //System.out.println("FIRST RULE : " + current.toString());
-        //System.out.println("FIRST RULE RuleSet: " + current.ruleset_id);
         
   
         int i;
+        
         for (int j = 0; j < this.rulelist.size(); j ++) {
             i = j+1;
             if (this.rulelist.getRule(j).ruleset_id == -1) {
@@ -132,9 +125,9 @@ public class RuleSetList {
             while (i < this.rulelist.size()-2) {
 
                 i++;
-                //System.out.println("Looking at " + i);
+                
                 if (this.rulelist.getRule(i).isSameRuleSet(current) && this.rulelist.getRule(i).ruleset_id == -1) {
-                    //System.out.println("FOUND ONE at index " + i);
+                    
                     this.rulelist.getRule(i).ruleset_id = current.ruleset_id;
                     this.getRuleSet(current.ruleset_id).add(this.rulelist.getRule(i));
                 }
@@ -161,6 +154,7 @@ public class RuleSetList {
     
     
     
+    // Consolidate a RuleSet by adding all the Missing Rules
     public int consolidate (SensorList sList, RuleList closedList, RuleMap rMap, boolean silent) {
         
         int counter = 0;
@@ -184,14 +178,12 @@ public class RuleSetList {
 
     
     
-    /* 
-        GETS THE CONFLICS BETWEEN ALL RULESETS FROM THE RULESETLIST
-        FIRST INDEX OF THE LIST IS THE NUMBER OF CONFLICTS DETECTED
     
-        EVERY CONFLICT BETWEEN RULESETS X AND Y IS LOCATED BOTH IN X AND Y INDEXES 
-        OF THE LIST
-    */
-    
+    //    GETS THE CONFLICS BETWEEN ALL RULESETS FROM THE RULESETLIST
+    //    FIRST INDEX OF THE LIST IS THE NUMBER OF CONFLICTS DETECTED
+    //
+    //    EVERY CONFLICT BETWEEN RULESETS X AND Y IS LOCATED BOTH IN X AND Y INDEXES 
+    //    OF THE LIST
     public ArrayList getConflicts (SensorList sList, SensorMap sMap, RuleMap rMap, boolean silent) {
         
         ArrayList <ArrayList> res = new ArrayList();
@@ -201,19 +193,18 @@ public class RuleSetList {
         
         for (int i = 1; i <= this.size()-1; i++) {
             
-//            if ((count%1000) == 0) 
-//                System.out.println("CONFLICTS " + count);
+
             if (!silent)    
                 System.out.println(i + " / " + this.size());
             ArrayList <Integer> a = new ArrayList ();
-            //this.getRuleSet(i).
+            
             
             for (int j = i+1; j <= this.size(); j++) {
                       
                 if ((this.getRuleSet(i).isConflicting(this.getRuleSet(j))) && (i != j)) {
                     a.add(this.getRuleSet(j).id);
                     number++;
-                    //ArrayList <Integer> b = this.getRuleSet(i).getIntersection(this.getRuleSet(j));
+                    
                     RuleSet RS12 = new RuleSet(this.getRuleSet(i),this.getRuleSet(j), sList, sMap, rMap);
                     
                     if ((RS12.totalProb > 0.0)) {
@@ -240,6 +231,7 @@ public class RuleSetList {
     }
     
     
+    
     public void initIndexes (SensorList sList, SensorMap sMap) {
         
         for (int i = 0; i < this.size(); i++) {
@@ -248,59 +240,8 @@ public class RuleSetList {
     }
     
     
-//    public void initPrecedences () {
-//        
-//        for (int i = 0; i < this.size(); i++) {
-//            
-//            for (int j = 0; j < this.size(); j++) {
-//                
-//                if (this.get)
-//            }
-//        }
-//    }
     
-    
-    public void buildFromFile (RuleList rList, SensorList sList) {
-        
-        int max_index = 1;
-        
-        for (int j = 0; j < rList.size(); j++) {
-            
-            if (rList.getRule(j).ruleset_id > max_index)
-                max_index = rList.getRule(j).ruleset_id;
-        }
-        
-        for (int i = 0; i < max_index; i++) {
-            
-            RuleSet r = new RuleSet(rList, sList);
-            
-            this.add(r);
-        }
-        
-        for (int j = 0; j < rList.size(); j++) {
-            
-            this.getRuleSet(rList.getRule(j).ruleset_id).add(rList.getRule(j));
-        }
-        
-        
-                // UPDATING RULESET PROBABILITY
-        if (this.size() > 0) {
-            for (int i = 0; i < this.size(); i++) {
-
-                this.getRuleSet(i+1).totalProb = 0.0;
-                for (int j = 0; j < this.getRuleSet(i+1).size(); j++) {
-                    this.getRuleSet(i+1).totalProb = this.getRuleSet(i+1).totalProb + this.getRuleSet(i+1).getRule(j).getProb();
-                }
-                
-                this.getRuleSet(i+1).totalProb = Math.round(this.getRuleSet(i+1).totalProb * 1000);
-                this.getRuleSet(i+1).totalProb = this.getRuleSet(i+1).totalProb/1000;
-            }
-        }
-        
-    }
-    
-    
-    
+    // SAVES RuleSetList in RSLIST_INPUT_FILE
     public void export () {
         
         LogFiles logFiles = LogFiles.getInstance();
@@ -326,8 +267,8 @@ public class RuleSetList {
     
     
     
-    
- public int fromFile () {
+    // Loads the RuleSetList from RLIST_INPUT_FILE
+    public int fromFile () {
         
         String filePath = Logging.LogFiles.FILE_NAME_3;
  
@@ -346,7 +287,7 @@ public class RuleSetList {
                 String [] b = line2.split(" ");
 
                 
-                RuleSet RS = new RuleSet(this.rulelist,this.sList);
+                RuleSet RS = new RuleSet(this.rulelist,this.sensorList);
                 
                 RS.id = Integer.parseInt(a[0]);
                 RS.totalProb = 0.0;

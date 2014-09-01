@@ -55,10 +55,12 @@ public class PaintPaintedFluent extends Fluent implements Cloneable, Serializabl
         else {
             switch (getValue()){
                 case BLOCK_PAINTED: {
-                    return "BP"; 
+                    //return "BP"; 
+                    return "P";
                 }
                 case NOT_BLOCK_PAINTED: {
-                    return "NOT_BP";
+                    //return "NOT_BP";
+                    return "p";
                 }
             }
         }

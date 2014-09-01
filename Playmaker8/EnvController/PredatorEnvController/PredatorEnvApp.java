@@ -55,15 +55,19 @@ public class PredatorEnvApp extends EnvApp {
         //getPredatorEnvironment().updateEnvironment();
         
         
-        // NEW VERSION
+        // 2nd VERSION USING ACTION VALUE TABLE IN STATETABLE.TXT
         //getPredatorEnvironment().updateEnvironmentFromStateActionValueTable();
       
-        // 3rd Version
+        // 3rd VERSION USING VALUE TABLE IN STATETABLE.TXT
         //getPredatorEnvironment().updateEnvironmentFromStateValueTable();
        
         
-        // 4th Version
+        // 4th VERSION USING DECISION TABLE IN STATETABLE.TXT
         getPredatorEnvironment().updateEnvironmentFromDecisionTable();
+        
+        
+        
+        
         /*Force a repaint*/      
         getEnvViewPanel().repaint();
     }

@@ -105,7 +105,7 @@ public class PredatorAgentPercep extends Percep implements Cloneable, Serializab
         String percepString = "";
         for (int i = 0; i < SIZE; i++) {
             percepString += ((PredatorFluent)getFluent(i)).translation();
-            percepString += "";
+            percepString += ",";
         }
         
         percepString += "";

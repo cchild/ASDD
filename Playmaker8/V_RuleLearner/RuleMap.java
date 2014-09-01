@@ -65,7 +65,7 @@ public class RuleMap {
     }
     
     
-    // Adds a Rule with its indexes at insert_index
+    // Adds a Rule with its "indexes" at "insert_index"
     public void addRule (Rule rule, ArrayList indexes, int insert_index) {
         
         
@@ -108,7 +108,7 @@ public class RuleMap {
     }    
     
     
-    // Replace existing Rule at index bu "rule"
+    // Replace existing Rule at "index" by "rule"
     public void setRule (Rule rule, int index) {
         
         
@@ -171,20 +171,20 @@ public class RuleMap {
             Scanner scanner=new Scanner(new File(filePath));
             int i = 0;
             String line = scanner.nextLine();
-            Sensor previous = new Sensor(line,tokenMap);
+        
+            Sensor previous = new Sensor(line,tokenMap,2);
             
             while (scanner.hasNextLine()) {
                 i++;
                 String line2 = scanner.nextLine();
                 
 
-                Sensor post = new Sensor(line2,tokenMap);
+                Sensor post = new Sensor(line2,tokenMap,2);
 
                 Rule r = new Rule(previous,post);
                
                 int tip = this.findRule(r);
-                
-                //System.out.println("FIND : " + tip);
+ 
                 if (tip > -1) {
                     
                     this.addNewIndex(tip, i);
@@ -214,7 +214,7 @@ public class RuleMap {
     
     public void printList (String str) {
         
-        System.err.println("\nPRINTING " + str + " RULEMAP (" + this.size() + " entries).");
+        System.out.println("\nPRINTING " + str + " RULEMAP (" + this.size() + " entries).");
         for (int i =0; i < this.size(); i++) {
             
             System.out.println("Rule " + i + " " + this.getRule(i) + " Occurrencies : " + this.getOccurrencies(i) + " tab : " + this.getIndexes(i) );
@@ -223,7 +223,7 @@ public class RuleMap {
     
     
     
-    // Retruns how many times Rule is matched in the RuleMap
+    // Retruns how many times Rule is matched in the database (using RuleMap)
     public int getMatchingOccurencies (Rule rule) {
         
         int a = 0;

@@ -242,6 +242,8 @@ public class RuleSet {
         if (this.size() >= 1)
         indexesOfPrec = sList.indexesOfSensor(this.getPrecursorWithID());
         
+        //indexesOfPrec = sMap.getIndexes(id);
+        
     }
     
     
@@ -399,14 +401,14 @@ public class RuleSet {
     // IN ORDER TO GET A "COMPLETE" RULESET, I.E. WITH A TOTAL PROB OF 1. 
     //    
     // THIS PROCESS TOOK A HUGE TIME, WITH A BIT OF OPTIMIZATION WE DRASTICALLY
-    // REDUCED THE EXECUTUION TIME NEEDED
+    // REDUCED THE EXECUTUION THE TIME NEEDED
     public int consolidate (RuleList closedList, RuleMap rMap) {
         
         int steps = 0;
         boolean insert;
         // IF THE RULESET IS ALREADY COMPLETE, NO NEED TO FIND RULES
-        if (this.totalProb < 0.98) {
-
+        if (this.totalProb < 0.999) {
+            //System.out.println("Incomplete RuleSet : " ); this.printRules();
             for (int l = 0 ; l < this.references.size(); l++) {
                 RuleList r = closedList.getRuleByID(this.references.get(l)).getSameRuleSetRules(sList, closedList, rMap);
 

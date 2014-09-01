@@ -37,7 +37,7 @@ public class StateList {
         this.list.add(a);
     }
     
-    
+    // Adds a Sensor at "index"
     public void addSensor (Sensor sen, double prob, int index) {
         
         
@@ -52,10 +52,12 @@ public class StateList {
     }
     
     
+    
     public void remove (int index) {
         
         this.list.remove(index);
     }
+    
     
     
     public void setProb (int index, double value) {
@@ -203,33 +205,7 @@ public class StateList {
               
     }
     
-    
-    // Cleaning by deleting every Sensor Impossible or Not contained in the Possible List
-    public void clean_hard (SensorList impList, StateList posList) {
-        
-        
-        for (int u = this.size()-1; u >= 0; u--) {
-                
-                int a = impList.findSensor(this.getSensor(u));
-                if ( a > 0) {
-                    this.remove(u); 
-                    continue;
-                }
-                
-                if (!posList.hasSensor(this.getSensor(u)))
-                    this.remove(u);    
-        }
-        
-        double lastProb = this.getTotalProb();
-        for (int i = 0; i  < this.size(); i++) {
-            
-            double b =  this.getProb(i) / lastProb;            
-            double a = Math.round(b * 1000);
-            a= a/1000;
-            this.setProb(i, a);
-        }
-        
-    }
+   
     
 
     // Cleans using the Impossible List
@@ -241,7 +217,6 @@ public class StateList {
                 int a = impList.findSensor(this.getSensor(u));
                 if ( a > 0) {
                     this.remove(u); 
-                    continue;
                 }
    
         }
@@ -295,19 +270,6 @@ public class StateList {
     
     
 
-    
-    // Returns true if sen occurs in the StateList
-    public boolean hasSensor (Sensor sen) {
-        
-        for (int i = 0; i < this.size(); i++) {
-            
-            if (this.getSensor(i).sensorMatch_exact(sen))
-                return true;
-        }
-        
-        
-        return false;
-    }
     
     
     // Returns the indexes of Sensors matching sen in the StateList

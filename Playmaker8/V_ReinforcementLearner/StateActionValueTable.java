@@ -6,6 +6,7 @@
 
 package V_ReinforcementLearner;
 
+import V_Sensors.StateMap;
 import Logging.LogFiles;
 import V_Sensors.*;
 import java.io.File;
@@ -23,13 +24,18 @@ public class StateActionValueTable {
     
     
     
-    
+    // State Action Value Tables are designed like this : 
+    //
+    // SENSOR 1 [W, E, E, W, E, *] Actions : [N, S, E, W] Values : [0.35, 0.35, 0.50, 0.33]
+    //
+    // Each Action has a Separate Value, Inside a State row
     public StateActionValueTable () {
         
         list = new ArrayList();
     }
     
     
+    // Adds a Sensor, an action and its value
     public void addSensor (Sensor sen, Token action, double value) {
         
         
@@ -50,6 +56,7 @@ public class StateActionValueTable {
     }
     
     
+    // Same than above for specified index
     public void addSensor (Sensor sen, Token action, double value, int index) {
         
         
@@ -70,7 +77,7 @@ public class StateActionValueTable {
     }
     
     
-    
+    // Adds the whole lists
     public void addSensor (Sensor sen, ArrayList <Token> actions, ArrayList <Double> values, int index) {
         
         
@@ -92,6 +99,7 @@ public class StateActionValueTable {
     }
     
     
+    // Adds a new action & value to an existing State
     public void addActionAndValue (int i, Token action, double value) {
         
         ArrayList b = this.getAction(i);
@@ -106,6 +114,7 @@ public class StateActionValueTable {
     }
     
     
+    // Updates the Value of the State "i" and the action "ii"
     public void increaseValue (int i, int ii, double increase) {
         
         ArrayList res = new ArrayList ();
@@ -183,18 +192,13 @@ public class StateActionValueTable {
     }
     
     
-    public void fromSensorList (SensorList s) {
-        
-        for (int i = 0; i < s.size(); i++) {
-            
-            this.addSensor(s.getSensor(i+1), s.getSensor(i+1).getToken(s.getSensor(i+1).size()-1), 0.0);
-        }
-    }
+
     
-    
+    // Returns the indexesof State and Action if the Table contains State & Action
+    //
+    // INDEX 0 : Index of the State (if any)
+    // INDEX 1 : Index of the Action for the State (if any)
     public ArrayList <Integer> containsStateAndAction (Sensor sen, Token action) {
-        
-        //System.out.println("Looking for : " + sen + " & " + action);
         
         ArrayList a = new ArrayList ();
         
@@ -208,23 +212,24 @@ public class StateActionValueTable {
                 for (int j = 0; j < b.size(); j++) {
                     if (this.getAction(i).get(j).getReference() == action.getReference()) {
                     
-                    //System.out.println("Found " + this.getSensor(i) + " & : " + this.getAction(i) + " returning true");
+                    
                         a.add(i);
                         a.add(j);
-                        //System.out.println ( " returning " + a);
+                        
                         return a;
                     }
                 }
                 
                 a.add(i);
-                //System.out.println ( " returning " + a);
+                
                 return a;
             }
         }
         
-        //System.out.println ( " returning " + a);
+        
         return a;
     }
+    
     
     
     public double findMaxActionValue (int i) {
@@ -259,24 +264,7 @@ public class StateActionValueTable {
         return res;
     }
     
-    
-    public int findBestIndex (int i) {
-        
-        ArrayList a = this.getValue(i);
-        double stack = 0.0;
-        int res = 0;
-        double rand = Math.random() * this.getSumOfRow(i);
-        
-        for (int j = 0; j < a.size(); j++) {
-            
-            stack = stack + (double) a.get(j);
-            
-            if (stack > rand) 
-                return j;
-        }
-        
-        return res;
-    }
+
     
     
     public int findSensor (Sensor sen) {
@@ -307,97 +295,10 @@ public class StateActionValueTable {
     
     
     
-    public StateActionValueTable sort () {
-        
-        StateActionValueTable res = new StateActionValueTable (); 
-        
-        ArrayList <Token> actionsOrder = new ArrayList ();
-        
-        
-        
-        this.printTable("BEFORE SORTING");
-        
-        for (int i = 0; i < this.size(); i++) {
-            
-            // GETTING SENSOR
-            
-            Sensor sen = this.getSensor(i);
-            
-            
-            
-            // GETTING AND SORTING ACTIONS
-            
-            ArrayList <Token> actions = this.getAction(i);
-            
-            ArrayList newActions = new ArrayList ();
-            
-            ArrayList values = this.getValue(i);
-            
-            ArrayList newValues = new ArrayList ();
-            
-            int number = actions.size();
-            
-                // COPYING ORDER FROM FIRST SENSOR
-//                if (i == 0) {
-//                
-//                    for (int j = 0; j < number; j++) {
-//                    
-//                        actionsOrder.add(actions.get(j));
-//                    }
-//                    
-//                    
-//                    res.addSensor(sen, actions, values, i);
-//                }
-            
-                if (i == 0) {
-                
-                    for (int j = 0; j < number; j++) {
-                    
-                        actionsOrder.add(actions.get(j));
-                        actionsOrder.get(j).setReference(j+1);
-                    }
-                    
-                    
-                    res.addSensor(sen, actions, values, i);
-                }
-            
-                // BUILDING NEWACTIONS, SORTED
-                else {
-                    
-                    for (int u = 0; u < number; u++) {
-                        
-                        Token t = (Token) actionsOrder.get(u);
-
-                        
-                        int index = this.findActionIndex(i, t);
-                        if (index != -1) {
-                        
-                            Token a = this.getAction(i).get(index);
-                        
-                            double d = this.getValue(i).get(index);
-                        
-                            newActions.add(a);
-                        
-                            newValues.add(d);
-                        }
-                    }
-                    
-                    
-                    res.addSensor(sen, newActions, newValues, i);
-                }
-                
-            
-        }
-        
-        
-        System.out.println("AFTER SORTING");
-        
-        return res;
-    }
+ 
     
     
-    
-    
+    // Exports to StateTable.txt
     public void export () {
         
         LogFiles logFiles = LogFiles.getInstance();
@@ -425,32 +326,30 @@ public class StateActionValueTable {
     
     
     
+    // Init from StateMap with all values set to 0.0
     public StateActionValueTable fromStateMap (StateMap stMap) {
         
         
-        StateActionValueTable s33 = new StateActionValueTable ();
+        StateActionValueTable actionValueTable = new StateActionValueTable ();
         
         for (int i = 0; i < stMap.size(); i++) {
             
             Sensor sen = stMap.getSensor(i);
-            //System.out.println("State : " + sen);
             
-            for (int j = 0; j < stMap.getActions(j).size(); j++) {
+            for (int j = 0; j < stMap.getActions(i).size(); j++) {
                 
                 Token action = stMap.getActions(i).get(j);
                 
-                //System.out.println("Action : " + action);
-                
                 
                 if (j == 0)
-                    s33.addSensor(sen, action, 0.0);
+                    actionValueTable.addSensor(sen, action, 0.0);
                 
                 else 
-                    s33.addActionAndValue(i, action, 0.0);
+                    actionValueTable.addActionAndValue(i, action, 0.0);
             }
         }
         
-        return s33;
+        return actionValueTable;
     }
     
     
@@ -459,7 +358,9 @@ public class StateActionValueTable {
     
     
     
-
+    // Imports from StateTable.txt
+    //
+    // Used in Predator APP
     public StateActionValueTable fromFile (TokenMap t) {
         
         String filePath = Logging.LogFiles.FILE_NAME_6;
@@ -471,14 +372,11 @@ public class StateActionValueTable {
             Scanner scanner=new Scanner(new File(filePath));
             int i = 0;
          
-            //System.out.println("Hello");
-            
             while (scanner.hasNextLine()) {
 
                 
                 String line = scanner.nextLine();
                 
-                //System.out.println("Line i " + i + " " + line);
                 Sensor s = new Sensor(line,t);
                 
                 String line2 = scanner.nextLine();
@@ -507,9 +405,6 @@ public class StateActionValueTable {
                 }
                 
                 
-                //System.out.println("Sensor : " + s);
-                //System.out.println("actions : " + actions);
-                //System.out.println("values : " + values);
                 sTable.addSensor(s, actions, values, i);
                 
                 i++;
@@ -530,20 +425,7 @@ public class StateActionValueTable {
         
     }    
     
-    
-    
-    public double getSumOfRow (int row) {
-        
-        double a = 0.0;
-        
-        for (int i = 0; i < this.getValue(row).size(); i++) {
-            
-            a = a + this.getValue(row).get(i);
-        }
-        
-        
-        return a;
-    }
+
     
     
 }

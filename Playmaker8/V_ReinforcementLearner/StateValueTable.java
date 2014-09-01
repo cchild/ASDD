@@ -6,6 +6,7 @@
 
 package V_ReinforcementLearner;
 
+import V_Sensors.StateMap;
 import Logging.LogFiles;
 import V_Sensors.*;
 import java.io.File;
@@ -128,19 +129,8 @@ public class StateValueTable {
         return (double) this.list.get(i).get(1);
     }
     
-    
-    public void fromSensorList (SensorList s) {
-        
-        for (int i = 0; i < s.size(); i++) {
-            
-            this.addSensor(s.getSensor(i+1), 0.0);
-        }
-    }
-    
+
  
-    
-  
-    
     
     public int findSensor (Sensor sen) {
         
@@ -156,7 +146,7 @@ public class StateValueTable {
     
     
 
-    
+    // Exports to StateTable.txt
     public void export () {
         
         LogFiles logFiles = LogFiles.getInstance();
@@ -174,7 +164,7 @@ public class StateValueTable {
     }
     
     
-    
+    // Inits with all values to 0 from the StateMap
     public StateValueTable fromStateMap (StateMap stMap) {
         
         StateValueTable res = new StateValueTable ();
@@ -189,6 +179,9 @@ public class StateValueTable {
         return res;
     }
     
+    
+    
+    // Returns the index of the maximum value
     public int findMaxValueIndex () {
         
         double max = 0.0;
@@ -208,6 +201,8 @@ public class StateValueTable {
         return index;
     }
     
+    
+    // Sorts by decreasing Value
     public StateValueTable sort () {
         
         StateValueTable res = new StateValueTable ();
@@ -226,7 +221,10 @@ public class StateValueTable {
         return res;
     }
     
-
+    
+    // Imports from StateTable.txt
+    // 
+    // Used in Predator APP
     public StateValueTable fromFile (TokenMap t) {
         
         String filePath = Logging.LogFiles.FILE_NAME_6;
@@ -268,7 +266,8 @@ public class StateValueTable {
         
         return sTable;
         
-    }    
+    }   
+    
     
    
 

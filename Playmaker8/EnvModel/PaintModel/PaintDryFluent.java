@@ -55,10 +55,12 @@ public class PaintDryFluent extends Fluent implements Cloneable, Serializable {
         else {
             switch (getValue()){
                 case GRIPPER_DRY: {
-                    return "GD"; 
+                    //return "GD"; 
+                    return "D";
                 }
                 case NOT_GRIPPER_DRY: {
-                    return "NOT_GD";
+                    //return "NOT_GD";
+                    return "d";
                 }
             }
         }

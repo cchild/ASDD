@@ -27,7 +27,7 @@ public class SensorList {
         
     }
     
-    // Adds all the Sensors of a SensorList
+    // Adds all the Sensors of a SensorList to another one
     public void addSensorList (SensorList sList) {
         
         for (int i=0; i < sList.Sensors.size();i++) {
@@ -60,17 +60,9 @@ public class SensorList {
                 i++;
                 String line = scanner.nextLine();
                 
-                //System.out.println("Creating Sensor from line " + i + " (" + line + ")");
-                
-//                for (int j = 0; j < (line.length()); j++) {
-//                    setToken(String.valueOf(line.charAt(j)),j);
-//                }
-                Sensor s = new Sensor(line,t);
+                Sensor s = new Sensor(line,t, 2);
 
-                this.addSensor(s);
-                
-                //System.out.println("Sensor " + i + " : " + s.getString().toString());
-                
+                this.addSensor(s);                
                 
             }
             scanner.close();
@@ -86,7 +78,8 @@ public class SensorList {
         
     }
 
-
+    
+    // Buils the impossible list level 2 
     // Using SensorMap to be quick
     // Impossible List is all the Sensors that can't be observed
     // Works with 2 non Wildcarded indexes
@@ -102,7 +95,7 @@ public class SensorList {
         for (int i = 0; i < root.size()-1; i ++) {
             
             stock=root.expand(i);
-            int size = stock.size();
+            
                 
             for (int j = i+1; j < root.size() -1; j ++) {
                 
@@ -127,7 +120,7 @@ public class SensorList {
     }
     
     
-    // Prints SensorList
+    // Prints a SensorList
     public int printList (String str) {
         
         int n = this.Sensors.size();
@@ -178,7 +171,9 @@ public class SensorList {
         return this.Sensors.indexOf(s)+1;
     }
     
-    // Returns a List with all the Sensor occurence indexes
+    
+    
+    // Returns a List with all the Sensor occurrencies indexes
     public ArrayList <Integer> indexesOfSensor (Sensor o) {
         
         ArrayList res = new ArrayList();
@@ -209,6 +204,7 @@ public class SensorList {
     
     // Old version to find Rule Occurencies
     // Not used anymore, see RuleMaps
+    /*
     public ArrayList <Integer> indexesOfRule (Rule rule) {
         rule.occurrencies = 0;
         ArrayList res = new ArrayList ();
@@ -232,10 +228,8 @@ public class SensorList {
         return res;
         
     }
+    */
     
-    
-    
-
     
  }
      

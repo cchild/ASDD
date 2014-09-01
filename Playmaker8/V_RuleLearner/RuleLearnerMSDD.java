@@ -4,9 +4,6 @@ package V_RuleLearner;
 
 
 import V_Sensors.*;
-
-import Logging.*;
-import static Logging.LogFiles.getInstance;
 import java.util.ArrayList;
 
 
@@ -18,18 +15,18 @@ import java.util.ArrayList;
 public class RuleLearnerMSDD {
     
     public TokenMap tokenMap;
-    public SensorList sensorMap;
+    public SensorList sensorList;
     
     static boolean silent_mode = false;
    
     
     public RuleLearnerMSDD(TokenMap t, SensorList s) {
         this.tokenMap = t;
-        this.sensorMap = s;
+        this.sensorList = s;
     }
     
     
-public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, RuleMap rMap, SensorList sList, RuleSetList rulesetlist, boolean silent, int maxnodes)
+public static ArrayList  learnRulesMSDD(TokenMap t, SensorMap sMap, RuleMap rMap, SensorList sList, RuleSetList rulesetlist, boolean silent, int maxnodes)
     {
         
         
@@ -44,13 +41,6 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
             System.out.println("\nMSDD RULELEARNER INITIALIZATION...");
         
 
-         
-
-         
-         
-
-         
-         
          
          // INIT MAXNODES & PRUNING 
          //int maxnodes = 700; // 1.5K > 11mins
@@ -67,281 +57,184 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
          boolean read_closedList = false;
 
                
-         
-         
-         
-
-         
-       
-         
-         
-         
-
-         // INIT CLOSELIST & RSList
-////         RuleList closedList = new RuleList();
-         //RuleSetList rulesetlist = new RuleSetList(closedList, sList);
-         
-         
-             // INIT OPENLIST
-             RuleList openList = new RuleList();
 
 
-             // INIT ROOTRULE
-             String str_pre = "******";
-             String str_post = "******";
-             Sensor pre = new Sensor(str_pre,t);
-             Sensor post = new Sensor(str_post,t);
-             Rule rootRule = new Rule(pre,post);
-             rootRule.occurrencies = sList.size();
-             //System.out.println(rootRule.prec_indexes);
-             openList.addRule(rootRule);
+         // INIT OPENLIST
+         RuleList openList = new RuleList();
 
 
-              
-             //impossibleList.printList();
-             
-             
-             
+         // INIT ROOTRULE
+         String str_pre = "******";
+         String str_post = "******";
+         Sensor pre = new Sensor(str_pre,t);
+         Sensor post = new Sensor(str_post,t);
+         Rule rootRule = new Rule(pre,post);
+         rootRule.occurrencies = sList.size();
 
-             //rMap.printList("RMAP");
-             
-             
-             
-             
-             
-             
-////             HashMap<Integer, Integer> map = new HashMap<>();
-////             
-////             
-////             map.put(1, sMap.getIndexes(sMap.size()-1).get(0));
-////             
-////             System.out.println(map.containsValue(3592));
-             
-             
-             // [W, E, E, A, E, W][W, E, A, W, E, N]
-             
-////             Sensor test1 = new Sensor("WEEAEW",t);
-////             Sensor test2 = new Sensor("WEAWEN",t);
-////             Rule testRule = new Rule(test1,test2, sList);
-////             
-////             
-////             System.out.println(sList.indexesOfRule(testRule));
-             
-             //System.out.println(sList.indexesOfRule(rootRule).size());
-             //System.out.println(sList.indexesOfRule2(rootRule).size());
-            
-             //System.out.println(sMap.getMatchingOccurencies(pre));
-             
-             if (silent_mode)
-                System.out.println("\nBUILDING CLOSEDLIST...");
-             
-             
+         openList.addRule(rootRule);
+
+
+         if (silent_mode)
+            System.out.println("\nBUILDING CLOSEDLIST...");
+
+
+         if (!silent_mode)
+            System.out.println("\nMAXNODES SET TO " + maxnodes);
+
+         // STOPS IN 2 CASES : MAXNODES REACHED OR OPENLIST EMPTY
+         while ((totalnodes < maxnodes) && (!openList.rulelist.isEmpty())) {
+
+             openList = openList.sort();
+
+             // THE CHOSEN RULE IS openList.getRule(0));
+             // CREATING THE CHILDREN, AND ADDING THEM TO OPENLIST
+
+
+
+             RuleList children = openList.getRule(0).getChildren();
+
+             int number_added = 0;
+
+             //PRUNING
+             if (pruning) 
+                number_added = openList.addWithCheck(children,sList, sMap, rMap);
+
+             if(!pruning)
+                 number_added = openList.addRuleList(children);
+
+             // ADDING THE SOURCE RULE TO CLOSEDLIST
+             closedList.addRule(openList.getRule(0));
+
+             // number_added children were added
+             totalnodes = totalnodes + number_added; 
+
+             // REMOVING THE SOURCE RULE FROM OPENLIST
+             openList.remove(0); 
+
+
+             if ((totalnodes % 50) == 0) {
+                 if (!silent_mode)
+                    System.out.println("NODES : " + totalnodes + " ...");
+             }
+
+         } // END WHILE
+
+
+         // IF MAXNODES HAS BEEN REACHED, ADDING REMAINING RULES FROM OPENLIST
+         if (totalnodes >= maxnodes) {
              if (!silent_mode)
-                System.out.println("\nMAXNODES SET TO " + maxnodes);
+                 System.out.println("MAXNODES REACHED ( " + maxnodes + " )");
 
-             // STOPS IN 2 CASES : MAXNODES REACHED OR OPENLIST EMPTY
-             while ((totalnodes < maxnodes) && (!openList.rulelist.isEmpty())) {
+             openList = openList.sort();
 
-                 openList = openList.sort();
+             while (closedList.size() < maxnodes)  {
 
-                 // THE CHOSEN RULE IS openList.getRule(0));
-                 // CREATING THE CHILDREN, AND ADDING THEM TO OPENLIST
-
-                 //System.out.println("HERE " + openList.getRule(0));
-
-                 RuleList children = openList.getRule(0).getChildren();
-
-                 int number_added = 0;
-
-                 //PRUNING
-                 if (pruning) 
-                    number_added = openList.addWithCheck(children,sList, sMap, rMap);
-
-                 if(!pruning)
-                     number_added = openList.addRuleList(children);
-
-                 // ADDING THE SOURCE RULE TO CLOSEDLIST
                  closedList.addRule(openList.getRule(0));
-
-                 // number_added children were added
-                 totalnodes = totalnodes + number_added; 
-
-                 // REMOVING THE SOURCE RULE FROM OPENLIST
-                 openList.remove(0); 
-
-
-                 if ((totalnodes % 50) == 0) {
-                     if (!silent_mode)
-                        System.out.println("NODES : " + totalnodes + " ...");
-                 }
+                 openList.rulelist.remove(0);
 
              } // END WHILE
 
-
-             // IF MAXNODES HAS BEEN REACHED, ADDING REMAINING RULES FROM OPENLIST
-             if (totalnodes >= maxnodes) {
-                 if (!silent_mode)
-                     System.out.println("MAXNODES REACHED ( " + maxnodes + " )");
-                 
-                 openList = openList.sort();
-
-                 while (closedList.size() < maxnodes)  {
-
-                     closedList.addRule(openList.getRule(0));
-                     openList.rulelist.remove(0);
-
-                 } // END WHILE
-                 
-                 if (!silent_mode)
-                    System.out.println("CLOSELIST HAS NOW " + closedList.size() + " ENTRIES.");
-
-             }
-
-
-
-
-             //openList.sort().printList("OPEN LIST");
-             //closedList.printListByWithProb("CLOSED LIST",sList,1);
-
-             //System.out.println("MSDD Rules (" + totalnodes + " entries) learned. ");
-
-
-             //System.out.println("\nHELLO...");
-             //closedList.printList();
-             
-             
-             if (silent_mode)
-                System.out.println("FILTERING CLOSELIST...");
-             
-             
-             
-             if (!silent_mode)
-                System.out.println("\nSTARTING FILTERING...");
-             if (!silent_mode)
-                System.out.println("FILTERING ROOT SUCCESSOR RULES...");
-             closedList = closedList.removeWildcardSuccessors();
-
-
-
-             int  taille = closedList.size();
-
-             if (!silent_mode)
-                System.out.println("FILTERED " + (maxnodes - taille) + " Root Successor Rules.");
-
-             
-             
-             if (freeloaders_filtering) {
-             
-                 if (!silent_mode)
-                    System.out.println("\nFILTERING FREELOADERS...");
-                 ArrayList arr = closedList.findFreeloaders(sMap);
-             
-                 closedList.removeFreeloaders(arr);
-             }
-
-             int taille2 = closedList.size();
-
-             //closedList.printListByWithProb("CLOSED LIST",sList,1,logfiles);
-
-
-             if (!silent_mode)
-                System.out.println("FILTERED " + (taille - taille2) + " Freeloaders.");
-
-             if (!silent_mode)
-                System.out.println("\nFILTERING DONE " + (maxnodes - closedList.size()) + " in total.");
              if (!silent_mode)
                 System.out.println("CLOSELIST HAS NOW " + closedList.size() + " ENTRIES.");
-             
-             //closedList.printList();
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             if (silent_mode)
-                System.out.println("\nBUILDING RULESETLIST...");
-             
-             
-             
-             if (!silent_mode)
-                System.out.print("\nBUILDING RULESETLIST FROM CLOSEDLIST...");
-             
-             rulesetlist = new RuleSetList(closedList, sList);
-             rulesetlist.buildFromClosedList();
-             
-             if (!silent_mode)
-                System.out.println(" OK");
-             
-             if (!silent_mode)
-                System.out.println(rulesetlist.size() + " RULESETS HAVE BEEN GENERATED.");
-             //rulesetlist.getRuleSet(1).consolidate(sList, closedList);
 
-             
-             //rulesetlist.printsoft();
-             
-             if (consolidate_rulesets) {
-
-                 if (!silent_mode)
-                    System.out.println("\nCONSOLIDATING RULESETS...");
-                 int counter = rulesetlist.consolidate(sList, closedList, rMap, silent_mode);
-                 //System.out.println(" OK");
-                 if (!silent_mode) {
-                    System.out.println(counter + " RULES SUCCESFULLY ADDED");
-                    System.out.println("CLOSELIST HAS NOW " + closedList.size() + " ENTRIES.");
-                 }
-             }
+         }
 
 
-         
-         
-             //rulesetlist.printall();
-             //// 
-             
-             
-             
-             
-             RuleList closedList2 = closedList.copy();
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-          
+
          if (silent_mode)
+            System.out.println("FILTERING CLOSELIST...");
+
+
+
+         if (!silent_mode)
+            System.out.println("\nSTARTING FILTERING...");
+         if (!silent_mode)
+            System.out.println("FILTERING ROOT SUCCESSOR RULES...");
+
+         closedList = closedList.removeWildcardSuccessors();
+
+         int  taille = closedList.size();
+
+         if (!silent_mode)
+            System.out.println("FILTERED " + (maxnodes - taille) + " Root Successor Rules.");
+
+
+
+         if (freeloaders_filtering) {
+
+             if (!silent_mode)
+                System.out.println("\nFILTERING FREELOADERS...");
+             ArrayList arr = closedList.findFreeloaders(sMap);
+
+             closedList.removeFreeloaders_ASDD(arr);
+         }
+
+         int taille2 = closedList.size();
+
+
+         if (!silent_mode)
+            System.out.println("FILTERED " + (taille - taille2) + " Freeloaders.");
+
+         if (!silent_mode)
+            System.out.println("\nFILTERING DONE " + (maxnodes - closedList.size()) + " in total.");
+         if (!silent_mode)
+            System.out.println("CLOSELIST HAS NOW " + closedList.size() + " ENTRIES.");
+
+
+
+
+
+
+         //////////////////////////////////
+         ///////// RULESETLIST ////////////
+         //////////////////////////////////
+
+
+         if (silent_mode)
+            System.out.println("\nBUILDING RULESETLIST...");
+
+
+
+         if (!silent_mode)
+            System.out.print("\nBUILDING RULESETLIST FROM CLOSEDLIST...");
+
+         rulesetlist = new RuleSetList(closedList, sList);
+         rulesetlist.buildFromRuleList();
+
+         if (!silent_mode)
+            System.out.println(" OK");
+
+         if (!silent_mode)
+            System.out.println(rulesetlist.size() + " RULESETS HAVE BEEN GENERATED.");
+
+
+         if (consolidate_rulesets) {
+
+             if (!silent_mode)
+                System.out.println("\nCONSOLIDATING RULESETS...");
+             int counter = rulesetlist.consolidate(sList, closedList, rMap, silent_mode);
+             //System.out.println(" OK");
+             if (!silent_mode) {
+                System.out.println(counter + " RULES SUCCESFULLY ADDED");
+                System.out.println("CLOSELIST HAS NOW " + closedList.size() + " ENTRIES.");
+             }
+         }
+
+
+
+         RuleList closedList2 = closedList.copy();
+
+         
+         
+         
+         
+         
+             
+         if (!silent_mode)
             System.out.println("SETTING PRECEDENCES...");
          
          
-         
-         
-         
-         if (!silent_mode)
-            System.out.print("\nINITIATING INDEXES...");
-         rulesetlist.initIndexes(sList, sMap);
-         if (!silent_mode)
-            System.out.println(" OK");
-         
-         //rulesetlist.print();
 
-
-        
-        //System.out.println("\nBUILDING REQUIRED SENSORLISTS...");
-        
-        
         if (!silent_mode)
             System.out.print("\nINDENTIFYING CONFLICTS & ESTABLISHING PRECEDENCES BETWEEN RULESETS...");
         ArrayList <ArrayList> a = rulesetlist.getConflicts(sList, sMap, rMap, silent_mode);
@@ -353,11 +246,10 @@ public static ArrayList <RuleList> learnRulesMSDD(TokenMap t, SensorMap sMap, Ru
         }
         
  
-        //rulesetlist.printsoft();
-      
         
-        //System.out.println("CLOSEDLIST2 SIZE : " + closedList2.size());
         
+        
+        // OUTPUT
         ArrayList res = new ArrayList ();
         
         

@@ -55,10 +55,12 @@ public class PaintCleanFluent extends Fluent implements Cloneable, Serializable 
         else {
             switch (getValue()){
                 case GRIPPER_CLEAN: {
-                    return "GC"; 
+                    //return "GC"; 
+                    return "C";
                 }
                 case NOT_GRIPPER_CLEAN: {
-                    return "NOT_GC";
+                    //return "NOT_GC";
+                    return "c";
                 }
             }
         }

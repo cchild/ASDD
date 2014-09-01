@@ -6,6 +6,7 @@
 
 package V_Tester;
 
+import V_Sensors.StateMap;
 import Logging.LogFiles;
 import static Logging.LogFiles.getInstance;
 import V_ReinforcementLearner.*;
@@ -29,28 +30,34 @@ public class Tester {
 
     
     // MSDD SETTINGS
-    static final boolean MSDD = true;
-    static final boolean load_MSDD_rules = true;
+    static final boolean MSDD = false;
+    static final boolean load_MSDD_rules = false;
     static final boolean save_MSDD_rules = !load_MSDD_rules;
     static final int maxnodes = 50000;
+    
+
+    // ASDD SETTINGS
+    static final boolean ASDD = false;
+    static final boolean load_ASDD_rules = false;
+    static final boolean save_ASDD_rules = !load_ASDD_rules;
     
     
     
     // STATE GENERATOR SETTINGS
-    static final boolean use_Maps = true;
-    static final boolean use_Rules = !use_Maps;    
+    static final boolean use_Rules = (MSDD || ASDD); 
+    static final boolean use_Maps = !use_Rules;
 
     
     
     // REINFORCEMENT LEARNING SETTINGS
     static final boolean Reinforcement_Learning = true;
     static final int Reinforcement_Learning_steps = 10000;  // MAPS CAN GO TO 2 Millions, Rules around 15K
-    static final boolean use_decision_tables = true;
+    static final boolean use_decision_tables = false;
     static final boolean save_Reinforcement_Learning_results = Reinforcement_Learning; 
     static final boolean load_Reinforcement_Learning_results = !save_Reinforcement_Learning_results;
     static final boolean use_Value_Table = false;
     static final boolean use_Action_Value_Table = !use_Value_Table;
-    static final boolean use_Dynamic_Programming = true;
+    static final boolean use_Dynamic_Programming = false;
     
     
 
@@ -92,7 +99,7 @@ public class Tester {
                 tokenMap.fromFile();
                 if (!silent_mode)
                     System.out.println(" OK");
-                
+            //System.out.println(tokenMap.TokenList);
             
         // SENSORLIST (DATABASE)    
             SensorList sensorList = new SensorList();
@@ -101,7 +108,7 @@ public class Tester {
                 sensorList.fromFile(tokenMap);
                 if (!silent_mode)
                     System.out.println(" OK");
-            
+            //sensorList.printMap("");
             
         // SENSORMAP  
             SensorMap sensorMap = new SensorMap(tokenMap);
@@ -110,15 +117,15 @@ public class Tester {
                 sensorMap.fromFile();
                 if (!silent_mode)
                     System.out.println(" OK");
-            
+            //sensorMap.printMap("");
                 
-        // INIT IMPOSSIBLELIST
+        // IMPOSSIBLELIST
                 if (!silent_mode)
                     System.out.print("Building Impossible List...");
                 SensorList impossibleList = sensorList.getImpossibleList(sensorMap);
-         
                 if (!silent_mode)
                     System.out.println(" OK");
+            //impossibleList.printMap("");    
          
        // STATEMAP
                 if (!silent_mode)                 
@@ -127,7 +134,7 @@ public class Tester {
                 stateMap.fromFile(tokenMap);
                 if (!silent_mode)
                     System.out.println(" OK");
-
+            stateMap.printMap();
                     
         // RULEMAP
             RuleMap ruleMap = new RuleMap(tokenMap);
@@ -136,31 +143,36 @@ public class Tester {
                 ruleMap.fromFile(sensorList);
                 if (!silent_mode)
                     System.out.println(" OK");                
-             ruleMap.printList("");
-        // CLOSEDLIST        
+            //ruleMap.printMap("");
+             
+                
+        // CLOSEDLIST (ASDD & MSDD Rules)       
             RuleList closedList = new RuleList();
-        
             
         // RULESETLIST    
             RuleSetList ruleSetList = new RuleSetList(closedList, sensorList);
       
-        
-        // OTHERS    
-            ArrayList MSDD_rules = new ArrayList ();
-            MSDD_rules.add(closedList);        
-            MSDD_rules.add(ruleSetList);
+        // TABLES
             StateActionValueTable stateActionValueTable;
             StateValueTable stateValueTable;
+            
+            
+        // RULES    
+            ArrayList MSDD_rules;
+            ArrayList ASDD_rules;
+            
 
             
         // LOGFILES
         LogFiles logfiles = getInstance();
         
-        // IF CREATING A NEW MSDD DATABASE, ERASES THE OLD ONE
-        if (save_MSDD_rules) {
+        // IF CREATING A NEW MSDD OR ASDD DATABASE, ERASES THE OLD ONE
+        if ( (save_MSDD_rules && MSDD) || (save_ASDD_rules && ASDD)) {
 
              logfiles = getInstance(5);
-             logfiles = getInstance(3);    
+             logfiles = getInstance(3); 
+             System.out.println("Erasing Database...");
+             
          }        
         
         // IF CREATING A NEW REINFORCEMENT LEARNING DATABASE, ERASES THE OLD ONE
@@ -172,7 +184,7 @@ public class Tester {
         
         
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////        
+////////////////////////////////// MSDD ////////////////////////////////////////        
 ////////////////////////////////////////////////////////////////////////////////        
         
         
@@ -244,6 +256,77 @@ public class Tester {
         
         
 
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// ASDD ////////////////////////////////////////        
+////////////////////////////////////////////////////////////////////////////////        
+        
+        
+        
+        
+        ////////////////////////
+        // ASDD - LEARN RULES //
+        ////////////////////////
+        if ( (!load_ASDD_rules) && (ASDD) ) {
+            
+            System.out.println("\n\nLEARNING ASDD RULES ...");
+
+
+            ASDD_rules = RuleLearnerASDD.learnRulesASDD(tokenMap, sensorList, ruleMap, sensorMap);
+
+
+            closedList = (RuleList) ASDD_rules.get(0);
+
+            ruleSetList = (RuleSetList) ASDD_rules.get(1);
+        
+            
+            System.out.println("\n\n" + closedList.size() + " Rules successfully learned. " + ruleSetList.size() + " RuleSets were created.");
+        
+        }
+        
+        
+        
+        
+        ///////////////////////
+        // ASDD - LOAD RULES //
+        ///////////////////////
+        if ( (load_ASDD_rules) && (ASDD)) {
+            
+                System.out.println("\n\nLOADING ASDD RULES ...");
+             
+                closedList.fromFile(sensorList, tokenMap);
+                         
+                ruleSetList.fromFile();
+
+                
+                System.out.println("\n" + closedList.size() + " Rules successfully learned. " + ruleSetList.size() + " RuleSets were created.");
+        
+        }
+        
+
+
+        ///////////////////////
+        // ASDD - SAVE RULES //
+        ///////////////////////        
+        if ( (save_ASDD_rules) && (ASDD)) {
+            
+            System.out.print("\nExporting ClosedList...");
+            
+            
+        
+            closedList.export();
+                       
+            System.out.println(" OK");
+            
+            
+            
+            System.out.print("\nExporting RuleSetList...");
+            
+            ruleSetList.export();
+                        
+            System.out.println(" OK");
+            
+        }        
+   
         
         
 ////////////////////////////////////////////////////////////////////////////////
@@ -260,20 +343,20 @@ public class Tester {
         
         
         
-        // DEFAULT STATE GENERATOR : MAPS
-        StateGenerator stateGenerator = new MSDD_StateGenerator_Maps ();
+        
+        StateGenerator stateGenerator;
         
         // RULES STATE GENERATOR
         if (use_Rules) {
             
-            stateGenerator = new MSDD_StateGenerator_Rules ();
+            stateGenerator = new StateGenerator_Rules ();
             System.out.println("\nRules State Generator selected.");
         }
         
         // MAPS STATE GENERATOR
         if (use_Maps) {
             
-            stateGenerator = new MSDD_StateGenerator_Maps ();
+            stateGenerator = new StateGenerator_Maps ();
             
             System.out.println("\nMaps State Generator selected.");
         }
@@ -281,8 +364,12 @@ public class Tester {
         
         
         // SOURCE STATE
-        String str = "EEEEE*";
-        Sensor currentState= new Sensor(str,tokenMap);
+        Sensor currentState = stateMap.getSensor(0);
+        
+        
+        //String str = "EEEEE*"; //Predator
+        //String str = "pCDb=*"; //Paint
+        //Sensor currentState = new Sensor(str,tokenMap);
         
 
         
@@ -320,21 +407,21 @@ public class Tester {
                 if (use_Value_Table) {
                     
                     stateValueTable = rLearner.createStateValueTable(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
-            
+                    //stateValueTable.printTable("SVT before converting");
                 }
                 
                 
                 if (((use_Action_Value_Table) && (use_Dynamic_Programming))) {
                     
                     stateActionValueTable = rLearner.createStateActionValueTable_dynamic(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
-                    
+                    //stateActionValueTable.printTable("SVT before converting");
                 }
                 
                 
                 if (((use_Action_Value_Table) && (!use_Dynamic_Programming))) {
                     
                     stateActionValueTable = rLearner.createStateActionValueTable(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
-               
+                    //stateActionValueTable.printTable("SVT before converting");
                 }
 
                 
@@ -352,10 +439,12 @@ public class Tester {
                     if (use_Value_Table)
                         decision_table = decision_table.fromStateValueTable(stateValueTable, stateMap);
 
-
+                    
                     if (save_Reinforcement_Learning_results) 
                         decision_table.export();
                     
+                    
+                    decision_table.printTable("");
                     
                     System.out.println("\nDecision Table successfully exported (" + decision_table.size() + " entries).");
                 
@@ -370,6 +459,8 @@ public class Tester {
                         
                             stateValueTable.export();
                         
+                            stateValueTable.printTable("");
+                            
                             System.out.println("\nState Value Table successfully exported (" + stateValueTable.size() + " entries).");
                         }
                         
@@ -377,26 +468,29 @@ public class Tester {
                             
                             stateActionValueTable.export();
                             
+                            stateActionValueTable.printTable("");
+                            
                             System.out.println("\nState Action Value Table successfully exported (" + stateActionValueTable.size() + " entries).");
                         }
                         
                     } 
                     
                 } // Decision Tables (else)
+                
+                
+                
             
         } // Reinforcement Learning (if)
 
 
         
-        
-        
-        
-        
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////        
 ////////////////////////////////////////////////////////////////////////////////        
         
         
+
         
         System.out.println("\nClosing Files...");
         

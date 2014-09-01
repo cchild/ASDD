@@ -7,7 +7,7 @@
 package V_StateGenerator;
 
 import V_ReinforcementLearner.StateActionValueTable;
-import V_ReinforcementLearner.StateMap;
+import V_Sensors.StateMap;
 import V_ReinforcementLearner.StateValueTable;
 import V_RuleLearner.RuleSetList;
 import V_Sensors.*;
@@ -30,7 +30,7 @@ public abstract class StateGenerator {
     
     public abstract Token generateActionFromStateValueTable (Sensor s1, StateMap stMap, StateValueTable sValTab);
             
-    public abstract Token generateRandomAction (Sensor s1, ArrayList <Token> actions);
+    public abstract Token generateRandomAction (ArrayList <Token> actions);
     
    
 }

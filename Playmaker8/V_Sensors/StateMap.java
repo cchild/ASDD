@@ -1,5 +1,5 @@
 
-package V_ReinforcementLearner;
+package V_Sensors;
 
 import V_Sensors.*;
 import java.io.*;
@@ -14,13 +14,21 @@ public class StateMap {
     public ArrayList <ArrayList> list;
     
     
+    // STATEMAPS are designed like this : 
+    //
+    // STATE 6 [E, W, A, E, E, *] Actions : [N, S] Occurencies : [1, 3] Leading To : [[[7, 1]], [[12, 1], [5, 1], [35, 1]]]
+    //
+    // In other words [E, W, A, E, E, *] occurs 4 times, 
+    //
+    // 1 time was action N leading to State 7
+    // 3 times were action S leading to States 12 (1 time), 5 (1 time) and 35 (1 time)
     public StateMap () {
     
         this.list = new ArrayList ();
     }
     
     
-
+    // Adds a Sensor with an empty ref list
     public void addSensor (Sensor sen, Token action) {
         
         
@@ -51,6 +59,7 @@ public class StateMap {
     }
     
     
+    // Adds a Sensor with one ref
     public void addSensor (Sensor sen, Token action, int ref, int index) {
         
         
@@ -80,7 +89,7 @@ public class StateMap {
     }
     
     
-    
+    // Adds a Sensor and all of its ref
     public void addSensor (Sensor sen, ArrayList <Token> actions, ArrayList <ArrayList <ArrayList <Integer> > > referencies, ArrayList <Integer> occ, int index) {
         
         
@@ -98,12 +107,14 @@ public class StateMap {
     }
     
     
+    // Returns the Occurrencies List
     public ArrayList getOccurencies (int row) {
         
         return (ArrayList) this.list.get(row).get(3);
     }
     
     
+    // Increases the occurrencies of the specified action
     public void increaseOccurenciesOfAction (int row, Token action) {
         
         ArrayList a = this.getOccurencies(row);
@@ -120,6 +131,7 @@ public class StateMap {
     }
     
     
+    // Adds an action and the Reference to an existing State
     public void addActionAndReference (int i, Token action, int ref) {
         
         ArrayList b = this.getActions(i);
@@ -142,7 +154,7 @@ public class StateMap {
         b.add(action);
         
         ArrayList c = this.getReferencies(i);
-        //System.out.println(c.getClass());
+        
         ArrayList d = new ArrayList();
         c.add(d);
         
@@ -199,16 +211,15 @@ public class StateMap {
         
     }
     
+    // Finds the index of "ref" in the Reference list for the action "place"
     public int findReferenceIndex (int row, int place, int ref) {
         
         ArrayList <ArrayList <ArrayList <Integer> > >  b = this.getReferencies(row);
         
-        //System.out.println ( " b is " + b);
-        
         
         ArrayList a = b.get(place);
         
-            //System.out.println(" a is : " + a);
+            
             for (int i = 0; i < a.size(); i++) {
             
                 ArrayList r = (ArrayList) a.get(i);
@@ -227,11 +238,9 @@ public class StateMap {
         
         ArrayList  <Token> a = this.getActions(row);
         
-        //System.out.print("Looking for " + action + " in " + a );
         for (int i = 0; i < a.size(); i++) {
                        
             if ( a.get(i).getReference() == action.getReference()) {
-                //System.out.println("Result : " + i);
                 return i;
             }
         }
@@ -257,20 +266,7 @@ public class StateMap {
         
     }
     
-    
-    
-    public void printMap_soft (String str) {
-        
-        System.out.println("\nPRITING " + str + " STATEMAP ("+ this.size() + " entries.)");
-        
-        for (int i = 0; i < this.size(); i ++) {
-            
-            for (int j = 0; j < this.getActions(i).size(); j++) {
-                System.out.println("STATE " + (i) + " " + this.getSensor(i) + " Action : " + this.getActions(i).get(j)  + " Occurencies : " + this.getOccurencies(i).get(j) + " Leading To : " + this.getReferencies(i).get(j));
-            }
-            System.out.println("(///////////////////////)");
-        }
-    }
+
     
     
     
@@ -297,7 +293,7 @@ public class StateMap {
     
     
 
-    
+    // Builds the StateMap from the INPUT FILE
     public int fromFile (TokenMap t) {
         
         String filePath = Logging.LogFiles.INPUT_FILE;
@@ -311,7 +307,7 @@ public class StateMap {
             
             String line_previous = scanner.nextLine();
 
-            Sensor s_previous = new Sensor(line_previous,t);
+            Sensor s_previous = new Sensor(line_previous,t,2);
             
             action = new Token (t);
             
@@ -328,7 +324,7 @@ public class StateMap {
                 String line = scanner.nextLine();
                 
 
-                Sensor s = new Sensor(line,t);
+                Sensor s = new Sensor(line,t,2);
 
                 action_saved = new Token (t);
                 
@@ -407,6 +403,10 @@ public class StateMap {
     }
     
     
+    
+    
+    
+    // Returns true if State and Action already are in the StateMap
     public ArrayList <Integer> containsStateAndAction (Sensor sen, Token action) {
         
        
@@ -437,6 +437,7 @@ public class StateMap {
     }
     
     
+    // Used to choose an action, and Optimal Future Estimation
     public double findMaxValue (int i) {
         
         ArrayList a = this.getReferencies(i);
@@ -452,6 +453,7 @@ public class StateMap {
     }
     
     
+    // Index of value above
     public int findMaxValueIndex (int i) {
         
         ArrayList a = this.getReferencies(i);
@@ -478,19 +480,8 @@ public class StateMap {
         return -1;
     }
     
+
     
-    public int findReference (int row, int number) {
-        
-        ArrayList <ArrayList <ArrayList <Integer> > > b = this.getReferencies(row);
-        
-        for (int i = 0; i < b.size(); i++) {
-            
-         
-        }
-        
-        
-        return -1;
-    }
     
 
 }

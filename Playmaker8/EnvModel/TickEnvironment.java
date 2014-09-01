@@ -1,6 +1,7 @@
 package EnvModel;
 
 
+import V_Sensors.StateMap;
 import EnvAgent.*;
 import V_ReinforcementLearner.*;
 import V_Sensors.*;
@@ -20,7 +21,7 @@ import V_StateGenerator.*;
 
 public abstract class TickEnvironment extends Environment
 {
-  
+    int number = 0;
     /*True if this is a turn based moves environment*/ 
     protected boolean turnBasedMoves;
     /*True if this is a turn based perceptions environment*/
@@ -235,7 +236,7 @@ public abstract class TickEnvironment extends Environment
                 
 
                 
-                    Sensor currentState = new Sensor (str, tokenMap );
+                    Sensor currentState = new Sensor (str, tokenMap, 2);
                 
                     System.out.println("Current State : " + currentState);
                     
@@ -243,7 +244,7 @@ public abstract class TickEnvironment extends Environment
                         System.out.println("REWARD");
                     
                     
-                    MSDD_StateGenerator_Maps sGen = new MSDD_StateGenerator_Maps ();
+                    StateGenerator_Maps sGen = new StateGenerator_Maps ();
                     
                     Token chosenAction = sGen.generateActionFromStateActionValueTable(currentState, nop);
                     
@@ -308,6 +309,8 @@ public abstract class TickEnvironment extends Environment
     
      public void updateEnvironmentFromStateValueTable() {
        
+         number ++; 
+         System.out.println("STEPS : " + number);
         for (int i = 0; i < agents.size(); i++) {
             Agent current = agents.getAgent(i);
             //System.out.println("Agent : " + current);
@@ -362,7 +365,7 @@ public abstract class TickEnvironment extends Environment
                     stMap.fromFile(tokenMap);
                     
                     
-                    Sensor currentState = new Sensor (str, tokenMap );
+                    Sensor currentState = new Sensor (str, tokenMap, 2);
                 
                     System.out.println("Current State : " + currentState);
                     
@@ -370,7 +373,7 @@ public abstract class TickEnvironment extends Environment
                         System.out.println("REWARD");
                     
                     
-                    MSDD_StateGenerator_Maps sGen = new MSDD_StateGenerator_Maps ();
+                    StateGenerator_Maps sGen = new StateGenerator_Maps ();
                     
                     Token chosenAction = sGen.generateActionFromStateValueTable (currentState, stMap, nop);
 //                    
@@ -435,6 +438,7 @@ public abstract class TickEnvironment extends Environment
      
      public void updateEnvironmentFromDecisionTable() {
        
+         
         for (int i = 0; i < agents.size(); i++) {
             Agent current = agents.getAgent(i);
             //System.out.println("Agent : " + current);
@@ -442,9 +446,7 @@ public abstract class TickEnvironment extends Environment
             agents.updateAgentsTurn(current);
             
             
-            if (i == 0) {
             
-                 }
             
             
             if ((turnBasedPerceptions && currentAgentsTurn)
@@ -464,6 +466,9 @@ public abstract class TickEnvironment extends Environment
                 // INTERCEPTS THE ACTION
                 if (i == 0) {
                 
+                    number ++;
+         
+                    System.out.println("Steps : " + number);
                     
                     System.out.println("/////////////////////");
         
@@ -489,7 +494,7 @@ public abstract class TickEnvironment extends Environment
                     //stMap.fromFile(tokenMap);
                     
                     
-                    Sensor currentState = new Sensor (str, tokenMap );
+                    Sensor currentState = new Sensor (str, tokenMap, 2 );
                 
                     System.out.println("Current State : " + currentState);
                     

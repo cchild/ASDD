@@ -37,9 +37,11 @@ public class TokenMap {
                 
                 String line = scanner.nextLine();
                 
-                for (int j = 0; j < (line.length()); j++) {
+                String [] a = line.split(",");
+                
+                for (int j = 0; j < (a.length); j++) {
                     
-                    setToken(String.valueOf(line.charAt(j)),j);
+                    setToken(a[j],j);
                 }
 
             }
@@ -122,12 +124,16 @@ public class TokenMap {
     }
     
     
+    
+    
     // RETURNS POSSIBLE TOKENS AT POSITION "POSITION"
     public ArrayList getTokenList (int position) {
          
         return this.TokenList.get(position);
     }
      
+    
+    
 
     // Returns the reference of String "str", at the position "position"
     //

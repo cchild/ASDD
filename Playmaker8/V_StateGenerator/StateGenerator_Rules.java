@@ -6,7 +6,7 @@
 
 package V_StateGenerator;
 
-import V_ReinforcementLearner.StateMap;
+import V_Sensors.StateMap;
 import V_ReinforcementLearner.StateActionValueTable;
 import V_ReinforcementLearner.StateValueTable;
 import V_RuleLearner.RuleSetList;
@@ -17,9 +17,9 @@ import java.util.ArrayList;
  *
  * @author virgile
  */
-public class MSDD_StateGenerator_Rules extends StateGenerator {
+public class StateGenerator_Rules extends StateGenerator {
     
-    public MSDD_StateGenerator_Rules () {
+    public StateGenerator_Rules () {
     
     }
         
@@ -43,7 +43,7 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
         
         SensorList current_state_with_expanded_actions = new SensorList (); 
 
-
+        //System.out.println("State : " + s1);
         
         // Expanding current_state with possible actions
         if (s1.getToken(s1.size()-1).isWildcard()) {
@@ -70,11 +70,17 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
             ArrayList <Integer> chosenRuleSets = new ArrayList();
 
 
-
+            
+            // Choosing RuleSets until we fill up the whole Sensor        
             while ( (aList.size()+1)!= s1.size()) {
 
                 int chosen_ruleset = current_state_with_expanded_actions.getSensor(i + 1).chooseNextRuleSet(rulesetlist, aList);
 
+
+                //System.out.println("\nChosen RuleSet : ");
+                //rulesetlist.getRuleSet(chosen_ruleset).printRules();
+                
+                
                 aList.addAll(rulesetlist.getRuleSet(chosen_ruleset).detectNonWildcardedSpots());
 
                 chosenRuleSets.add(chosen_ruleset);
@@ -87,7 +93,7 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
 
 
             stateLists.add(possible_states);
-
+            
             actionsList.add(random_action);
              
              
@@ -127,7 +133,7 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
 
         // Used to resolve some cases where the same RuleSet needs to be used again
         int forceRuleSet = -1;
-        
+        int stuck = 0;
         
 
         // Generates all the possible full Sensors (with action included)
@@ -157,15 +163,19 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
         covered_indexes = new ArrayList();
 
 
-        // While we have not cover all the indexes of new_state
+        
+        
+        
+        // While we have not covered all the indexes of new_state
         while ( (covered_indexes.size()+1)!= s1.size()) {
 
+            
             // A state is Valid when all of its indexes are covered, except the action slot
             boolean isValid = false;
-
+            stuck = 0;
             
             while (!isValid) {
-
+                
                 // Copying
                 Sensor copy = new_state.merge(new_state);
                 ArrayList <Integer> copy2 = new ArrayList ();
@@ -177,34 +187,41 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
                 }
 
 
+                
+                // Choosing RuleSet
                 int chosen_ruleset;
                 
-                
-                if (forceRuleSet == -1)
+                // Force RuleSet if last step was wrong, see below
+                if (forceRuleSet == -1) {
                     chosen_ruleset = s1_with_actions_expand.getSensor((int) rand +1).chooseNextRuleSet(rulesetlist, covered_indexes);
+                    
+                }
                 else {
                     chosen_ruleset = forceRuleSet;
                     forceRuleSet = -1;
                 }
                 
                 
+                
+                // Updates the indexes covered
                 covered_indexes.addAll(rulesetlist.getRuleSet(chosen_ruleset).detectNonWildcardedSpots());
 
 
-                Sensor bb = rulesetlist.getRuleSet(chosen_ruleset).chooseRandomRule().getPostcondition();
+                Sensor postcondition = rulesetlist.getRuleSet(chosen_ruleset).chooseRandomRule().getPostcondition();
                 
                 
-                new_state = new_state.merge(bb);
+                new_state = new_state.merge(postcondition);
 
                 
                 int impossible_state_index = impossibleList.findSensor2(new_state);
 
-                //System.out.println(" COUNT IS : " + impossible_state_index);
+                //System.out.println("New State : " + new_state);
 
+                // State is not in the Impossible List, it is valid
                 if ( impossible_state_index == 0) {
 
                     if (new_state.numberOfWildcards() == 1) {
-
+                        //System.out.println("\n\nFinal State : " + new_state);
                         isValid = true;
                     }
 
@@ -226,9 +243,23 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
 
                     // But we use the same RuleSet
                     forceRuleSet = chosen_ruleset;
+                    
+                    stuck ++;
 
+                    // Sometimes, the algortihm got stuck for low input data
+                    //
+                    // If it is stuck for more than 3 steps, we return the current sensor with the action generated
+                    if (stuck > 3) {
+                        action = s1_with_actions_expand.getSensor((int) rand +1).getToken(s1_with_actions_expand.getSensor((int) rand +1).size()-1);
+                        container.add(s1);
+                        container.add(action);
+                        return container;
+                        
+                    }
                 }
             }
+            
+            
 
         }
 
@@ -239,7 +270,6 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
         container.add(new_state);
 
         container.add(action);
-
          
         return container;
         
@@ -267,7 +297,7 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
                           
             else {
                         // RANDOM, never happens
-                        action = this.generateRandomAction(s1, sTable.getAction(state_index));
+                        action = this.generateRandomAction(sTable.getAction(state_index));
                 }   
 
         }
@@ -407,9 +437,9 @@ public class MSDD_StateGenerator_Rules extends StateGenerator {
     
     
     
-    // Selects container random action from the input ArrayList
+    // Selects a random action from the input ArrayList
     @Override
-    public Token generateRandomAction (Sensor s1, ArrayList actions) {
+    public Token generateRandomAction (ArrayList actions) {
         
         int size = actions.size();
         

@@ -121,11 +121,16 @@ public class PaintAgentPercep extends Percep implements Cloneable, Serializable 
         return percepString;
     }
     
+    
     public String translation() {
+        
         String percepString = "";
+        
         for (int i = 0; i < SIZE; i++) {
+            
+            
             percepString += ((Fluent)getFluent(i)).toString();
-            percepString += "";
+            percepString += ",";
         }
         
         percepString += "";

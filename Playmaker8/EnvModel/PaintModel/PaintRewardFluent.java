@@ -61,13 +61,16 @@ public class PaintRewardFluent extends Fluent implements Cloneable, Serializable
         else {
             switch (getValue()){
                 case NO_REWARD: {
-                    return "NO_RE"; 
+                    //return "NO_RE";
+                    return "=";
                 }
                 case POSITIVE_REWARD: {
-                    return "PO_RE";
+                    //return "PO_RE";
+                    return "+";
                 }
                 case NEGATIVE_REWARD: {
-                    return "NE_RE";
+                    //return "NE_RE";
+                    return "-";
                 }
             }
         }

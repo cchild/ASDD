@@ -18,6 +18,7 @@ public class Token {
     public TokenMap tokenMap;
     
     
+    // If ref = 0, it is a Wildcard
     public Token(TokenMap t)
     {
         this.tokenMap = t;
@@ -25,7 +26,7 @@ public class Token {
         this.reference = 0;
     }
     
-    
+    // From a String
     public Token(String str, int position, TokenMap t)
     {
         this.tokenMap = t;

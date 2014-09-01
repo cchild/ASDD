@@ -7,7 +7,7 @@
 package V_StateGenerator;
 
 import V_ReinforcementLearner.StateActionValueTable;
-import V_ReinforcementLearner.StateMap;
+import V_Sensors.StateMap;
 import V_ReinforcementLearner.StateValueTable;
 import V_RuleLearner.RuleSetList;
 import V_Sensors.*;
@@ -17,9 +17,9 @@ import java.util.ArrayList;
  *
  * @author virgile
  */
-public class MSDD_StateGenerator_Maps extends StateGenerator {
+public class StateGenerator_Maps extends StateGenerator {
     
-        public MSDD_StateGenerator_Maps () {
+        public StateGenerator_Maps () {
     
     }
         
@@ -49,13 +49,13 @@ public class MSDD_StateGenerator_Maps extends StateGenerator {
          
          
          // Generating one StateList of possible Sensors for every possible best_action
-         for (int action = 0; action < s1.tokenMap.getTokenList(s1.size()-1).size(); action ++) {
+         for (int action = 0; action < stMap.getReferencies(index_of_state_in_map).size(); action ++) {
         
              
             StateList possible_states = new StateList ();
              
-
-
+            
+            
             // Getting possible States referencies and the best_action in progress
             ArrayList <ArrayList> possibleStates = (ArrayList) stMap.getReferencies(index_of_state_in_map).get(action);
 
@@ -116,7 +116,7 @@ public class MSDD_StateGenerator_Maps extends StateGenerator {
      
      
        
-    // Same function than above, without container full load of parameters, 
+    // Same function than above, without unneccessary parameters, 
     // This avoids unnecessary parameters to be generated in PredatorApp
     // Not commented, exactly the same than above
     public ArrayList  generateStates_maps (Sensor s1, StateMap stMap) {
@@ -133,8 +133,10 @@ public class MSDD_StateGenerator_Maps extends StateGenerator {
          // Index of State
          int index_of_state_in_map = stMap.findSensor(s1);
          
+         if (index_of_state_in_map == -1)
+             return container;
          
-         for (int action = 0; action < s1.tokenMap.getTokenList(s1.size()-1).size(); action ++) {
+         for (int action = 0; action < stMap.getReferencies(index_of_state_in_map).size(); action ++) {
         
              
              StateList possible_states = new StateList ();
@@ -208,10 +210,17 @@ public class MSDD_StateGenerator_Maps extends StateGenerator {
         
         
         // RANDOM ACTION BETWEEN 0 AND 3
-        int action = (int) (rand * 3.99);
+        
         
         int index = stMap.findSensor(s1);
-  
+        
+        int taille = stMap.getActions(index).size();
+        double c = (double) taille;
+        c = c * rand;
+        int action = (int) (c - 0.001);
+
+        
+        
         // From the random best_action, the possible States
         ArrayList possibleStates = (ArrayList) stMap.getReferencies(index).get(action);
         
@@ -230,7 +239,7 @@ public class MSDD_StateGenerator_Maps extends StateGenerator {
             double candidate_index_double = (double) candidate_index;
             
             total_prob = total_prob + candidate_index_double/occurrencies_double ;
-            //System.out.println("total_prob : " + total_prob);
+            
             
             if (total_prob > rand2) {
                 
@@ -267,7 +276,7 @@ public class MSDD_StateGenerator_Maps extends StateGenerator {
                           
             else {
                         // RANDOM, never happens
-                        action = this.generateRandomAction(s1, sTable.getAction(state_index));
+                        action = this.generateRandomAction(sTable.getAction(state_index));
                 }   
 
         }
@@ -292,37 +301,59 @@ public class MSDD_StateGenerator_Maps extends StateGenerator {
         // Generates all the possible states and actions
         ArrayList container = this.generateStates_maps(s1, stMap);
         
-        ArrayList statelists = (ArrayList) container.get(0);
-        
-        ArrayList actions = (ArrayList) container.get(1);
-        
-        double max_value = 0.0;
-        
-        
-        // Goes through every StateLists
-        for (int i = 0; i < statelists.size(); i++) {
-            
-            // If the score of a statelist is high, its action is a "good" action
-            double score = 0.0;
-            
-            StateList possible_states = (StateList) statelists.get(i);
-            
-            for (int j = 0; j < possible_states.size(); j++) {
+        if (container.size() > 1) {
+            ArrayList statelists = (ArrayList) container.get(0);
+
+            ArrayList actions = (ArrayList) container.get(1);
+
+            double max_value = 0.0;
+
+            double reward = 1.0;
+
+            // Goes through every StateLists
+            for (int i = 0; i < statelists.size(); i++) {
+
+                // If the score of a statelist is high, its action is a "good" action
+                double score = 0.0;
+
+                StateList possible_states = (StateList) statelists.get(i);
+
+                for (int j = 0; j < possible_states.size(); j++) {
+
+                    int index_of_state = sValTab.findSensor(possible_states.getSensor(j));
+
+                    if (possible_states.getSensor(j).isRewarded())
+                        score = score + possible_states.getProb(j) * (reward + sValTab.getValue(index_of_state));
+
+                    else if (possible_states.getSensor(j).is_negative_rewarded())
+                        score = score + possible_states.getProb(j) * (-1.0 * reward + sValTab.getValue(index_of_state));
+
+                    else 
+                        score = score + possible_states.getProb(j) * sValTab.getValue(index_of_state);
+                }
+
                 
-                int index_of_state = sValTab.findSensor(possible_states.getSensor(j));
+                // Is it the best action yet ?    
+                if (score > max_value) {
+
+                    max_value = score;
+
+
+                    best_action = (Token) actions.get(i);
+                }
+            }
+        }
+        
+        else {
+            ArrayList actions = new ArrayList ();
+            
+            for (int i = 0; i < s1.tokenMap.getTokenList(s1.size()-1).size(); i++) {
                 
-                score = score + possible_states.getProb(j) * sValTab.getValue(index_of_state);
+                Token a = new Token ((String) s1.tokenMap.getTokenList(s1.size()-1).get(i), s1.size()-1, s1.tokenMap);
+                actions.add(a);
             }
             
-            
-            // Is it the best action yet ?    
-            if (score > max_value) {
-                
-                max_value = score;
-                
-                
-                best_action = (Token) actions.get(i);
-            }
+            best_action = this.generateRandomAction(actions);
         }
         
 
@@ -335,7 +366,7 @@ public class MSDD_StateGenerator_Maps extends StateGenerator {
     
     // Selects a random action from the input ArrayList
     @Override
-    public Token generateRandomAction (Sensor s1, ArrayList actions) {
+    public Token generateRandomAction (ArrayList actions) {
         
         int size = actions.size();
         

@@ -38,13 +38,14 @@ public class SensorMap {
     
  
     // Returns Sensor i
+    // Indexes start at 0
     public Sensor getSensor (int i) {
         
         return (Sensor) this.map.get(i).get(0);
     }
     
     
-    // Returns Sensor indexes that can be reached from Sensor i
+    // Returns Sensor indexes (in map) that can be reached from Sensor i
     public ArrayList <Integer> getIndexes (int i) {
         
         return (ArrayList <Integer>) this.map.get(i).get(1);
@@ -65,7 +66,7 @@ public class SensorMap {
     }
     
     
-    // Adds a Sensor & ArrayList at insert_index
+    // Adds a Sensor & indexes ArrayList at insert_index
     public void addSensor (Sensor sen, ArrayList indexes, int insert_index) {
         
         
@@ -93,7 +94,7 @@ public class SensorMap {
     }
     
     
-    
+    // Adds a sensor with only one reference
     public void addSensor (Sensor sen, int firstIndex) {
         
         ArrayList a = new ArrayList ();
@@ -129,7 +130,7 @@ public class SensorMap {
     }    
     
     
-    // Adds a new Index to the Indexes List
+    // Adds a new Index to the Indexes List at "i"
     public void increaseIndexes (int i, int newindex) {
         
         ArrayList a = (ArrayList) this.map.get(i).get(1);
@@ -175,8 +176,7 @@ public class SensorMap {
                 i++;
                 String line = scanner.nextLine();
                 
-
-                Sensor s = new Sensor(line,tokenMap);
+                Sensor s = new Sensor(line,tokenMap,2);
 
                 int tip = this.findSensor(s);
                 
@@ -206,18 +206,18 @@ public class SensorMap {
     
     
     
-    public void printList (String str) {
+    public void printMap (String str) {
         
-        System.err.println("\nPRINTING " + str + " SENSORMAP (" + this.size() + " entries).");
+        System.out.println("\nPRINTING " + str + " SENSORMAP (" + this.size() + " entries).");
         for (int i =0; i < this.size(); i++) {
             
-            System.out.println("Sensor " + i + " " + this.getSensor(i) + " Occurrencies : " + this.getOccurrencies(i) );
+            System.out.println("State " + i + " " + this.getSensor(i) + " Occurrencies : " + this.getOccurrencies(i) );
         }
     }
     
     
     
-    // Returns how many times the Sensor is matched
+    // Returns how many times the Sensor is matched in database
     public int getMatchingOccurencies (Sensor sen) {
         
         int a = 0;
@@ -232,6 +232,7 @@ public class SensorMap {
         
         return a;
     }
+    
     
     
     // Returns all the indexes that match this one
@@ -268,6 +269,7 @@ public class SensorMap {
         return a;
     }
     
+    
     // Returns the indexes of exact matching
     public ArrayList getExactMatchingIndexes (Sensor sen) {
         
@@ -303,7 +305,8 @@ public class SensorMap {
     }
     
     
-    // G-State
+    
+    // G-Statistic numerical function
     public float Gstatistic(Rule rule1, Rule rule2) {
         //1.count d1 predecessor equals with the database
         int d1Precursorequals = this.getMatchingOccurencies(rule1.getPrecondition());
@@ -342,7 +345,7 @@ public class SensorMap {
     }
 
 
-    // G-Stat numeric
+    // G-Stat called above
     public float GStatistic(int n1, int n2, int n3, int n4) {
         long r1 = n1 + n2;
         long r2 = n3 + n4;

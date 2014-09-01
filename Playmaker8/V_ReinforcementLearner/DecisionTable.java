@@ -1,9 +1,10 @@
 
 package V_ReinforcementLearner;
 
+import V_Sensors.StateMap;
 import Logging.LogFiles;
 import V_Sensors.*;
-import V_StateGenerator.MSDD_StateGenerator_Maps;
+import V_StateGenerator.StateGenerator_Maps;
 import java.io.*;
 import java.util.*;
 
@@ -106,7 +107,7 @@ public class DecisionTable {
     }
     
 
-    // Returns the index of sen
+    // Returns the index of a Sensor
     // If not found, returns -1
     public int findSensor (Sensor sen) {
         
@@ -156,12 +157,11 @@ public class DecisionTable {
     
         DecisionTable res = new DecisionTable ();
        
-        MSDD_StateGenerator_Maps sGen = new MSDD_StateGenerator_Maps ();
+        StateGenerator_Maps sGen = new StateGenerator_Maps ();
        
         for (int i = 0; i < sTab.size(); i++) {
            
            Sensor sen = sTab.getSensor(i).copy();
-           
            
            Token action = sGen.generateActionFromStateValueTable(sen, stMap, sTab);
            
@@ -183,8 +183,29 @@ public class DecisionTable {
        
        int state_index = this.findSensor(current_state);
        
+       // The State is in the Map, we return the Action
+       if (state_index != -1)
+        return this.getAction(state_index);
        
-       return this.getAction(state_index);
+       
+       // The State isn't in the Map, we select a Random Action
+       else {
+           int number_of_actions = current_state.tokenMap.getTokenList(current_state.size()-1).size();
+           double rand = Math.random();
+           
+           double action_index = (double) number_of_actions;
+           
+           action_index = action_index * (rand - 0.001);
+           
+           int action_index_int = (int) action_index;
+           
+           String token_str =  (String) current_state.tokenMap.getTokenList(current_state.size()-1).get(action_index_int);
+           
+           Token action = new Token (token_str, current_state.size()-1, current_state.tokenMap);
+           
+           System.out.println("Rand action : " + action);
+           return action;
+       }
     }
    
    
@@ -212,6 +233,8 @@ public class DecisionTable {
     
     
     // Imports from StateTable.txt
+    //
+    // Used in Predator APP 
     public DecisionTable fromFile (TokenMap t) {
         
    
@@ -233,7 +256,7 @@ public class DecisionTable {
                 
                 String [] a = line.split(" ");
                 
-                Sensor s = new Sensor (a[0], t);
+                Sensor s = new Sensor (a[0], t, 2);
                 
                 Token action = new Token (a[1], s.size()-1, t) ;
                 

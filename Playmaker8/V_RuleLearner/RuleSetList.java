@@ -103,18 +103,17 @@ public class RuleSetList {
     }
     
     
-    // Builds the RuleSetList from the ClosedList in MSDD Algorithm
-    public void buildFromClosedList () {
+    // Builds the RuleSetList from the ClosedList in MSDD & ASDD Algorithms
+    public void buildFromRuleList () {
         
         
         Rule current = this.rulelist.getRule(0);
-        this.add(current);
         
   
         int i;
         
         for (int j = 0; j < this.rulelist.size(); j ++) {
-            i = j+1;
+            i = j;
             if (this.rulelist.getRule(j).ruleset_id == -1) {
                 
                 current = this.rulelist.getRule(j);
@@ -122,7 +121,7 @@ public class RuleSetList {
             }
             
         
-            while (i < this.rulelist.size()-2) {
+            while (i < this.rulelist.size()-1) {
 
                 i++;
                 
@@ -151,6 +150,10 @@ public class RuleSetList {
         }
         
     }
+    
+
+ 
+    
     
     
     
@@ -215,6 +218,15 @@ public class RuleSetList {
                             this.getRuleSet(j).precedences.add(i); count++;
                         }
                     }
+                    else {
+                        
+                        if ( this.getRuleSet(i).getPrecursorOccurrencies() > this.getRuleSet(j).getPrecursorOccurrencies()) {
+                            
+                            this.getRuleSet(i).precedences.add(j); count++; 
+                        }
+                        else 
+                            this.getRuleSet(j).precedences.add(i); count++;
+                    }
                     
 
                 } 
@@ -227,17 +239,13 @@ public class RuleSetList {
         b.add(number);
         b.add(count);
         res.add(0, b);
+        
+        
+        
         return res;
     }
     
     
-    
-    public void initIndexes (SensorList sList, SensorMap sMap) {
-        
-        for (int i = 0; i < this.size(); i++) {
-            this.getRuleSet(i+1).initIndexes(sMap);
-        }
-    }
     
     
     

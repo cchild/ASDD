@@ -82,10 +82,13 @@ public class Fluent extends RuleObject implements Cloneable, Serializable {
     }
     
     public String toString() {
+        
+        System.out.println("Value : " + currentValue + " Result : " + String.valueOf(currentValue));
+            
+        
         if (currentValue == numValues)
             return "*"; //don't care symbol
         return 
-             
             String.valueOf(currentValue);
         
     }

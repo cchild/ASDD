@@ -131,23 +131,28 @@ public class PaintAction extends Action implements Cloneable, Serializable {
         
         switch (action) {
             case NOOP: {
-                actionString += "NOOP";
+                //actionString += "NOOP";
+                actionString += "O";
                 break;
             }
             case DRY: {
-                actionString += "DRY";
+                //actionString += "DRY";
+                actionString += "R";
                 break;
             }
             case NEW: {  
-                actionString += "NEW";
+                //actionString += "NEW";
+                actionString += "E";
                 break;
             }
             case PAINT: {  
-                actionString += "PAINT";
+                //actionString += "PAINT";
+                actionString += "A";
                 break;
             }
             case PICKUP: {  
-                actionString += "PICKUP";
+                //actionString += "PICKUP";
+                actionString += "I";
                 break;
             }
             default: {

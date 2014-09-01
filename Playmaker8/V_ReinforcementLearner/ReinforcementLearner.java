@@ -6,6 +6,7 @@
 
 package V_ReinforcementLearner;
 
+import V_Sensors.StateMap;
 import V_StateGenerator.*;
 import V_RuleLearner.*;
 import V_Sensors.*;
@@ -27,8 +28,10 @@ public class ReinforcementLearner {
     
     public StateValueTable createStateValueTable (int limit, StateGenerator sGen, Sensor currentState, SensorList sList, SensorMap sMap, RuleSetList rsList, SensorList impossibleList, StateMap stMap) {
         
-        StateValueTable sTable = new StateValueTable ();
-        sTable = sTable.fromStateMap(stMap);
+        StateValueTable valueTable = new StateValueTable ();
+        
+        // INIT FROM STATEMAP
+        valueTable = valueTable.fromStateMap(stMap);
         
         ArrayList container;
         
@@ -47,6 +50,7 @@ public class ReinforcementLearner {
         double learning_rate = 0.03;
         double reward = 1;
         double discount_factor = 0.95;
+        
         double actual_reward = 0; 
         
         StateList possible_states;
@@ -56,7 +60,7 @@ public class ReinforcementLearner {
         int numberOfRewards = 0;
         
         
-        
+        valueTable.printTable("INITIAL TABLE");
         
         // PRINTING EVERY 10%
         for (int i = 1; i < limit; i++) {
@@ -77,7 +81,7 @@ public class ReinforcementLearner {
             //System.out.println(i);
             // GENERATING POSSIBLE STATES FOR EVERY ACTION
             
-            //System.out.print("GENERATING STATELISTS");
+            //System.out.print("Current State : " + new_state);
             container = sGen.generateAllPossibleStates(new_state, sList, sMap, rsList, impossibleList, false, stMap);
             //System.out.println(" _____ OK");
             double max_factor = 0.0;
@@ -89,7 +93,21 @@ public class ReinforcementLearner {
             double rand = Math.random();
             
             double rand2 = Math.random();
-            double c = 3.99;
+            
+            
+            int index = stMap.findSensor(new_state);
+            
+            double c;
+            if (index != -1) {
+            int taille = stMap.getReferencies(index).size();
+            
+            c = (double) taille;
+            c = c - 0.001;
+            }
+            else {
+                c = 0;
+                //stMap.addSensor(new_state, old_action);
+            }
             
             rand2 = rand2 * c ;
             
@@ -97,14 +115,18 @@ public class ReinforcementLearner {
             int pick = (int) rand2;
             
             ArrayList ps = (ArrayList) container.get(0);
+            ArrayList ps2 = (ArrayList) container.get(1);
+
             
+            
+            int old_state_index = valueTable.findSensor(old_state);
             
             // CONSIDERING ALL ACTIONS
             for (int l = 0; l < ps.size(); l++) {
                 
 
                 possible_states = (StateList) ps.get(l);
-
+                Token possible_action = (Token) ps2.get(l);
 
 
                 //FOR EVERY POTENTIAL NEW STATE, FEEDING BACK ITS VALUE 
@@ -115,10 +137,26 @@ public class ReinforcementLearner {
                 for (int j = 0; j < possible_states.size(); j++) {
 
 
-                    int potential_state_index =  sTable.findSensor(possible_states.getSensor(j));
+                    int potential_state_index =  valueTable.findSensor(possible_states.getSensor(j));
 
-
-
+                    
+                    // ADDING IF NOT SEEN BEFORE
+                    if (potential_state_index == -1) {
+                        
+                        if (possible_states.getSensor(j).numberOfWildcards() > 1)
+                            break;
+                        
+                        //possible_states.printList();
+                        System.out.println("Unseen State detected : " + possible_states.getSensor(j) + " from " + new_state + " & " + possible_action);
+                        for (int u = 0; u < ps.size(); u++) {
+                            StateList ss = (StateList) ps.get(u);
+                            ss.printList("" + (Token) ps2.get(u));
+                        }
+                        valueTable.addSensor(possible_states.getSensor(j), 0.0);
+                        potential_state_index = valueTable.size()-1;
+                        //sTable.printTable("New Table");
+                    }
+                    
                     actual_reward = 0.0;
                     
                     
@@ -126,10 +164,11 @@ public class ReinforcementLearner {
 
                         actual_reward = reward;
                         numberOfRewards++;
+                        //System.out.println("Reward from " + possible_states.getSensor(j) + " fed back to " + actionValueTable.getSensor(old_state_index) + " & " + ps2.get(l));
                     }
 
-
-                    factor2 += possible_states.getProb(j) * (actual_reward + discount_factor * sTable.getValue(potential_state_index));              
+                    //if (potential_state_index != -1)
+                        factor2 += possible_states.getProb(j) * (actual_reward + discount_factor * valueTable.getValue(potential_state_index));              
                      
                 }
 
@@ -166,14 +205,16 @@ public class ReinforcementLearner {
             new_state = possible_states.getSensor(state_to_pick);
             
 
+            //System.out.println("Returned " + new_state + " Action : " + pick);
             
             // INDEXES OF OLD AND NEW STATE
-                int old_state_index = sTable.findSensor(old_state);
                 
-        
-                double increase_factor = learning_rate * (max_factor - sTable.getValue(old_state_index));
+                
+                if (old_state_index != -1) {
+                    double increase_factor = learning_rate * (max_factor - valueTable.getValue(old_state_index));
                         
-                sTable.increaseValue(old_state_index, increase_factor);
+                    valueTable.increaseValue(old_state_index, increase_factor);
+                }
                 
 
                 old_state = new_state.copy();
@@ -182,8 +223,8 @@ public class ReinforcementLearner {
 
         
         
-        sTable = sTable.sort();
-        return sTable;
+        valueTable = valueTable.sort();
+        return valueTable;
         
     }
     
@@ -194,7 +235,7 @@ public class ReinforcementLearner {
     
     public StateActionValueTable createStateActionValueTable (int limit, StateGenerator sGen, Sensor currentState, SensorList sList, SensorMap sMap, RuleSetList rsList, SensorList impossibleList, StateMap stMap) {
         
-        StateActionValueTable sTable = new StateActionValueTable () ;
+        StateActionValueTable actionValueTable = new StateActionValueTable () ;
         ArrayList container = new ArrayList ();
         Token old_action = new Token (currentState.tokenMap);
         
@@ -209,10 +250,9 @@ public class ReinforcementLearner {
         
         Token root = new Token(currentState.tokenMap);    
           
-        // FIRST ENTRY WITHOUT THE ACTION
-        //sTable.addSensor(currentState, root, 0.0);
+
         
-        
+////        OPTIMAL        
 ////        double learning_rate = 0.03;
 ////        double reward = 1;
 ////        double discount_factor = 0.95;
@@ -247,6 +287,7 @@ public class ReinforcementLearner {
                 
                 System.out.println(a * 100 + " % ");
             }
+            
             // GENERATING NEXT STATE
             
 
@@ -257,6 +298,7 @@ public class ReinforcementLearner {
             
                 new_state = (Sensor) container.get(0);
                 old_action = (Token) container.get(1);
+                //System.out.println("Returned " + new_state + " & " + old_action);
             }
             
             
@@ -275,7 +317,7 @@ public class ReinforcementLearner {
             
             
             // GETS THE INDEXES OF THE OLD STATE & ACTION IN THE TABLE (IF THEY ARE)
-            ArrayList <Integer> temp = sTable.containsStateAndAction(old_state, old_action);
+            ArrayList <Integer> temp = actionValueTable.containsStateAndAction(old_state, old_action);
             
             
             
@@ -283,8 +325,8 @@ public class ReinforcementLearner {
             if (temp.isEmpty()) {
                 
                 
-                sTable.addSensor(old_state, old_action, 0.0);
-                old_state_index = sTable.size()-1;
+                actionValueTable.addSensor(old_state, old_action, 0.0);
+                old_state_index = actionValueTable.size()-1;
                 old_action_index = 0;
             }
             
@@ -292,9 +334,9 @@ public class ReinforcementLearner {
             if (temp.size() == 1) {
                 
                 
-                sTable.addActionAndValue(temp.get(0), old_action, 0.0);
+                actionValueTable.addActionAndValue(temp.get(0), old_action, 0.0);
                 old_state_index = temp.get(0);
-                old_action_index = sTable.getAction(temp.get(0)).size()-1;
+                old_action_index = actionValueTable.getAction(temp.get(0)).size()-1;
             }               
                
             
@@ -308,7 +350,7 @@ public class ReinforcementLearner {
                        
             
             // RETURNS THE INDEX OF THE NEW STATE IN THE TABLE
-            int new_state_index =  sTable.findSensor(new_state);
+            int new_state_index =  actionValueTable.findSensor(new_state);
             
            
             
@@ -325,21 +367,21 @@ public class ReinforcementLearner {
             if (new_state_index != -1) {
                 
                    
-                factor = learning_rate * (actual_reward + (discount_factor * sTable.findMaxActionValue(new_state_index)) - sTable.getValue(old_state_index).get(old_action_index));
+                factor = learning_rate * (actual_reward + (discount_factor * actionValueTable.findMaxActionValue(new_state_index)) - actionValueTable.getValue(old_state_index).get(old_action_index));
 //                            
             }
             
             // CURRENT STATE IS NOT IN THE TABLE
             else {
                 
-                factor = learning_rate * (actual_reward  - sTable.getValue(old_state_index).get(old_action_index));
+                factor = learning_rate * (actual_reward  - actionValueTable.getValue(old_state_index).get(old_action_index));
 //             
             }
             
             
             
             
-            sTable.increaseValue(old_state_index, old_action_index, factor);
+            actionValueTable.increaseValue(old_state_index, old_action_index, factor);
                 
                 
             
@@ -351,18 +393,11 @@ public class ReinforcementLearner {
             
             }
             
-            
-            
-        
-        
+
         //System.out.println("Rewards : " + numberOfRewards);
-        
-        
-        
-        //sTable = sTable.sort();
-        return sTable;
-        
-        //return numberOfRewards;
+
+        return actionValueTable;
+
     }
     
     
@@ -378,9 +413,9 @@ public class ReinforcementLearner {
     
     public StateActionValueTable createStateActionValueTable_dynamic (int limit, StateGenerator sGen, Sensor currentState, SensorList sList, SensorMap sMap, RuleSetList rsList, SensorList impossibleList, StateMap stMap) {
         
-        StateActionValueTable s22 = new StateActionValueTable ();
+        StateActionValueTable actionValueTable = new StateActionValueTable ();
         
-        s22 = s22.fromStateMap(stMap);
+        actionValueTable = actionValueTable.fromStateMap(stMap);
 
         double learning_rate = 0.03;
         double reward = 1;
@@ -420,7 +455,7 @@ public class ReinforcementLearner {
 
             
             
-            int source_state_index = s22.findSensor(source_state);;
+            int source_state_index = actionValueTable.findSensor(source_state);
                 
                 
                 
@@ -432,36 +467,41 @@ public class ReinforcementLearner {
                 
                 double factor = 0.0;
                 
-                int action_index_for_source = s22.findActionIndex(source_state_index, action);
+                int action_index_for_source = actionValueTable.findActionIndex(source_state_index, action);
                         
                 //Exploring StateList & action j
                 for (int h = 0; h < possible_states.size(); h++) {
              
-                    int possible_state_index = s22.findSensor(possible_states.getSensor(h));
+                    int possible_state_index = actionValueTable.findSensor(possible_states.getSensor(h));
                     
-                    //int action_index = s22.findActionIndex(possible_state_index, action);
- 
                     double actual_reward = 0.0;
                     
                     if (possible_states.getSensor(h).isRewarded()) {
                         actual_reward = reward;
+                        //System.out.println("Reward from " + possible_states.getSensor(h) + " fed back to " + actionValueTable.getSensor(source_state_index) + " & " + actionValueTable.getAction(source_state_index).get(action_index_for_source));
                     }
                     
-                    factor = factor + (possible_states.getProb(h) * learning_rate * (actual_reward + (discount_factor * s22.findMaxActionValue(possible_state_index) - s22.getValue(source_state_index).get(action_index_for_source))));
+                    factor = factor + (possible_states.getProb(h) * learning_rate * (actual_reward + (discount_factor * actionValueTable.findMaxActionValue(possible_state_index) - actionValueTable.getValue(source_state_index).get(action_index_for_source))));
 //                     
                 }
                 
-                //System.out.println(source_state + " action " + action + " rewarded " + factor+ " " + j + " out of size " + ps.size());
-                s22.increaseValue(source_state_index, action_index_for_source, factor);
-                // Updating source_state randomly
+                // Updating Value
+                actionValueTable.increaseValue(source_state_index, action_index_for_source, factor);
+                
                 
                 
 
             }
             
-                    double random_statelist = Math.random() * 3.99;
+                    int taille = currentState.tokenMap.getTokenList(currentState.size()-1).size();
+                    double c = (double) taille;
+                    
+                    double random_statelist = c - 0.001;
+                    double rand3 = Math.random();
+                    random_statelist = rand3 * random_statelist;
+                    
                     int random_statelist_int = (int) random_statelist;
-            
+                    //System.out.println(random_statelist_int);
                     StateList possible_states = (StateList) ps.get(random_statelist_int);
                     
                     int size = possible_states.size();
@@ -473,12 +513,11 @@ public class ReinforcementLearner {
                     
                     source_state = possible_states.getSensor(random_state_int);
                     
-                    //System.out.println("Picking");
                 
         }
         
         
-        return s22;
+        return actionValueTable;
     }
     
 

@@ -70,6 +70,40 @@ public class Sensor {
     }
     
 
+    
+    // Creates a sensor from "str", using coma version
+    // Use any int, makes no difference
+    public Sensor(String str, TokenMap t, int version) {    
+        
+        
+        this.tokenMap = t;
+        this.tokenList = new ArrayList ();
+        
+        
+
+        
+        String [] a = str.split(",");
+        
+        for (int i = 0; i < a.length; i++)
+        {
+            if (a[i].compareTo("*") == 0) {
+                
+                Token b = new Token(0,i,t);
+                this.tokenList.add(b);
+                continue;
+            }
+            
+            Token b = new Token(a[i], i, t);
+
+            this.tokenList.add(b);
+        }
+        
+       
+        
+        
+    }
+    
+    
     // Sets a Token inside a Sensor, at "position"
     public int setToken (String str, int position) {
         
@@ -108,10 +142,11 @@ public class Sensor {
     
 
     
+    
     // Expands the index "position"
     //
-    // If the Token at position is a Wildcard, returns an empty List
-    // If not, returns a list with all possible Tokens according to the tokenMap
+    // If the Token at position is Not a Wildcard, returns an empty List
+    // If it is, returns a list with all possible Sensors according to the tokenMap
     public SensorList expand (int position) {
         
        SensorList sList = new SensorList ();
@@ -138,14 +173,15 @@ public class Sensor {
        
     }
 
-    // Expands the position and returns a List of all possible Tokens, except the one already in place
+    // Expands the position and returns a List of all possible Sensors, except the one already in place
+    // In other words, returns all the similar Sensors with another Token at "position"
     // See function below for uses
     public SensorList expandNonWildcard (int position) {
         
-       SensorList sMap = new SensorList ();
+       SensorList sensorList = new SensorList ();
         
         if ((position >= this.tokenList.size() ) || (position <0) || this.tokenList.get(position).isWildcard()) {
-            return sMap;
+            return sensorList;
         }
         
         
@@ -156,18 +192,15 @@ public class Sensor {
         for (int i = 0; i < limit; i++) {
             Sensor a = this.copy();
             Token tok = new Token(this.tokenMap.getToken(position, i),position,this.tokenMap);
-            //System.out.println(this.tokenMap.getToken(position, i));
-            //System.out.println("Copied Sensor : " + a.tokenList);
+
             if (!tok.match_exact(this.getToken(position))){
                 a.tokenList.set(position, tok);
-                sMap.addSensor(a);
+                sensorList.addSensor(a);
             }
-            //System.out.println("Adding " + a.getString());
-            //System.out.println("Added >> " + a.tokenList);
             
         }
         
-        return sMap;
+        return sensorList;
         
        
     }  
@@ -340,11 +373,12 @@ public class Sensor {
     // The one preceding the most over the other candidates is selected
     // This is represented by "score"
     //
-    // A candidate is a matching RuleSet that contains Wildcards at the indexes in the List a
+    // A candidate is a matching RuleSet that contains Wildcards at the indexes in the List "a"
     public int chooseNextRuleSet (RuleSetList rsList, ArrayList <Integer> a) {
         
         int score;
         ArrayList <Integer> all = getAllMatchingRuleSets(rsList);
+        
         int chosen = -1;
         int best_score = 0;
         boolean isCandidate;
@@ -354,7 +388,7 @@ public class Sensor {
         
         if (rsList.size() == 0)
             return -1;
-        
+        //System.out.print("\nCandidates : ");
         for (int i = 0; i < all.size(); i++) {
             
             score = 0;
@@ -382,27 +416,26 @@ public class Sensor {
 
                 }  
 
-                if (score == best_score) {
-
-                    chosen = all.get(i);
-                    best_score = score;
-                }
-                if (score > best_score) {
+                if (score >= best_score) {
 
                     chosen = all.get(i);
                     best_score = score;
                     
+                    //System.out.println("New Best Score : " + chosen + " > " + score);
+                    
                 }
             }
         }
-        
+        //System.out.print("\nPicked RuleSet : " + chosen);
         return chosen;
     }    
     
-    
+
+ 
     
     // OLD VERSION USING PRECURSOR OCCURENCIES
     // NOT USED SINCE WE CHOSE PRECEDENCES
+    /*
     public int getBestMatchingRuleSets (RuleSetList rsList) {
         
         int level = 100000; // TO START, BIG ENOUGH TO ENSURE WE FIND LESS
@@ -428,6 +461,7 @@ public class Sensor {
         
         return chosen_ruleset;
     }
+    */
     
 
 
@@ -446,14 +480,16 @@ public class Sensor {
     }
     
     
-    // Simple string representation
+    // Simple string representation with coma
     public String simple () {
         
         String str = new String();
         
         for (int i = 0; i < this.size(); i++) {
-            
-            str = str.concat(this.getToken(i).toString());
+            if (i != this.size()-1)
+                str = str.concat(this.getToken(i).toString() + ",");
+            else
+                str = str.concat(this.getToken(i).toString());
         }
         
         return str;
@@ -461,15 +497,75 @@ public class Sensor {
     
     
     
-    // Would need to be changed for another game
+    // isRewarded now works using strings, because TokenMap referencies are risky
+    // MUST BE CAREFUL not to use A and + for the same model etc..
     public boolean isRewarded () {
         
-        if (this.getToken(this.size()-2).getReference() == 2)
+        // Predator Agent
+        if (this.getToken(this.size()-2).toString().equals("A"))
             return true;
         
-        else {
-            return false;
-        }
+        // Paint Agent
+        if (this.getToken(this.size()-2).toString().equals("+"))
+            return true;
+        
+        
+        return false;
+        
     }
+    
+  
+    // For Paint Agent
+    public boolean is_negative_rewarded () {
+        
+
+        // Paint Agent
+        if (this.getToken(this.size()-2).toString().equals("-"))
+            return true;
+        
+        
+        return false;
+        
+    }
+    
+
+    
+    public void print () {
+        
+        System.out.println(this.toString());
+    }
+    
+ 
+    
+    public int detect_level () {
+        
+        return this.numberOfNonWildcards();
+    }
+    
+    
+    // Returns an ArrayList with the indexes of non_wildcarded indexes
+    public ArrayList get_nonWildcarded_indexes () {
+        
+        ArrayList res = new ArrayList ();
+        
+        for (int i = 0; i < this.size(); i++) {
+            
+            if (this.getToken(i).isNotWildcard())
+                res.add(i);
+        }
+        
+        return res;
+    }
+    
+    
+    
+    // Returns true if a Sensor is has an effect (non-root Sensor) 
+    public boolean has_effect () {
+        
+        return (this.numberOfNonWildcards() > 0);
+    }
+    
+    
+    
     
 }

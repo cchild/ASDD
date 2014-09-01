@@ -55,10 +55,12 @@ public class PaintHoldingFluent extends Fluent implements Cloneable, Serializabl
         else {
             switch (getValue()){
                 case HOLDING_BLOCK: {
-                    return "HB"; 
+                    //return "HB";
+                    return "B";
                 }
                 case NOT_HOLDING_BLOCK: {
-                    return "NOT_HB";
+                    //return "NOT_HB";
+                    return "b";
                 }
             }
         }

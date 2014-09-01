@@ -80,6 +80,7 @@ public abstract class Percep extends Object implements Cloneable, Serializable {
     
     public abstract String translation();
     
+    
     /*return the number of fluents this percep contains*/
     public abstract int getNumFluents();
     

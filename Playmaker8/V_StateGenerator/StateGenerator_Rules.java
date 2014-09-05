@@ -104,6 +104,8 @@ public class StateGenerator_Rules extends StateGenerator {
             actionsList.add(random_action);
             
             chosenRuleSets.add(rulesets_for_action);
+            
+            //possible_states.printList(random_action + "");
              
              
         }

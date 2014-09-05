@@ -102,7 +102,7 @@ public class RuleSetList {
     public void printall_RVLR () {
         
         System.out.println("\nPRINTING RULESETLIST");
-        for (int i = 0; i < this.size(); i++) {
+        for (int i = 1; i < this.size(); i++) {
             
             this.getRuleSet(i).printRules_RVLR();
         }
@@ -350,14 +350,15 @@ public class RuleSetList {
 
         double score = 0.0;
         
-        for (int i = 0; i < this.size(); i++) {
+        for (int i = 1; i < this.size(); i++) {
             
-            System.out.println("Bahhhh : " + i);
+            
             
             if (this.getRuleSet(i).getRule(0).getPrecondition().sensorMatch(state)) {
                 
                 score = score + this.getRuleSet(i).getRule(0).get_RVRL();
             }
+            
         }
 
         return score;

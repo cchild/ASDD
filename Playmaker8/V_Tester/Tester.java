@@ -51,7 +51,7 @@ public class Tester {
     
     // REINFORCEMENT LEARNING SETTINGS
     static final boolean Reinforcement_Learning = true;
-    static final int Reinforcement_Learning_steps = 1000000;  // MAPS CAN GO TO 2 Millions, Rules around 15K
+    static final int Reinforcement_Learning_steps = 300000;  // MAPS CAN GO TO 2 Millions, Rules around 15K
     static final boolean use_decision_tables = true;
     static final boolean save_Reinforcement_Learning_results = Reinforcement_Learning; 
     static final boolean load_Reinforcement_Learning_results = !save_Reinforcement_Learning_results;
@@ -442,8 +442,8 @@ public class Tester {
                 
                 
                 
-                
-                ruleSetList.printall_RVLR();
+                //System.out.println("RuleSetList has " + ruleSetList.size() + " entries.");
+                //ruleSetList.printall_RVLR();
                 
                 
                 if (use_decision_tables) {

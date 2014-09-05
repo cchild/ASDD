@@ -97,6 +97,17 @@ public class RuleSetList {
     }
     
     
+    
+    // Exhaustive printing
+    public void printall_RVLR () {
+        
+        System.out.println("\nPRINTING RULESETLIST");
+        for (int i = 0; i < this.size(); i++) {
+            
+            this.getRuleSet(i).printRules_RVLR();
+        }
+    }
+    
     public int size () {
         
         return this.rulesetlist.size();
@@ -332,6 +343,25 @@ public class RuleSetList {
     }  
  
  
+    
+    
+    // Returns the RVLR score (to determine the best action)
+    public double get_RVLR_score (Sensor state) {
+
+        double score = 0.0;
+        
+        for (int i = 0; i < this.size(); i++) {
+            
+            System.out.println("Bahhhh : " + i);
+            
+            if (this.getRuleSet(i).getRule(0).getPrecondition().sensorMatch(state)) {
+                
+                score = score + this.getRuleSet(i).getRule(0).get_RVRL();
+            }
+        }
+
+        return score;
+    }
  
 
 }

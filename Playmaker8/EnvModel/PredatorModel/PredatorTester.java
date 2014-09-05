@@ -33,7 +33,7 @@ public class PredatorTester
         
         
         // READS THE INPUT FILE, LEARNS THE RULES FROM IT
-        boolean changeFromInput = false;
+        
         
         
         
@@ -52,9 +52,8 @@ public class PredatorTester
         
         
         // READ FROM INPUT >> NUMBER OF LINES IN INPUT
-        if (changeFromInput) {
-            NUM_MOVES = LogFiles.getLines();
-        }
+        
+            
         
         
          // NUM_MOVES doubled for turn taking
@@ -83,75 +82,31 @@ public class PredatorTester
 
 
         LogFiles logfile2 = LogFiles.getInstance(2);
+        
         System.out.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES);
         System.out.print("\n" + "Total reward: " + totalReward + "\n");
-        //logfile2.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES,2);
-        //logfile2.print("\n" + "Total reward: " + totalReward + "\n",2);
-        
-        
+
 
         
         
-        
-        // READ THE TEXT FILE : LogFileInput.txt
-        if (changeFromInput)
-        {
-        
-            int lines = LogFiles.getLines();
-            int i = 0;
-
-
-            String filePath = Logging.LogFiles.INPUT_FILE;
-
-            
-            
-             try {
-
-                Scanner scanner=new Scanner(new File(filePath));
-
-                System.out.println();
-                while (scanner.hasNextLine()) {
-                // modifying manually the perceps & actions
-                    String line = scanner.nextLine();
-                    pred.getPercepRecord().getPercep(i).readFromString(line);
-                    //logfile2.println(i + " : " + pred.getPercepRecord().getPercep(i).toString() , 4);
-                    pred.getActionRecord().getAction(i).readFromChar(line.charAt(line.length()-1));
-                    i++;
-                }
+      
 
                 
-                scanner.close();
+             
+                ////////////////////////////////////////////
+                ///// UNCOMMENT THIS FOR OLD BEHAVIOUR /////
+                ////////////////////////////////////////////
+             
+                //predatorEnvironment.testAgentRecords();
+        
 
-            }
-            catch (FileNotFoundException e) {
-                System.out.println("ERROR OPENING INPUT FILE");
-            }
+        
+        
+        
+        
+        
 
-              
-              // Only does "lines" steps, instead of all the iterations
-              predatorEnvironment.testAgentRecords2(lines);
-        }
-        
-        
-        else {
-        
-            //predatorEnvironment.testAgentRecords();
-
-
-        }
-        
-        
-        
-        
-        
-        
-        
-        // PRINTS DATA INTO LOGFILESRESULTS.TXT
-        
-        
-        //logfile2.getInstance(2);
-        
-        //logfile2.println("OUTPUT PERCEPS & ACTIONS : ", 2);
+        // Exports to LogFileResults.txt
          for (int h = 0; h < pred.getPercepRecord().size(); h++) {
 
 

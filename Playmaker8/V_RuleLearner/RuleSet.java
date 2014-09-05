@@ -330,6 +330,19 @@ public class RuleSet {
     }
  
     
+    
+    // MORE DETAILED WAY TO PRINT A RULESET, PRINTING RULES CONTENT INSTEAD OF IDS
+    public void printRules_RVLR () {
+        
+        System.out.println("PRINTING RULESET ID : " + this.id + " (" + this.size() + ") entries.");
+        for (int i = 0; i < this.size(); i++) {
+            
+            System.out.println("Rule " + (i+1) + " (ID " + references.get(i) + ") : " + this.rulelist.getRuleByID(references.get(i)) + " Prob : " + this.rulelist.getRuleByID(references.get(i)).getProb() + " TIMES " + this.rulelist.getRuleByID(references.get(i)).occurrencies + " PREC " + this.rulelist.getRuleByID(references.get(i)).prec_occurrencies + " Value : " + this.rulelist.getRuleByID(references.get(i)).get_RVRL());
+        }
+        System.out.println("Total Prob : " + this.totalProb);
+        //System.out.println("Precedences : " + this.precedences);
+    }    
+    
     // CHECKS IF A RULESET IS CONFLICTING WITH ANOTHER ONE BY CHECKING SUCCESSORS OUTPUT
     public boolean isConflicting (RuleSet ruleset) {
         
@@ -474,6 +487,31 @@ public class RuleSet {
         
         return this.getRule(this.size()-1);
         
+    }
+    
+    
+    
+    public void increase_RVLR (double value) {
+        
+        for (int i = 0; i < this.size(); i++) {
+            
+            this.getRule(i).increase_RVRL( value - this.getRule(i).get_RVRL());
+        }
+    }
+    
+    
+    
+    public double get_RVLR () {
+        
+        double res = 0.0;
+        
+        for (int i = 0; i < this.size(); i++) {
+            
+            res = res + this.getRule(i).get_RVRL();
+        }
+        
+        
+        return res;
     }
     
     

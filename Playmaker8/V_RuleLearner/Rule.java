@@ -18,6 +18,7 @@ public class Rule {
     public int prec_occurrencies;
     public int ruleset_id;
     public int id;
+    public double RVRL_value;
     public static AtomicInteger counter = new AtomicInteger();
     
     
@@ -30,7 +31,8 @@ public class Rule {
         this.postcondition = postcondition;
 
         this.ruleset_id = -1;
-        this.id = counter.incrementAndGet();       
+        this.id = counter.incrementAndGet();  
+        this.RVRL_value = 0.0;
 
     }
     
@@ -55,6 +57,17 @@ public class Rule {
     }
     
     
+    public void increase_RVRL (double value) {
+        
+        this.RVRL_value = this.RVRL_value + value;
+
+    }
+    
+    public double get_RVRL () {
+        
+        return this.RVRL_value;
+
+    }
     
     // Returns the Probability of a Rule
     public double getProb () {

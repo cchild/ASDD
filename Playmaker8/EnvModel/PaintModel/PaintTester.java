@@ -68,26 +68,28 @@ public class PaintTester
         LogFiles logfile2 = LogFiles.getInstance(2);
 
 
-       //logfile2.print("\n\nBlocks painted: " + blocksPainted,2);
-       //logfile2.print("\nBlocks unpainted: " + blocksUnpainted,2);
-       //logfile2.print("\nTotal reward: " + totalReward  + "\n",2);
        System.out.print("\n\nBlocks painted: " + blocksPainted);
        System.out.print("\nBlocks unpainted: " + blocksUnpainted);
-       //logfile2.print("\nTotal reward: " + totalReward + "\n",2);
+
        
+       
+       
+       
+       ////////////////////////////////////////////
+       ///// UNCOMMENT THIS FOR OLD BEHAVIOUR /////
+       ////////////////////////////////////////////
        
        //paintEnvironment.testAgentRecords();
        
        
-        //System.out.println("OUTPUT PERCEPS & ACTIONS : ");
-        //logfile2.println("OUTPUT PERCEPS & ACTIONS : ", 2);
+       
+       
+       
+       
+       
+        // Exporting to LogFileResults.txt
          for (int h = 0; h < agent.getPercepRecord().size(); h++) {
 
-
-            //System.out.println("ACTIONS : " + agent.getActionRecord().getActionString(h));
-            //System.out.println("PERCEPS : " + agent.getPercepRecord().getPercep(h).translation());
-             
-            //logfile2.println("", 2);
             logfile2.println(agent.getPercepRecord().getPercep(h).translation() + "" + agent.getActionRecord().getAction(h).translation(), 2);
          }
        

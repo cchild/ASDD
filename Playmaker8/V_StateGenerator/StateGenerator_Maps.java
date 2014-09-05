@@ -47,60 +47,62 @@ public class StateGenerator_Maps extends StateGenerator {
          // Index of Current State
          int index_of_state_in_map = stMap.findSensor(s1);
          
-         
-         // Generating one StateList of possible Sensors for every possible best_action
-         for (int action = 0; action < stMap.getReferencies(index_of_state_in_map).size(); action ++) {
-        
-             
-            StateList possible_states = new StateList ();
-             
-            
-            
-            // Getting possible States referencies and the best_action in progress
-            ArrayList <ArrayList> possibleStates = (ArrayList) stMap.getReferencies(index_of_state_in_map).get(action);
+         if (index_of_state_in_map != -1) {
+             // Generating one StateList of possible Sensors for every possible best_action
+             for (int action = 0; action < stMap.getReferencies(index_of_state_in_map).size(); action ++) {
 
-            actions = stMap.getActions(index_of_state_in_map).get(action).copy();
 
-            
-            // Getting occurrencies_double. to compute probs
-            int total_occurencies_of_state_and_action = (int) stMap.getOccurencies(index_of_state_in_map).get(action);
+                StateList possible_states = new StateList ();
 
-            double total_occurencies_of_state_and_action_double = (double) total_occurencies_of_state_and_action;
 
-             
-            
-            // Going through the above list, and adding each state with its prob
-            for (int i = 0; i < possibleStates.size(); i++) {
 
-                // Couple is like (ref, occurrencies_double), so couple.get(0) is reference, 
-                // and couple.get(1) is occurrencies
-                ArrayList couple = (ArrayList) possibleStates.get(i);
+                // Getting possible States referencies and the best_action in progress
+                ArrayList <ArrayList> possibleStates = (ArrayList) stMap.getReferencies(index_of_state_in_map).get(action);
 
-                // Prob part
-                int occurencies_of_action_and_state_i = (int) couple.get(1);
+                actions = stMap.getActions(index_of_state_in_map).get(action).copy();
 
-                double prob = (double) occurencies_of_action_and_state_i;
 
-                prob = prob / total_occurencies_of_state_and_action_double;
+                // Getting occurrencies_double. to compute probs
+                int total_occurencies_of_state_and_action = (int) stMap.getOccurencies(index_of_state_in_map).get(action);
 
-                // State Part
-                int new_state_index = (int) couple.get(0);
+                double total_occurencies_of_state_and_action_double = (double) total_occurencies_of_state_and_action;
 
-                Sensor state = stMap.getSensor(new_state_index);
 
-                // Adding
-                possible_states.addSensor(state, prob);
-                 
 
+                // Going through the above list, and adding each state with its prob
+                for (int i = 0; i < possibleStates.size(); i++) {
+
+                    // Couple is like (ref, occurrencies_double), so couple.get(0) is reference, 
+                    // and couple.get(1) is occurrencies
+                    ArrayList couple = (ArrayList) possibleStates.get(i);
+
+                    // Prob part
+                    int occurencies_of_action_and_state_i = (int) couple.get(1);
+
+                    double prob = (double) occurencies_of_action_and_state_i;
+
+                    prob = prob / total_occurencies_of_state_and_action_double;
+
+                    // State Part
+                    int new_state_index = (int) couple.get(0);
+
+                    Sensor state = stMap.getSensor(new_state_index);
+
+                    // Adding
+                    possible_states.addSensor(state, prob);
+
+
+                 }
+
+
+                // Adding container complete Statelist, and its best_action
+                stateLists.add(possible_states);
+                actionsList.add(actions);
+
+                //possible_states.printList(actions + "");
              }
-
-
-            // Adding container complete Statelist, and its best_action
-            stateLists.add(possible_states);
-            actionsList.add(actions);
              
-             
-         }
+         } // If
          
          // Adding all the StateLists & Actions to container
          container.add(stateLists);

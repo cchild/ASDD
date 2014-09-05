@@ -51,6 +51,7 @@ public class PredatorEnvApp extends EnvApp {
  
     
    public void run1Cycle() {
+       
        // OLD VERSION
         //getPredatorEnvironment().updateEnvironment();
         

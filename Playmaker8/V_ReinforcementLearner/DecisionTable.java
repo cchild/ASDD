@@ -1,9 +1,10 @@
 
 package V_ReinforcementLearner;
 
-import V_Sensors.StateMap;
 import Logging.LogFiles;
+import V_RuleLearner.RuleSetList;
 import V_Sensors.*;
+import V_Sensors.StateMap;
 import V_StateGenerator.StateGenerator_Maps;
 import java.io.*;
 import java.util.*;
@@ -278,6 +279,60 @@ public class DecisionTable {
         
         return dTab;
         
+    }
+    
+    
+    public DecisionTable from_stateMap (StateMap stMap) {
+        
+        DecisionTable dec = new DecisionTable ();
+        
+        
+        for (int i = 0; i < stMap.size(); i++) {
+            
+            
+            
+            Token wildcard = new Token ("*", stMap.getSensor(0).size()-1, stMap.getSensor(0).tokenMap);
+            
+            dec.addSensor(stMap.getSensor(i), wildcard);
+            
+            
+        }
+        
+        return dec;
+    }
+    
+    
+    // Converts an Action Value Table into a Decision Table
+    public void RVLR (RuleSetList rsList, StateMap stMap) {
+       
+       
+       for (int i = 0; i < stMap.size(); i++) {
+        
+            SensorList senList = stMap.getSensor(i).expand(stMap.getSensor(i).size()-1);
+            
+            double max_score = 0.0;
+            int max_index = 0;
+            
+            System.out.println("State : " + stMap.getSensor(i));
+            
+            for (int j = 0; j < senList.size(); j++) {
+                
+                double score = rsList.get_RVLR_score(senList.getSensor(j+1));
+                
+                
+                if (score >= max_score) {
+                    max_score = score;
+                    max_index = j;
+                }
+                
+                System.out.println("Score for  " + senList.getSensor(j+1).getToken(senList.getSensor(j+1).size()-1) + " : " + score);
+            }
+            
+            this.setAction(i, senList.getSensor(max_index+1).getToken(senList.getSensor(max_index+1).size()-1));
+       
+       }
+       
+       
     }
    
 }

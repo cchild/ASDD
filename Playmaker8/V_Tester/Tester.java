@@ -51,13 +51,15 @@ public class Tester {
     
     // REINFORCEMENT LEARNING SETTINGS
     static final boolean Reinforcement_Learning = true;
-    static final int Reinforcement_Learning_steps = 10000;  // MAPS CAN GO TO 2 Millions, Rules around 15K
-    static final boolean use_decision_tables = false;
+    static final int Reinforcement_Learning_steps = 1000000;  // MAPS CAN GO TO 2 Millions, Rules around 15K
+    static final boolean use_decision_tables = true;
     static final boolean save_Reinforcement_Learning_results = Reinforcement_Learning; 
     static final boolean load_Reinforcement_Learning_results = !save_Reinforcement_Learning_results;
     static final boolean use_Value_Table = false;
     static final boolean use_Action_Value_Table = !use_Value_Table;
-    static final boolean use_Dynamic_Programming = false;
+    static final boolean use_Dynamic_Programming = true;
+    
+    static final boolean use_RVLR = false;
     
     
 
@@ -134,7 +136,7 @@ public class Tester {
                 stateMap.fromFile(tokenMap);
                 if (!silent_mode)
                     System.out.println(" OK");
-            stateMap.printMap();
+            //stateMap.printMap();
                     
         // RULEMAP
             RuleMap ruleMap = new RuleMap(tokenMap);
@@ -153,7 +155,7 @@ public class Tester {
             RuleSetList ruleSetList = new RuleSetList(closedList, sensorList);
       
         // TABLES
-            StateActionValueTable stateActionValueTable;
+            StateActionValueTable stateActionValueTable = null;
             StateValueTable stateValueTable;
             
             
@@ -364,14 +366,15 @@ public class Tester {
         
         
         // SOURCE STATE
-        Sensor currentState = stateMap.getSensor(0);
+        //Sensor currentState = stateMap.getSensor(0);
         
         
-        //String str = "EEEEE*"; //Predator
+        String str = "WEAEE*"; //Predator
         //String str = "pCDb=*"; //Paint
-        //Sensor currentState = new Sensor(str,tokenMap);
+        Sensor currentState = new Sensor(str,tokenMap);
         
 
+        stateGenerator.generateAllPossibleStates(currentState, sensorList, sensorMap, ruleSetList, impossibleList, false, stateMap);
         
         
         
@@ -397,51 +400,78 @@ public class Tester {
                 if (use_Dynamic_Programming)
                     System.out.println("Dynamic Programming enabled");
                 
-                
+                if (use_RVLR) 
+                    System.out.println("RVLR selected");
                 
                 
                 ReinforcementLearner rLearner = new ReinforcementLearner ();
         
 
+                if (use_RVLR)
+                        rLearner.RVLR(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap, closedList);
                 
-                if (use_Value_Table) {
+                else {
                     
-                    stateValueTable = rLearner.createStateValueTable(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
-                    //stateValueTable.printTable("SVT before converting");
-                }
-                
-                
-                if (((use_Action_Value_Table) && (use_Dynamic_Programming))) {
-                    
-                    stateActionValueTable = rLearner.createStateActionValueTable_dynamic(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
-                    //stateActionValueTable.printTable("SVT before converting");
-                }
-                
-                
-                if (((use_Action_Value_Table) && (!use_Dynamic_Programming))) {
-                    
-                    stateActionValueTable = rLearner.createStateActionValueTable(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
-                    //stateActionValueTable.printTable("SVT before converting");
+                    if (use_Value_Table) {
+
+                        stateValueTable = rLearner.createStateValueTable(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
+                        //stateValueTable.printTable("SVT before converting");
+                    }
+
+
+                    if (((use_Action_Value_Table) && (use_Dynamic_Programming))) {
+
+
+                        stateActionValueTable = rLearner.createStateActionValueTable_dynamic(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
+
+                    }
+
+
+                    if (((use_Action_Value_Table) && (!use_Dynamic_Programming))) {
+
+                        stateActionValueTable = rLearner.createStateActionValueTable(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
+                        //stateActionValueTable.printTable("SVT before converting");
+                    }
                 }
 
                 
                 
+                
+                
+                    
+                
+                
+                
+                
+                ruleSetList.printall_RVLR();
                 
                 
                 if (use_decision_tables) {
                     
                     DecisionTable decision_table = new DecisionTable ();
 
+                    if (use_RVLR) {
+                        
+                        decision_table = decision_table.from_stateMap(stateMap);
+                        
+                        decision_table.RVLR(ruleSetList, stateMap);
+                    }
+                        
+                    else {
+                        
+                        
+                        if (use_Action_Value_Table)
+                            decision_table = decision_table.fromStateActionValueTable(stateActionValueTable);
                     
-                    if (use_Action_Value_Table)
-                        decision_table = decision_table.fromStateActionValueTable(stateActionValueTable);
-                    
-                    if (use_Value_Table)
-                        decision_table = decision_table.fromStateValueTable(stateValueTable, stateMap);
+                        if (use_Value_Table)
+                            decision_table = decision_table.fromStateValueTable(stateValueTable, stateMap);
 
                     
+                    
+                    }
+                    
                     if (save_Reinforcement_Learning_results) 
-                        decision_table.export();
+                            decision_table.export();
                     
                     
                     decision_table.printTable("");

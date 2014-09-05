@@ -233,6 +233,22 @@ public class ReinforcementLearner {
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public StateActionValueTable createStateActionValueTable (int limit, StateGenerator sGen, Sensor currentState, SensorList sList, SensorMap sMap, RuleSetList rsList, SensorList impossibleList, StateMap stMap) {
         
         StateActionValueTable actionValueTable = new StateActionValueTable () ;
@@ -520,6 +536,277 @@ public class ReinforcementLearner {
         return actionValueTable;
     }
     
+    
+    
+    
+    
+    
+    public StateActionValueTable createStateActionValueTable_dynamic_RVLR (int limit, StateGenerator sGen, Sensor currentState, SensorList sList, SensorMap sMap, RuleSetList rsList, SensorList impossibleList, StateMap stMap, RuleList closedList) {
+        
+        StateActionValueTable actionValueTable = new StateActionValueTable ();
+        
+        actionValueTable = actionValueTable.fromStateMap(stMap);
+
+        double learning_rate = 0.03;
+        double reward = 1;
+        double discount_factor = 0.9;
+        
+        int shouldprint = limit / 25;
+        
+        
+        Sensor source_state = currentState;
+
+            
+        for (int i = 1; i < limit; i++) {
+                    
+        
+            if (i == 1) {
+                
+                System.out.println("");
+            }
+
+            if (i % shouldprint == 0) {
+                double b = (double) i;
+                double c = (double) limit;
+                double a = b / c;
+                
+                System.out.println(a * 100 + " % ");
+            }
+            
+            ArrayList container = sGen.generateAllPossibleStates(source_state, sList, sMap, rsList, impossibleList, false, stMap);
+
+            // StateLists for different Actions
+            ArrayList ps = (ArrayList) container.get(0);
+            
+            // The different Actions
+            ArrayList ps2 = (ArrayList) container.get(1);
+            
+            // Rulesets for RVLR
+            ArrayList ps3 = (ArrayList) container.get(2);
+            
+            // Picks a random StateList (and a random action at the same time)
+
+            
+            
+            int source_state_index = actionValueTable.findSensor(source_state);
+                
+                
+                
+            for (int j = 0; j < ps.size(); j++) {
+                
+                // Picking StateList & action j
+                StateList possible_states = (StateList) ps.get(j);
+                Token action = (Token) ps2.get(j);
+                ArrayList ruleSets = (ArrayList) ps3.get(j);
+                
+                double factor = 0.0;
+                double factor2 = 0.0;
+                double counter = 0.0;
+                
+                int action_index_for_source = actionValueTable.findActionIndex(source_state_index, action);
+                        
+                //Exploring StateList & action j
+                for (int h = 0; h < possible_states.size(); h++) {
+             
+                    int possible_state_index = actionValueTable.findSensor(possible_states.getSensor(h));
+                    
+                    double actual_reward = 0.0;
+                    
+                    if (possible_states.getSensor(h).isRewarded()) {
+                        actual_reward = reward;
+                        //System.out.println("Reward from " + possible_states.getSensor(h) + " fed back to " + actionValueTable.getSensor(source_state_index) + " & " + actionValueTable.getAction(source_state_index).get(action_index_for_source));
+                    }
+                    
+                    
+                    for (int y = 0; y < ruleSets.size(); y++) {
+                        
+                        for (int u = 0; u < rsList.getRuleSet((int) ruleSets.get(y)).size(); u++) {
+                            
+                            factor = factor + (possible_states.getProb(h) * learning_rate * (actual_reward + (discount_factor * rsList.getRuleSet((int) ruleSets.get(y)).getRule(u).get_RVRL() )));                  
+                        
+                             
+                        }
+                        
+                        rsList.getRuleSet((int) ruleSets.get(y)).increase_RVLR(factor);
+                        
+                        factor2 = factor2 + rsList.getRuleSet((int) ruleSets.get(y)).get_RVLR();
+                        
+                        counter = counter + 1.0;
+                    }
+                       
+                }
+                
+                // Average
+                factor2 = factor2/counter;
+                
+                
+                //factor2 = factor2 - actionValueTable.getValue(source_state_index).get(action_index_for_source);
+                
+                // Updating Value
+                actionValueTable.increaseValue(source_state_index, action_index_for_source, factor2);
+                
+                
+                
+
+            }
+            
+                    int taille = currentState.tokenMap.getTokenList(currentState.size()-1).size();
+                    double c = (double) taille;
+                    
+                    double random_statelist = c - 0.001;
+                    double rand3 = Math.random();
+                    random_statelist = rand3 * random_statelist;
+                    
+                    int random_statelist_int = (int) random_statelist;
+                    //System.out.println(random_statelist_int);
+                    StateList possible_states = (StateList) ps.get(random_statelist_int);
+                    
+                    int size = possible_states.size();
+                    double size_double = (double) size;
+                    
+                    double random_state = Math.random() * size_double;
+                    
+                    int random_state_int = (int) random_state;
+                    
+                    source_state = possible_states.getSensor(random_state_int);
+                    
+                
+        }
+        
+        
+        return actionValueTable;
+    }
+    
 
     
+    
+    
+    
+    
+    
+    public void RVLR (int limit, StateGenerator sGen, Sensor currentState, SensorList sList, SensorMap sMap, RuleSetList rsList, SensorList impossibleList, StateMap stMap, RuleList closedList) {
+        
+        
+
+        double learning_rate = 0.03;
+        double reward = 1;
+        double discount_factor = 0.9;
+        
+        int shouldprint = limit / 25;
+        
+        
+        Sensor source_state = currentState;
+
+            
+        for (int i = 1; i < limit; i++) {
+                    
+        
+            if (i == 1) {
+                
+                System.out.println("");
+            }
+
+            if (i % shouldprint == 0) {
+                double b = (double) i;
+                double c = (double) limit;
+                double a = b / c;
+                
+                System.out.println(a * 100 + " % ");
+            }
+            
+            ArrayList container = sGen.generateAllPossibleStates(source_state, sList, sMap, rsList, impossibleList, false, stMap);
+
+            // StateLists for different Actions
+            ArrayList ps = (ArrayList) container.get(0);
+            
+            // The different Actions
+            ArrayList ps2 = (ArrayList) container.get(1);
+            
+            // Rulesets for RVLR
+            ArrayList ps3 = (ArrayList) container.get(2);
+            
+            // Picks a random StateList (and a random action at the same time)
+
+            
+            
+                
+                
+            for (int j = 0; j < ps.size(); j++) {
+                
+                // Picking StateList & action j
+                StateList possible_states = (StateList) ps.get(j);
+                Token action = (Token) ps2.get(j);
+                ArrayList ruleSets = (ArrayList) ps3.get(j);
+                
+                double factor = 0.0;
+                double factor2 = 0.0;
+                double counter = 0.0;
+                
+                        
+                //Exploring StateList & action j
+                for (int h = 0; h < possible_states.size(); h++) {
+             
+                    double actual_reward = 0.0;
+                    
+                    if (possible_states.getSensor(h).isRewarded()) {
+                        actual_reward = reward;
+                        //System.out.println("Reward from " + possible_states.getSensor(h) + " fed back to " + actionValueTable.getSensor(source_state_index) + " & " + actionValueTable.getAction(source_state_index).get(action_index_for_source));
+                    }
+                    
+                    
+                    for (int y = 0; y < ruleSets.size(); y++) {
+                        
+                        for (int u = 0; u < rsList.getRuleSet((int) ruleSets.get(y)).size(); u++) {
+                            
+                            factor = factor + (possible_states.getProb(h) * learning_rate * (actual_reward + (discount_factor * rsList.getRuleSet((int) ruleSets.get(y)).getRule(u).get_RVRL() )));                  
+                        
+                             
+                        }
+                        
+                        rsList.getRuleSet((int) ruleSets.get(y)).increase_RVLR(factor);
+                        
+                        //factor2 = factor2 + rsList.getRuleSet((int) ruleSets.get(y)).get_RVLR();
+                        
+                        //counter = counter + 1.0;
+                    }
+                       
+                }
+                
+                // Average
+                //factor2 = factor2/counter;
+                
+                
+                //factor2 = factor2 - actionValueTable.getValue(source_state_index).get(action_index_for_source);
+                
+                
+                
+                
+
+            }
+            
+                    int taille = currentState.tokenMap.getTokenList(currentState.size()-1).size();
+                    double c = (double) taille;
+                    
+                    double random_statelist = c - 0.001;
+                    double rand3 = Math.random();
+                    random_statelist = rand3 * random_statelist;
+                    
+                    int random_statelist_int = (int) random_statelist;
+                    //System.out.println(random_statelist_int);
+                    StateList possible_states = (StateList) ps.get(random_statelist_int);
+                    
+                    int size = possible_states.size();
+                    double size_double = (double) size;
+                    
+                    double random_state = Math.random() * size_double;
+                    
+                    int random_state_int = (int) random_state;
+                    
+                    source_state = possible_states.getSensor(random_state_int);
+                    
+                
+        }
+        
+        
+    }
 }

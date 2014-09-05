@@ -28,6 +28,7 @@ public class StateGenerator_Rules extends StateGenerator {
      //    
      // INDEX 0 : ARRAYLIST CONTAINING THE STATELISTS
      // INDEX 1 : ARRAYLIST CONTAINING THE ACTIONS (TOKENS)
+     // INDEX 2 : LIST OF CHOSEN RULESETS (RVLR) 
      //   
      // OF COURSE, STATELIST 1 CORRESPONDS TO ACTION 1    
      @Override
@@ -36,7 +37,7 @@ public class StateGenerator_Rules extends StateGenerator {
 
         ArrayList stateLists = new ArrayList ();
         ArrayList actionsList = new ArrayList ();
-        
+        ArrayList chosenRuleSets = new ArrayList();
         
         ArrayList container = new ArrayList ();
          
@@ -59,6 +60,7 @@ public class StateGenerator_Rules extends StateGenerator {
             
             
             StateList possible_states = new StateList ();
+            ArrayList rulesets_for_action = new ArrayList ();
             Token random_action;
             
             // SETTING REF OF OUR RANDOM ACTION
@@ -67,7 +69,7 @@ public class StateGenerator_Rules extends StateGenerator {
             
             // GENERATES ALL STATES FROM STATE S1 AND ACTION random_action
             ArrayList <Integer> aList = new ArrayList();
-            ArrayList <Integer> chosenRuleSets = new ArrayList();
+            
 
 
             
@@ -81,9 +83,14 @@ public class StateGenerator_Rules extends StateGenerator {
                 //rulesetlist.getRuleSet(chosen_ruleset).printRules();
                 
                 
+                rulesets_for_action.add(chosen_ruleset);
+               
+                
+                
+                
                 aList.addAll(rulesetlist.getRuleSet(chosen_ruleset).detectNonWildcardedSpots());
 
-                chosenRuleSets.add(chosen_ruleset);
+                
 
                 possible_states.update(rulesetlist.getRuleSet(chosen_ruleset), impossibleList);
 
@@ -95,13 +102,16 @@ public class StateGenerator_Rules extends StateGenerator {
             stateLists.add(possible_states);
             
             actionsList.add(random_action);
+            
+            chosenRuleSets.add(rulesets_for_action);
              
              
         }
          
          container.add(stateLists);
          container.add(actionsList);
-
+         container.add(chosenRuleSets);
+         
         return container;
      }
     
@@ -115,6 +125,7 @@ public class StateGenerator_Rules extends StateGenerator {
     // RETURNS AN ARRAYLIST WITH :
     // INDEX 0 : GENERATED STATE (SENSOR)
     // INDEX 1 : CHOSEN ACTION (TOKEN)
+    // INDEX 2 : LIST OF CHOSEN RULESETS (RVLR) 
     @Override
     public ArrayList generateRandomActionAndPseudoRandomState (Sensor s1, RuleSetList rulesetlist, SensorList impossibleList, StateMap stMap) {
          
@@ -122,6 +133,7 @@ public class StateGenerator_Rules extends StateGenerator {
        
         ArrayList container = new ArrayList ();
 
+        ArrayList chosen_rulesets = new ArrayList ();
         
         SensorList s1_with_actions_expand = new SensorList (); 
 
@@ -202,6 +214,11 @@ public class StateGenerator_Rules extends StateGenerator {
                 }
                 
                 
+                for (int u = 0; u < rulesetlist.getRuleSet(chosen_ruleset).size(); u++) {
+                    
+                    chosen_rulesets.add(rulesetlist.getRuleSet(chosen_ruleset).getRule(u).id);
+                    
+                }
                 
                 // Updates the indexes covered
                 covered_indexes.addAll(rulesetlist.getRuleSet(chosen_ruleset).detectNonWildcardedSpots());
@@ -270,7 +287,9 @@ public class StateGenerator_Rules extends StateGenerator {
         container.add(new_state);
 
         container.add(action);
-         
+        
+        container.add(chosen_rulesets);
+        
         return container;
         
      }
@@ -456,5 +475,6 @@ public class StateGenerator_Rules extends StateGenerator {
     }
     
     
+
     
 } // END OF FILE

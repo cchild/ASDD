@@ -30,7 +30,7 @@ public class Tester {
 
     
     // MSDD SETTINGS
-    static final boolean MSDD = false;
+    static final boolean MSDD = true;
     static final boolean load_MSDD_rules = false;
     static final boolean save_MSDD_rules = !load_MSDD_rules;
     static final int maxnodes = 50000;

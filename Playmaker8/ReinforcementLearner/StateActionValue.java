@@ -38,6 +38,14 @@ public class StateActionValue extends Object implements Serializable {
         reward = DEFAULT_REWARD;
     }
     
+    // Son added this
+    public StateActionValue(Percep percep, Action action, double value) {
+        this.percep = (Percep)percep.clone();
+        this.action = (Action)action.clone();
+        this.value = value;
+        setReward();
+    }
+    
     public StateActionValue(Percep percep, Action action, double utility, double reward) {
         this.percep = (Percep)percep.clone();
         this.action = (Action)action.clone();

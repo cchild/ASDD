@@ -34,6 +34,10 @@ public class PredatorAction extends Action implements Cloneable, Serializable {
         clear();
     }
     
+    /*
+     * Create all possible actions
+     */
+    
         /*Call standard write object.
      *Must ensure that the nodes also have customizable write and read functions*/
     public void writeObject(ObjectOutputStream s) throws IOException {
@@ -350,4 +354,8 @@ public class PredatorAction extends Action implements Cloneable, Serializable {
                  break;
          }
      }
+      
+      /*
+       * Son added
+       */     
 }

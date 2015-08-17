@@ -2,3 +2,14 @@
 /ENeuralSystem.class
 /Layer.class
 /LogisticLayer.class
+/TDNeuralNet.class
+/NeuralSystem.class
+/LogsigLayer.class
+/BinomialLayer.class
+/SoftmaxLayer.class
+/TDNeuralSystem.class
+/QNeuralNet.class
+/QRBM.class
+/QNeuralSystem.class
+/QFittedNeuralNet.class
+/QFittedRBM.class

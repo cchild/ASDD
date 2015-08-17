@@ -18,6 +18,9 @@ import Logging.*;
 
 import StateGenerator.*;
 
+// Mark this one if don't want to
+//import S_ReinforcementLearner.StateActionValueMap;
+
 /**
  *
  * @author  Chris Child
@@ -207,6 +210,7 @@ public class ReinforcementLearner extends java.lang.Object {
             stateActionValueMap.setStateActionValue(nextState, action , 0);
             sa = stateActionValueMap.getStateActionValue(nextState, action);
         }
+        
         double reward = sa.getReward();
         
         double newStateActionValue = 0;
@@ -232,11 +236,13 @@ public class ReinforcementLearner extends java.lang.Object {
         if (sav != null)
             maxActionValue = sav.getValue();
         
+        // 	
         newStateActionValue = oldStateActionValue + 
                                 ALPHA *
                                 (reward + GAMMA * maxActionValue - oldStateActionValue);
         
-        stateActionValueMap.setStateActionValue(stateToRefine, action , newStateActionValue);
+        //stateActionValueMap.setStateActionValue(stateToRefine, action , newStateActionValue);      
+        stateActionValueMap.setStateActionValue(stateToRefine,action,reward,nextState,maxAction);
     }
     
     
@@ -288,6 +294,7 @@ public class ReinforcementLearner extends java.lang.Object {
                                 (reward + GAMMA * totalMaxStateActionValue - oldStateActionValue);
         
         stateActionValueMap.setStateActionValue(stateToRefine, action , newStateActionValue);
+        //stateActionValueMap.setStateActionValue(stateToRefine,action,reward,nextState,maxAction);
     }
    
    

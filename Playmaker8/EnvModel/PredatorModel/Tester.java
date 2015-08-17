@@ -76,7 +76,7 @@ public class Tester
         
         int n = Logging.LogFiles.getLines();
         for (int i=0;i<8;i++){
-        System.out.println(pred.getPercepRecord().getPercep(i));
+        	System.out.println(pred.getPercepRecord().getPercep(i));
         
         }
 

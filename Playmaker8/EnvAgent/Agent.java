@@ -1218,6 +1218,60 @@ public StateValueMap generateRuleValueMap (NodeList learnedRules) {
         return tempReinforcementLearner.getValueMap(); 
     }
     
+public StateActionValueMap refineStateActionValueMap (ReinforcementLearner tempReinforcementLearner) {
+        
+        Action action = defaultAction();
+        
+        
+        Percep agentPercep = (Percep)body.getPercep().clone();
+        Percep nextPercep = (Percep)body.getPercep().clone();
+
+        
+         
+     
+        System.out.println("\nWARNING (Predator Agnet): State Action Reinforcement learner set to " + REFINE_MAP_STEPS+ " itterations");
+        for (int i = 0; i < 1; i++) {
+            //System.out.print(i);
+            //System.out.flush();
+            
+            int whatever = 0;
+            
+            for (int j = 0; j < REFINE_MAP_STEPS; j++) {
+                
+                //This is the standard q learning reinforcement 
+                if (true)
+                {
+                    nextPercep = /*(PredatorAgentPercep)*/tempReinforcementLearner.getStateGenerator().generateNextState((Percep)agentPercep, action);
+                    tempReinforcementLearner.QLearningRefineValue(agentPercep, action, nextPercep);
+                    //System.out.print("Are we sure we want nextPercep and not random perep?");
+                    agentPercep = /*(PredatorAgentPercep)*/tempReinforcementLearner.pickRandomState();
+                    if (agentPercep == null)
+                       agentPercep = nextPercep;
+                }
+                else
+                {
+                    //This is the DynaQMethod
+                    ArrayList nextStatesAndProbs = tempReinforcementLearner.getStateGenerator().generateNextStates((Percep)agentPercep, action);
+                    if (nextStatesAndProbs != null) {
+                        tempReinforcementLearner.DynaQLearningRefineValue(agentPercep, action, nextStatesAndProbs);
+                        agentPercep = (Percep)tempReinforcementLearner.getStateGenerator().rouletteStatesAndProbs(nextStatesAndProbs);
+                    }
+                }
+                //Need to do something here to pick a random action. Not sure where this should be done
+                //but it must be done
+                //Also need to add the generate random state things to the other types of state generator (only done 
+                //for state action so far)
+                 //action = tempReinforcementLearner.getStateGenerator().pickRandomAction();
+
+                //***FRIG for random action****
+                //if this is not an action the agent is allowed to take then go to the next action
+                action.randomAction();
+            }
+        }
+
+        return tempReinforcementLearner.getStateActionValueMap(); 
+    }
+   /* OLD CODE
     public StateActionValueMap refineStateActionValueMap (ReinforcementLearner tempReinforcementLearner) {
         
         Action action = defaultAction();
@@ -1267,7 +1321,7 @@ public StateValueMap generateRuleValueMap (NodeList learnedRules) {
 
         return tempReinforcementLearner.getStateActionValueMap(); 
     }
-    
+    */
     
     
        

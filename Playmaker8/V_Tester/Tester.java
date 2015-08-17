@@ -227,7 +227,8 @@ public class Tester {
                 ruleSetList.fromFile();
 
                 
-                System.out.println("\n" + closedList.size() + " Rules successfully learned. " + ruleSetList.size() + " RuleSets were created.");
+                System.out.println("\n" + closedList.size() + " Rules successfully learned. " + 
+                ruleSetList.size() + " RuleSets were created.");
         
         }
         
@@ -414,7 +415,8 @@ public class Tester {
                     
                     if (use_Value_Table) {
 
-                        stateValueTable = rLearner.createStateValueTable(Reinforcement_Learning_steps, stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
+                        stateValueTable = rLearner.createStateValueTable(Reinforcement_Learning_steps, 
+                        		stateGenerator, currentState, sensorList, sensorMap, ruleSetList, impossibleList, stateMap);
                         //stateValueTable.printTable("SVT before converting");
                     }
 

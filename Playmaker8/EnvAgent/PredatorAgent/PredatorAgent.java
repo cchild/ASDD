@@ -43,9 +43,9 @@ public class PredatorAgent extends Agent {
         this.role = role;
 
         USE_SAVED_PERCEP_ACTION_RECORD = false;
-        USE_REINFORCEMENT_POLICY = false;
-        USE_BELLMAN = true;
-        USE_STATE_ACTION_LOTS = false;
+        USE_REINFORCEMENT_POLICY = true;//false; 
+        USE_BELLMAN = false;//true;
+        USE_STATE_ACTION_LOTS = true;//false;
         USE_CLAUSE_VALUES = false;
         USE_CLAUSE_APRIORI_VALUES = false;
         USE_RULE_APRIORI_VALUES = false;
@@ -81,10 +81,10 @@ public class PredatorAgent extends Agent {
         USE_SAVED_MSDD_RULES = USE_REINFORCEMENT_POLICY;
         USE_SAVED_APRIORI_RULES = USE_REINFORCEMENT_POLICY;
         USE_SAVED_STATE_ACTION_MAP = USE_REINFORCEMENT_POLICY;
-        USE_SAVED_APRIORI_CLAUSES = USE_REINFORCEMENT_POLICY;
+        USE_SAVED_APRIORI_CLAUSES = USE_REINFORCEMENT_POLICY; 
 
         LEARN_RULES_MSDD = false;
-        LEARN_RULES_APRIORI = true;
+        LEARN_RULES_APRIORI = false;//true;
         LEARN_CLAUSES_ASDD = false;
         //set USE_SET_BASED_APRIORI_COUNTING in ClauseLearnerASDD
 
@@ -114,7 +114,7 @@ public class PredatorAgent extends Agent {
         MSDD_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedMSDDRules.sav";        
         APRIORI_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedAprioriRules.sav";        
         STATE_ACTION_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\stateActionMap.sav";        
-        STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\stateActionMap.sav";
+        STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\stateActionMapBig.sav";
         APRIORI_CLAUSES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
   
         initialise(new PredatorAgentPercep(), new PredatorAction());

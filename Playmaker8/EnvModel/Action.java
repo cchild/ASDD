@@ -1,6 +1,8 @@
 package EnvModel;
 
 import java.io.*;
+import java.util.ArrayList;
+
 import EnvAgent.ClauseLearner.*;
 /*
  * Action.java
@@ -79,6 +81,7 @@ public abstract class Action extends RuleObject implements Cloneable, Serializab
             return null;
     }
     
+    
     public abstract void randomDumbAction();
     
     /*returns a tokenised representation of the action as a string*/
@@ -111,5 +114,6 @@ public abstract class Action extends RuleObject implements Cloneable, Serializab
     public abstract void readFromString(String str);
     
     public abstract void readFromChar(char c);
+       
     
 }

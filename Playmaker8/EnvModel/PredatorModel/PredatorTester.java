@@ -8,8 +8,8 @@ import EnvAgent.ClauseLearner.*;
 import EnvAgent.RuleLearner.NodeList;
 import EnvModel.*;
 import StateGenerator.*;
-
 import Logging.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import fzdeepnet.GlobalVar;
 
 
 public class PredatorTester
@@ -26,37 +27,16 @@ public class PredatorTester
         ;
     }
     
-  
-    
     public static void main (String[] args) {
-
-        
-        
-        // READS THE INPUT FILE, LEARNS THE RULES FROM IT
-        
-        
-        
-        
+    	// Set global variable
+    	GlobalVar.model_conf_file = args[0];
+    	// Here is old code
         PredatorEnvironment predatorEnvironment = new PredatorEnvironment();
         PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);
         PredatorAgent prey = (PredatorAgent)predatorEnvironment.addPredatorAgent(3,3,PredatorAgent.PREY);
         int stepsOntop = 0;
-        
-        
-        
-        ///////////////////////
-        int NUM_MOVES = 100000;
-        ///////////////////////
-        
-        
-        
-        
-        // READ FROM INPUT >> NUMBER OF LINES IN INPUT
-        
-            
-        
-        
-         // NUM_MOVES doubled for turn taking
+
+        int NUM_MOVES = 100000; //will be doubled for turn taking
         double totalReward = 0;
         for (int i = 0; i < NUM_MOVES * 2; i++){
             predatorEnvironment.updateEnvironment();
@@ -79,47 +59,16 @@ public class PredatorTester
             }
         }
 
-
-
-        LogFiles logfile2 = LogFiles.getInstance(2);
         
+
+        //LogFile logfile1 = new LogFile(1);
+        LogFiles logfile1 = LogFiles.getInstance(2);
         System.out.print("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES);
         System.out.print("\n" + "Total reward: " + totalReward + "\n");
-
-
-        
-        
-      
-
-                
-             
-                ////////////////////////////////////////////
-                ///// UNCOMMENT THIS FOR OLD BEHAVIOUR /////
-                ////////////////////////////////////////////
-             
-                //predatorEnvironment.testAgentRecords();
-        
-
-        
-        
-        
-        
-        
-
-        // Exports to LogFileResults.txt
-         for (int h = 0; h < pred.getPercepRecord().size(); h++) {
-
-
-            logfile2.println(pred.getPercepRecord().getPercep(h).translation() + pred.getActionRecord().getAction(h).translation(), 2);
-         }
-
-         
-        logfile2.closeall();
-        
-        
-        System.out.println(pred.getPercepRecord().size());
-        
-        
+        logfile1.println("\n\n/STEPS Ontop: " + stepsOntop + "out of " + NUM_MOVES,2);
+        logfile1.println("\n" + "Total reward: " + totalReward + "\n",2);
+        logfile1.closeall();        
+        predatorEnvironment.testAgentRecords();
     }
 }
       

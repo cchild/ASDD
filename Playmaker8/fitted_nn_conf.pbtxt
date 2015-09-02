@@ -1,0 +1,63 @@
+model_name: "Q Fitted Neural Net"
+model_base: "NN"
+app_name: "Predator"
+computation: CPU
+
+layer {
+	lid: "i1"
+	type: INPUT
+	dimensions: 5
+	
+	unit: LOGSIG	
+}
+layer{
+	lid: "i2"
+	type: INPUT
+	dimensions: 5
+	
+	unit: LOGSIG
+}
+layer {
+	lid: 'h1'
+	type: INTER
+	dimensions: 10
+	
+	unit: LOGSIG
+	depend{
+		layer_id: "i1"		
+		direction: FORWARD		
+	}
+	depend{
+		layer_id: "i2"		
+		direction: FORWARD		
+	}
+}
+
+layer {
+	lid: 'o'
+	type: LABEL
+	dimensions: 1
+	
+	unit: LOGSIG
+	depend{
+		layer_id: "h1"
+		direction: FORWARD		
+	}
+}
+
+dis_ftune{
+	epochs:100
+	batches:1
+	batch_size:5
+	nn_train: GRAD_DESCEND
+	nn_cost: C_EN
+	initial_momentum:0.01
+	weight_norm:0.001
+}
+
+trn_dat{
+	part:1
+	data_type:TRAINING
+	dat_path:"InputFile.txt"
+	additional_file_path:"PredatorGameStates.txt"
+}	

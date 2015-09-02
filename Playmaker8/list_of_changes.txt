@@ -1,0 +1,9 @@
+1. Copy the StateActionValueMap to BaseActionValueMap
+2. Change StateActionValueMap to empty class which extends from BaseActionValueMap so that we can 
+create different algorithm
+3. Add public StateActionValue(Percep percep, Action action, double value)  to StateActionValue
+4. Change public final Action getBestAction(Percep state) to public Action getBestAction(Percep state) 
+in BaseStateActionValueMap (formerlly StateActionValueMap) so that other BaseStateActionValueMap can perform this function.
+5. Change the public StateActionValueMap refineStateActionValueMap (ReinforcementLearner tempReinforcementLearner)
+ in Agent to allow q-learning to be called
+6. Add to GlobalVar to PredatorTester to store argument (for initializing different model at runtime)  

@@ -1,0 +1,59 @@
+model_name: "Q RBM"
+model_base: "RBM"
+app_name: "Predator"
+computation: CPU
+
+layer {
+	lid: "i1"
+	type: INPUT
+	dimensions: 5
+	
+	unit: LOGSIG
+	depend{
+		layer_id: "h1"		
+		direction: BIDIRECT	
+	}	
+}
+layer{
+	lid: "i2"
+	type: INPUT
+	dimensions: 5
+	
+	unit: LOGSIG
+	depend{
+		layer_id: "h1"		
+		direction: BIDIRECT		
+	}
+}
+layer {
+	lid: 'h1'
+	type: INTER
+	dimensions: 10
+	
+	unit: LOGSIG
+	depend{
+		layer_id: "i1"		
+		direction: BIDIRECT		
+	}
+	depend{
+		layer_id: "i2"		
+		direction: BIDIRECT		
+	}
+}
+
+dis_ftune{
+	epochs:100
+	batches:1
+	batch_size:5
+	nn_train: GRAD_DESCEND
+	nn_cost: C_EN
+	initial_momentum:0.01
+	weight_norm:0.001
+}
+
+trn_dat{
+	part:1
+	data_type:TRAINING
+	dat_path:"InputFile.txt"
+	additional_file_path:"PredatorGameStates.txt"
+}	

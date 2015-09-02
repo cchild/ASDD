@@ -43,9 +43,9 @@ public class PredatorAgent extends Agent {
         this.role = role;
 
         USE_SAVED_PERCEP_ACTION_RECORD = false;
-        USE_REINFORCEMENT_POLICY = true;//false; 
-        USE_BELLMAN = false;//true;
-        USE_STATE_ACTION_LOTS = true;//false;
+        USE_REINFORCEMENT_POLICY = true;//false;//true 
+        USE_BELLMAN = false;//true; //false
+        USE_STATE_ACTION_LOTS = true;//false;//true;//false;
         USE_CLAUSE_VALUES = false;
         USE_CLAUSE_APRIORI_VALUES = false;
         USE_RULE_APRIORI_VALUES = false;

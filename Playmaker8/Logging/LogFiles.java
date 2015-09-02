@@ -3,6 +3,8 @@ package Logging;
 import java.io.*;
 import java.util.Scanner;
 
+import fzdeepnet.GlobalVar;
+
 /*
  * LogFiles.java
  *
@@ -16,13 +18,13 @@ import java.util.Scanner;
  */
 public class LogFiles extends java.lang.Object {
     
-   private  static final String FILE_NAME_1 = "c_JAVA Projects_playmaker8_LogFiles.txt";
-   private  static final String FILE_NAME_2 = "c_JAVA Projects_playmaker8_LogFilesResults.txt";
-   public  static final String FILE_NAME_3 = "c_JAVA Projects_playmaker8_RSList_MSDD.txt";
-   private  static final String FILE_NAME_4 = "c_JAVA Projects_playmaker8_LogFilesOutput.txt";
-   public  static final String FILE_NAME_5 = "c_JAVA Projects_playmaker8_Rules_MSDD.txt";
-   public  static final String FILE_NAME_6 = "c_JAVA Projects_playmaker8_StateTable.txt";   
-   public static String INPUT_FILE = "c_JAVA Projects_playmaker8_InputFile.txt";
+   private  static final String FILE_NAME_1 = GlobalVar.dat_dir + "LogFiles.txt";
+   private  static final String FILE_NAME_2 = GlobalVar.dat_dir + "LogFilesResults.txt";
+   public  static final String FILE_NAME_3 = GlobalVar.dat_dir + "RSList_MSDD.txt";
+   private  static final String FILE_NAME_4 = GlobalVar.dat_dir + "LogFilesOutput.txt";
+   public  static final String FILE_NAME_5 = GlobalVar.dat_dir + "Rules_MSDD.txt";
+   public  static final String FILE_NAME_6 = GlobalVar.dat_dir + "StateTable.txt";   
+   public static String INPUT_FILE = GlobalVar.dat_dir + "InputFile.txt";
    private  PrintWriter outfile1, outfile2, outfile3, outfile4, outfile5, outfile6;
    public static final boolean OUTPUT_LOG0 = true;
    public static final boolean OUTPUT_LOG1 = true;

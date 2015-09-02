@@ -28,8 +28,15 @@ public class PredatorTester
     }
     
     public static void main (String[] args) {
-    	// Set global variable
+    	// Set configuration file
     	GlobalVar.model_conf_file = args[0];
+    	// Set data 
+    	if(args.length<2) // If data dir is not in the arguments
+    		GlobalVar.dat_dir = System.getProperty("user.dir") + System.getProperty("file.separator");
+    	else
+    		GlobalVar.dat_dir = args[1]+System.getProperty("file.separator");
+    	
+    	System.out.println(GlobalVar.dat_dir);
     	// Here is old code
         PredatorEnvironment predatorEnvironment = new PredatorEnvironment();
         PredatorAgent pred = (PredatorAgent)predatorEnvironment.addPredatorAgent(0,0,PredatorAgent.PREDATOR);

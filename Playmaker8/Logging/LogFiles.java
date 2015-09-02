@@ -16,13 +16,13 @@ import java.util.Scanner;
  */
 public class LogFiles extends java.lang.Object {
     
-   private  static final String FILE_NAME_1 = "c:\\JAVA Projects\\playmaker8\\LogFiles.txt";
-   private  static final String FILE_NAME_2 = "c:\\JAVA Projects\\playmaker8\\LogFilesResults.txt";
-   public  static final String FILE_NAME_3 = "c:\\JAVA Projects\\playmaker8\\RSList_MSDD.txt";
-   private  static final String FILE_NAME_4 = "c:\\JAVA Projects\\playmaker8\\LogFilesOutput.txt";
-   public  static final String FILE_NAME_5 = "c:\\JAVA Projects\\playmaker8\\Rules_MSDD.txt";
-   public  static final String FILE_NAME_6 = "c:\\JAVA Projects\\playmaker8\\StateTable.txt";   
-   public static String INPUT_FILE = "c:\\JAVA Projects\\playmaker8\\InputFile.txt";
+   private  static final String FILE_NAME_1 = "c_JAVA Projects_playmaker8_LogFiles.txt";
+   private  static final String FILE_NAME_2 = "c_JAVA Projects_playmaker8_LogFilesResults.txt";
+   public  static final String FILE_NAME_3 = "c_JAVA Projects_playmaker8_RSList_MSDD.txt";
+   private  static final String FILE_NAME_4 = "c_JAVA Projects_playmaker8_LogFilesOutput.txt";
+   public  static final String FILE_NAME_5 = "c_JAVA Projects_playmaker8_Rules_MSDD.txt";
+   public  static final String FILE_NAME_6 = "c_JAVA Projects_playmaker8_StateTable.txt";   
+   public static String INPUT_FILE = "c_JAVA Projects_playmaker8_InputFile.txt";
    private  PrintWriter outfile1, outfile2, outfile3, outfile4, outfile5, outfile6;
    public static final boolean OUTPUT_LOG0 = true;
    public static final boolean OUTPUT_LOG1 = true;

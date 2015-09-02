@@ -104,18 +104,18 @@ public class PredatorAgent extends Agent {
         if (ClauseList.USE_WEIGHTING_OF_ONE)
             aprioriClaueseFileExt = "WOO";
         
-        PERCEP_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\percepRecord.sav";        
-        ACTION_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\actionRecord.sav";        
-        VALUE_MAP_APRIORI_FILENAME = "c:\\JAVA Projects\\playmaker8\\learnedAprioriValues.sav";
-        VALUE_MAP_MSDD_FILENAME= "c:\\JAVA Projects\\playmaker8\\learnedMSDDValues.sav";
-        VALUE_MAP_STATE_ACTION_FILENAME= "c:\\JAVA Projects\\playmaker8\\learnedStateActionValues.sav";
-        STATE_ACTION_VALUE_MAP_STATE_ACTION_FILENAME= "c:\\JAVA Projects\\playmaker8\\learnedStateActionStateActionValues.sav";
-        VALUE_MAP_CLAUSE_APRIORI_FILENAME = "c:\\JAVA Projects\\playmaker8\\learnedClauseAprioriValues.sav";
-        MSDD_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedMSDDRules.sav";        
-        APRIORI_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedAprioriRules.sav";        
-        STATE_ACTION_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\stateActionMap.sav";        
-        STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\stateActionMapBig.sav";
-        APRIORI_CLAUSES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\learnedAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
+        PERCEP_FILE_NAME = "c_JAVA Projects_playmaker8_percepRecord.sav";        
+        ACTION_FILE_NAME = "c_JAVA Projects_playmaker8_actionRecord.sav";        
+        VALUE_MAP_APRIORI_FILENAME = "c_JAVA Projects_playmaker8_learnedAprioriValues.sav";
+        VALUE_MAP_MSDD_FILENAME= "c_JAVA Projects_playmaker8_learnedMSDDValues.sav";
+        VALUE_MAP_STATE_ACTION_FILENAME= "c_JAVA Projects_playmaker8_learnedStateActionValues.sav";
+        STATE_ACTION_VALUE_MAP_STATE_ACTION_FILENAME= "c_JAVA Projects_playmaker8_learnedStateActionStateActionValues.sav";
+        VALUE_MAP_CLAUSE_APRIORI_FILENAME = "c_JAVA Projects_playmaker8_learnedClauseAprioriValues.sav";
+        MSDD_RULES_FILE_NAME = "c_JAVA Projects_playmaker8_learnedMSDDRules.sav";        
+        APRIORI_RULES_FILE_NAME = "c_JAVA Projects_playmaker8_learnedAprioriRules.sav";        
+        STATE_ACTION_FILE_NAME = "c_JAVA Projects_playmaker8_stateActionMap.sav";        
+        STATE_ACTION_LOTS_FILE_NAME= "c_JAVA Projects_playmaker8_stateActionMapBig.sav";
+        APRIORI_CLAUSES_FILE_NAME = "c_JAVA Projects_playmaker8_learnedAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
   
         initialise(new PredatorAgentPercep(), new PredatorAction());
        

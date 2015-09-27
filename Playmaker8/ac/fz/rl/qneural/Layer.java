@@ -1,4 +1,4 @@
-package S_NeuralSystem;
+package ac.fz.rl.qneural;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,21 +6,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import fzdeepnet.FzMath;
 import fzdeepnet.Setting;
-import Jama.Matrix;
+import ac.fz.matrix.*;
 
 public abstract class Layer {
 	int dimension;                                  // Dimension of the layer
 	int sNum;                                       // Number of samples in one batch
 	String lid;                                     // Layer id
 	Setting.Layer.UType type;                       // Type of units in this layer
-	Matrix state;                                   // State of the layer	 
-	Matrix input_message;                           // Input message to the layer
-	Matrix bias;                                    // Bias
+	FzMatrix state;                                   // State of the layer	 
+	FzMatrix input_message;                           // Input message to the layer
+	FzMatrix bias;                                    // Bias
 	HashSet<String> dLayers;                        // List of the layers this layer depends on
 	HashMap<String,Layer> layers;                   // Reference to all layers
-	HashMap<String,Matrix> weights;                 // Reference to all weights
+	HashMap<String,FzMatrix> weights;                 // Reference to all weights
 	HashMap<String,Boolean> directions;             // Reference to weight directions
 	public Layer(String lid, int dimension){
 		this.lid = lid;
@@ -36,12 +35,12 @@ public abstract class Layer {
 	public void setLayers(HashMap<String,Layer> layers){
 		this.layers = layers;
 	}	
-	public void setWeights(HashMap<String,Matrix> weights, HashMap<String,Boolean> directions){
+	public void setWeights(HashMap<String,FzMatrix> weights, HashMap<String,Boolean> directions){
 		this.weights = weights;
 		this.directions = directions;
 	}
 	
-	public void setBias(Matrix bias){
+	public void setBias(FzMatrix bias){
 		this.bias = bias;
 	}
 	public String getLid(){
@@ -56,25 +55,25 @@ public abstract class Layer {
 	public int getDimension(){
 		return dimension;
 	}
-	public void setState(Matrix state){		
+	public void setState(FzMatrix state){		
 		this.state = state.copy();
 	}
-	public Matrix getState(){
+	public FzMatrix getState(){
 		return state;
 	}
-	public Matrix getInputMessage(){ // return input message to caller (different from getMessage)
+	public FzMatrix getInputMessage(){ // return input message to caller (different from getMessage)
 		return input_message;
 	}
-	public Matrix copyState(){
+	public FzMatrix copyState(){
 		return this.state.copy();
 	}
-	private Matrix copyInputMessage(){
+	private FzMatrix copyInputMessage(){
 		return this.input_message.copy();
 	}	
-	protected void collectInpMessage(){ // get incoming message from all layers it depends on
+	protected void collectInpMessage() throws Exception{ // get incoming message from all layers it depends on
 		if(dLayers.size()>=1){
 			String wkey;
-			Matrix message;
+			FzMatrix message;
 			String dlid[] = new String[dLayers.size()];
 			dlid = dLayers.toArray(dlid);					
 			for(int i=0;i<dlid.length;i++){
@@ -83,7 +82,7 @@ public abstract class Layer {
 				//FzMath.printMatrixShape(weights.get(wkey));
 				//FzMath.printMatrixShape(layers.get(dlid[i]).getState());
 				if(directions.get(wkey)){
-					message =  weights.get(wkey).transpose().times(layers.get(dlid[i]).getState());	
+					message =  weights.get(wkey).T().times(layers.get(dlid[i]).getState());	
 				}else{
 					String iwkey = dlid[i]  + ":" + lid;
 					message = weights.get(iwkey).times(layers.get(dlid[i]).getState());
@@ -97,7 +96,7 @@ public abstract class Layer {
 			}
 			//bias.print(1, 1);
 			//FzMath.repmat(bias,1,input_message.getColumnDimension()).print(1, 1);
-			input_message.plusEquals(FzMath.repmat(bias,1,input_message.getColumnDimension()));
+			input_message.plusEquals(bias.repmat(1,input_message.getColumnDimension()));
 		}
 	}
 	
@@ -122,6 +121,6 @@ public abstract class Layer {
 	
 	abstract void computeOutMessage(); // Result after input messages have been aggregated
 	abstract void activate(); // Sampling or activate	
-	abstract Matrix grad();    // Compute the gradient of output function
+	abstract FzMatrix grad();    // Compute the gradient of output function
 	abstract Layer copyStateLayer(); // Copy the state to new layer
 }

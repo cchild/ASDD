@@ -1,4 +1,4 @@
-package S_NeuralSystem;
+package ac.fz.rl.qneural;
 /*
  * Son Tran
  * QNeuralNet: Neural Net Q-Learning
@@ -15,92 +15,46 @@ import java.util.Map;
 
 import fzdeepnet.FzMath;
 import fzdeepnet.Setting;
-import Jama.Matrix;
+import ac.fz.matrix.*;
 
 public class QNeuralNet extends QNeuralSystem implements NeuralNet{
-	HashMap<String,Matrix> DWs;
-	HashMap<String,Matrix> DBs;
+	HashMap<String,FzMatrix> DWs;
+	HashMap<String,FzMatrix> DBs;
 	
 	int depth;	
 		
-	
-	/* This constructor has not been used for the project*/
-	public QNeuralNet(Setting.Model mConf) throws Exception{		
-		super(mConf);
-		trnConf = mConf.getDisFtune();
-		// Get depth
-		depth = 0;
-		Iterator it = layers.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry pair = (Map.Entry)it.next();
-	        String key = pair.getKey().toString();	        
-	        if(key.charAt(0)=='h'){
-	        	depth++;
-	        }
-	    }
-	    
-		sfNum = layers.get("i1").getDimension();    // State layer
-		afNum = layers.get("i2").getDimension();    // Action layer
-		clayers = new HashMap<String,Layer>();
-	}
-	
-	/* This is used to interact with Chris' game */
-	public QNeuralNet(Setting.Model mConf,int stateDim,int actionDim) throws Exception{	
-		super(mConf);
-		sfNum = stateDim;
-		afNum = actionDim;					
-		this.mConf = mConf;
-		trnConf = mConf.getDisFtune();
-		List<Setting.Layer> layerConfs = mConf.getLayerList();
-		
+	public QNeuralNet() throws Exception{
+		if (!QNeuralParams.PARAMS_INIT)
+			throw new Exception("Model's parameters have not been initialized!! Check setting file!!");
 		// Initialize network's layers
-		buildNetwork(layerConfs);
-		
+		buildNetwork();
 		// Make dependencies
-		makeDependencies(layerConfs);
-		
-		// Get the network's depth
-		getDepth();
+		makeDependencies();
 		
 		// Initialize weights update for learning
-		DWs = new HashMap<String,Matrix>();
+		DWs = new HashMap<String,FzMatrix>();
 		Iterator it = weights.entrySet().iterator();
 		while(it.hasNext()){
-			Map.Entry<String,Matrix> pair = (Map.Entry)it.next();
+			Map.Entry<String,FzMatrix> pair = (Map.Entry)it.next();
 			String key = pair.getKey();
-			Matrix weight = pair.getValue();
-			DWs.put(key, new Matrix(weight.getRowDimension(),weight.getColumnDimension()));
+			FzMatrix weight = pair.getValue();
+			DWs.put(key, FzMatrix.create(weight.getRowDimension(),weight.getColumnDimension()));
 		}
 		// Initialize biases update for learning
-		DBs = new HashMap<String,Matrix>();
+		DBs = new HashMap<String,FzMatrix>();
 		it = biases.entrySet().iterator();
 		while(it.hasNext()){
-			Map.Entry<String, Matrix> pair = (Map.Entry)it.next();
+			Map.Entry<String, FzMatrix> pair = (Map.Entry)it.next();
 			String key = pair.getKey();
-			Matrix bias = pair.getValue();
+			FzMatrix bias = pair.getValue();
 			layers.get(key).setBias(bias);
-			DBs.put(key, new Matrix(bias.getRowDimension(),bias.getColumnDimension()));
+			DBs.put(key, FzMatrix.create(bias.getRowDimension(),bias.getColumnDimension()));
 		}
 		// Initialize an copy of model's layers
 		clayers = new HashMap<String,Layer>();
 	}
 	
 	
-	/*
-	 * Get depth
-	 */
-	private void getDepth(){
-		// Get depth
-		depth = 0;
-		Iterator it = layers.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry pair = (Map.Entry)it.next();
-			String key = pair.getKey().toString();	        
-			if(key.charAt(0)=='h'){
-				depth++;
-			}
-		}
-	}
 	/*
 	 *  Train QNeuralNet
 	 */
@@ -109,15 +63,15 @@ public class QNeuralNet extends QNeuralSystem implements NeuralNet{
 		//System.out.println("Train ...");
 		applyStateAction(currState,currAction);
 		this.forwardMessage();
-		Matrix y = getOutput();
+		FzMatrix y = getOutput();
 		// Copy states of the layer
 		copyLayers();
 		// Forward message for s' and argmax_a'Q(s',a)
 	    applyStateAction(nextState,bestAction);
 	    this.forwardMessage();
-	    Matrix yt = getOutput();
+	    FzMatrix yt = getOutput();
 	    
-	    double error = FzMath.sum(FzMath.pow(y.minus(rewards).minus(yt),2),true,true).get(0,0);
+	    double error = y.minus(rewards).minus(yt).pow(2).sum(1).sum(2).get(0,0);
 	    System.out.println("Error = " + error);
 	    //System.out.println("Back prop ...");
 	    back_prop(y.minus(yt.plus(rewards)));
@@ -129,7 +83,7 @@ public class QNeuralNet extends QNeuralSystem implements NeuralNet{
 	 * Get output given all inputs
 	 */
 	@Override
-	public Matrix getOutput(Matrix... inputs) {
+	public FzMatrix getOutput(FzMatrix... inputs) {
 		// TODO Auto-generated method stub		
 		int i=1;
 		while(layers.containsKey("i"+String.valueOf(i))){
@@ -142,7 +96,7 @@ public class QNeuralNet extends QNeuralSystem implements NeuralNet{
 		return layers.get("o").getState();
 		
 	}
-	protected Matrix getOutput(){
+	protected FzMatrix getOutput(){
 		return layers.get("o").getState();
 	}
 	
@@ -150,19 +104,23 @@ public class QNeuralNet extends QNeuralSystem implements NeuralNet{
 	 * Forward message
 	 */
 	public void forwardMessage(){		
-		for(int i=0;i<this.depth;i++){ // forward message over all hidden layer
-			Layer l = layers.get("h"+String.valueOf(i+1));
-			//debug/*					
-			//enddebug*/
-			l.collectInpMessage();
-			l.computeOutMessage();
-			//l.activate();			
+		try{
+			for(int i=0;i<this.depth;i++){ // forward message over all hidden layer
+				Layer l = layers.get("h"+String.valueOf(i+1));
+				//debug/*					
+				//enddebug*/
+				l.collectInpMessage();
+				l.computeOutMessage();
+				//l.activate();			
+			}
+			// Get the output		
+			layers.get("o").collectInpMessage();
+			layers.get("o").computeOutMessage();
+			//layers.get("o").activate();
+			//layers.get("o").getState().print(1, 5);
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		// Get the output		
-		layers.get("o").collectInpMessage();
-		layers.get("o").computeOutMessage();
-		//layers.get("o").activate();
-		//layers.get("o").getState().print(1, 5);
 	}
 	
 	/*
@@ -177,7 +135,7 @@ public class QNeuralNet extends QNeuralSystem implements NeuralNet{
 	 * The true update will be multiplied with actual error in top layer in finalize_back_prop
 	 */
 		
-	public void back_prop(Matrix err_as){			
+	public void back_prop(FzMatrix err_as){			
 		// Back_prop
 		update("o",err_as,err_as.copy());		
 	}
@@ -185,7 +143,7 @@ public class QNeuralNet extends QNeuralSystem implements NeuralNet{
 	/*
 	 * Recursive function to update parameters
 	 */
-	private void update(String lid,Matrix err_as,Matrix err_axsx){
+	private void update(String lid,FzMatrix err_as,FzMatrix err_axsx){
 		if(layers.get(lid).getType() == Setting.Layer.UType.INPUT){
 			return;
 		}
@@ -194,37 +152,37 @@ public class QNeuralNet extends QNeuralSystem implements NeuralNet{
 		HashSet<String> dlayerIdx = layer.getDependencies();
 		for(String s:dlayerIdx){
 			String key = lid+":"+s;
-			Matrix DW = DWs.get(key);
-			Matrix bp_err_as;
-			Matrix bp_err_axsx;	
+			FzMatrix DW = DWs.get(key);
+			FzMatrix bp_err_as;
+			FzMatrix bp_err_axsx;	
 			int sNum = layers.get(s).getState().getColumnDimension();
-			Matrix tmp;
+			FzMatrix tmp;
 			err_as.arrayTimesEquals(layer.grad());
 			err_axsx = err_axsx.arrayTimesEquals(clayer.grad());
 			if(directions.get(key)){				
 			    // update the weight: lix.dimension x s.dimension							
-				tmp = clayers.get(s).getState().times(err_as.transpose());
-				tmp = tmp.minus(layers.get(s).getState().times(err_axsx.transpose())).times(1/sNum);
+				tmp = clayers.get(s).getState().times(err_as.T());
+				tmp = tmp.minus(layers.get(s).getState().times(err_axsx.T())).times(1/sNum);
 				
-				tmp.minusEquals(weights.get(key).times(trnConf.getWeightNorm()));							
+				tmp.minusEquals(weights.get(key).times(QNeuralParams.WEIGHT_DECAY));							
 				// back prop error
 				bp_err_as = weights.get(key).times(err_as);
 				bp_err_axsx = weights.get(key).times(err_axsx);
 			}else{
-			    // update the weight: s.dimension x lix.dimension - normally not happen in Neural Nets				
-				tmp = err_as.times(clayers.get(s).getState().transpose());
+			    // update the weight: s.dimension x lix.dimension - normally not happen in Neural Nets
+				// If this is used, need to check
+				tmp = err_as.times(clayers.get(s).getState().T());
 				tmp = tmp.minus(err_axsx.times(layers.get(s).getState().trace())).times(1/sNum);
-				tmp.minusEquals(weights.get(key).times(trnConf.getWeightNorm()));				
+				tmp.minusEquals(weights.get(key).times(QNeuralParams.WEIGHT_DECAY));				
 				// back prop error
-				bp_err_as = weights.get(key).transpose().times(err_as);
-				bp_err_axsx = weights.get(key).transpose().times(err_axsx);
+				bp_err_as = weights.get(key).T().times(err_as);
+				bp_err_axsx = weights.get(key).T().times(err_axsx);
 			}			
 			// TODO
-			DWs.put(key,DW.times(trnConf.getInitialMomentum()).plus(tmp.times(trnConf.getLearningRate())));
-			DBs.put(lid, FzMath.sum(err_as.times(trnConf.getLearningRate()),false,true).times(1/sNum));
+			DWs.put(key,DW.times(QNeuralParams.INIT_MOMENTUM).plus(tmp.times(QNeuralParams.LEARNING_RATE)));
+			DBs.put(lid, err_as.times(QNeuralParams.LEARNING_RATE).sum(2).times(1/sNum));
 			update(s,bp_err_as,bp_err_axsx);
-		}
-				
+		}				
 	}
 	
 	/*
@@ -245,7 +203,7 @@ public class QNeuralNet extends QNeuralSystem implements NeuralNet{
 	}
 	
 	
-	public void applyStateAction(Matrix s,Matrix a){
+	public void applyStateAction(FzMatrix s,FzMatrix a){
 		layers.get("i1").setState(s);
 		layers.get("i2").setState(a);
 	}

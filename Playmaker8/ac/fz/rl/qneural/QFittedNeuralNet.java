@@ -1,4 +1,4 @@
-package S_NeuralSystem;
+package ac.fz.rl.qneural;
 
 import java.util.HashSet;
 
@@ -7,10 +7,11 @@ import fzdeepnet.FzMath;
 import fzdeepnet.Setting;
 import fzdeepnet.Setting.Model;
 
-public class QFittedNeuralNet extends QNeuralNet{    
-	public QFittedNeuralNet(Model mConf, int stateDim, int actionDim)
+public class QFittedNeuralNet{ 
+	/*extends QNeuralNet{    
+	public QFittedNeuralNet()
 			throws Exception {
-		super(mConf, stateDim, actionDim);
+		super();
 				
 	}
 
@@ -75,5 +76,6 @@ public class QFittedNeuralNet extends QNeuralNet{
 			DBs.put(lid, FzMath.sum(err_as.times(trnConf.getLearningRate()),false,true).times(1/sNum));
 			update(s,bp_err_as);
 		}			
-	}	
+	}
+	*/	
 }

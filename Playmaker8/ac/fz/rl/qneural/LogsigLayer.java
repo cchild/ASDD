@@ -1,7 +1,6 @@
-package S_NeuralSystem;
+package ac.fz.rl.qneural;
 
-import Jama.Matrix;
-import fzdeepnet.FzMath;
+import ac.fz.matrix.FzMatrix;
 
 public class LogsigLayer extends Layer {
 	
@@ -10,17 +9,21 @@ public class LogsigLayer extends Layer {
 	}	
 	@Override
 	public void computeOutMessage(){
-		state = FzMath.logistic(input_message);
+		state = input_message.logistic();
 	}
 	@Override
 	public void activate(){
 		
 	}
 	
-	public Matrix grad(){
-		Matrix ones = new Matrix(state.getRowDimension(),state.getColumnDimension(),1);
-		//grad = o(1-o)
-		return state.arrayTimes(ones.minus(state));
+	public FzMatrix grad(){
+		try{
+			FzMatrix ones = FzMatrix.create(state.getRowDimension(),state.getColumnDimension(),1);
+			//grad = o(1-o)
+			return state.arrayTimes(ones.minus(state));
+		}catch(Exception e){
+			return null;
+		}
 	}
 	@Override
 	public Layer copyStateLayer() {		

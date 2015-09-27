@@ -1,4 +1,4 @@
-package S_NeuralSystem;
+package ac.fz.rl.qneural;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,7 +12,7 @@ import java.util.Map;
 import fzdeepnet.FzMath;
 import fzdeepnet.Setting;
 import Jama.Matrix;
-import S_NeuralSystem.Layer;
+import ac.fz.rl.qneural.Layer;
 
 public interface NeuralNet{		
 	abstract void back_prop();

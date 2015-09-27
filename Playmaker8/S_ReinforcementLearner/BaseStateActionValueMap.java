@@ -130,23 +130,16 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
     	try{
 	    	String s_state = percep.translation();    	
 	    	String s_action = action.translation();
-	    	//System.out.println(s_state);
-	    	//System.out.println(s_action);
+	    	
 	    	Matrix mState = state2Matrix(percep);
 	    	Matrix mAction = action2Matrix(action);
-	    	//mState.print(1, 1);
-	    	//mAction.print(1, 1);
+	    	
 	    	Matrix op = qNS.getOutput(mState,mAction);
 	    	if(op.getRowDimension()!=1 || op.getColumnDimension()!=1){
 	    		throw new Exception("Output not correct");
 	    	}
 	    	double sa_val = op.get(0, 0);    	    
-	    	//System.out.println(sa_val);    	
-			
 	    	
-	    	//java.util.Scanner scanner = new java.util.Scanner(System.in);	
-			//char c = scanner.next().charAt(0);
-			
 			return new StateActionValue(percep,action,sa_val);
     	}catch(Exception e){
     		e.printStackTrace();

@@ -1,4 +1,4 @@
-package S_NeuralSystem;
+package ac.fz.rl.qneural;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,14 +14,16 @@ import fzdeepnet.FzMath;
 import fzdeepnet.Setting;
 
 //Q-learning RBM (Sallans - JMLR 2004)
-public class QRBM extends QNeuralSystem{
+public class QRBM {
+	/*extends QNeuralSystem{
+
 			HashMap<String,Matrix> DWs;
 			HashMap<String,Matrix> DBs;
 		    int depth =1;
 		    int sNum;
 			double reward;
 									
-			/* This is used to interact with Chris' game */
+			// This is used to interact with Chris' game 
 			public QRBM(Setting.Model mConf,int stateDim,int actionDim) throws Exception{	
 				super(mConf);
 				sfNum = stateDim;
@@ -63,9 +65,8 @@ public class QRBM extends QNeuralSystem{
 			}
 						
 			
-			/*
-			 * Get depth
-			 */
+			
+			 // Get depth
 			private void getDepth(){
 				// Get depth
 				depth = 0;
@@ -78,13 +79,9 @@ public class QRBM extends QNeuralSystem{
 					}
 				}
 			}
-			/*
-			 * Copy Layers
-			 */
 			
-			/*
-			 *  Train QNeuralNet
-			 */
+			 //  Train QRBM
+			 
 			public void train(){	
 				try{
 					// Forward message for s,a & compute initial backprop update for this pair
@@ -147,9 +144,8 @@ public class QRBM extends QNeuralSystem{
 				
 			}
 			
-			/*
-			 * Get output given all inputs
-			 */
+			
+			//Get output given all inputs
 			@Override
 			public Matrix getOutput(Matrix... inputs) {
 				// TODO Auto-generated method stub		
@@ -166,23 +162,18 @@ public class QRBM extends QNeuralSystem{
 				
 			}
 			
-			/*
-			 * Forward message
-			 */
+			 // Forward message
 			public void forwardMessage(){		
 				for(int i=0;i<this.depth;i++){ // forward message over all hidden layer
 					Layer l = layers.get("h"+String.valueOf(i+1));
-					//debug/*					
-					//enddebug*/
+					
 					l.collectInpMessage();
 					l.computeOutMessage();
 					//l.activate();			
 				}
 			}
 			
-			/*
-			 * compute free energy in log-scale
-			 */
+			// compute free energy in log-scale
 			protected Matrix freeEnergy(){
 				Matrix free_en  = null;
 				try{
@@ -206,9 +197,8 @@ public class QRBM extends QNeuralSystem{
 			}
 			
 			
-			/*
-			 * Load mapping between states and neural input/output values
-			 */	
+			
+			 // Load mapping between states and neural input/output values	
 			private HashMap loadValueMap(String filename) throws IOException{
 				BufferedReader rder = new BufferedReader(new FileReader(filename));
 				String line;
@@ -231,21 +221,20 @@ public class QRBM extends QNeuralSystem{
 					map.put("i2:f"+strs[0]+ ":" + strs[i].substring(0,inx), Integer.valueOf(strs[i].substring(inx+1,strs[i].length())));								
 				}	
 				
-				/* debug		
-				Iterator it = map.entrySet().iterator();
-			    while (it.hasNext()) {
-			        Map.Entry pair = (Map.Entry)it.next();
-			        System.out.println(pair.getKey() + " = " + pair.getValue());
-			        it.remove(); // avoids a ConcurrentModificationException
-			    }
-				 java.util.Scanner scanner = new java.util.Scanner(System.in);		
-				char c = scanner.next().charAt(0);		
-				end debug */
+				// debug		
+				//Iterator it = map.entrySet().iterator();
+			    //while (it.hasNext()) {
+			    //    Map.Entry pair = (Map.Entry)it.next();
+			    //    System.out.println(pair.getKey() + " = " + pair.getValue());
+			    //    it.remove(); // avoids a ConcurrentModificationException
+			    //}
+				// java.util.Scanner scanner = new java.util.Scanner(System.in);		
+				//char c = scanner.next().charAt(0);		
+				//end debug 
 				return map;
 			}
-			/*
-			 * Print the QRBM
-			 */
+			
+			// Print the QRBM
 			public void print(){
 				System.out.println("Print QRBM .... ");
 				Iterator it = layers.entrySet().iterator();
@@ -254,5 +243,6 @@ public class QRBM extends QNeuralSystem{
 					pair.getValue().print();
 				}
 			}
+			*/
 
 }

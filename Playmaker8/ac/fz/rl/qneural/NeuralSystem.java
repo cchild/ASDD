@@ -1,43 +1,47 @@
-package S_NeuralSystem;
+package ac.fz.rl.qneural;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import Jama.Matrix;
-import fzdeepnet.FzMath;
+import com.google.protobuf.TextFormat;
+
+import ac.fz.matrix.*;
+import fzdeepnet.GlobalVar;
 import fzdeepnet.Setting;
 
 
 public abstract class NeuralSystem {
-	Setting.Model mConf;
-	Setting.Trainer trnConf;
+	//Setting.Model mConf;
+	//Setting.Trainer trnConf;
 	HashMap<String,Layer> layers;
-	HashMap<String,Matrix> weights;
-	HashMap<String,Matrix> biases;
+	HashMap<String,FzMatrix> weights;
+	HashMap<String,FzMatrix> biases;
 	HashMap<String,Boolean> directions;	
 	BufferedReader episodeR;
 	//HashMap valueMap;	
 	
 	public NeuralSystem(){};
 	
-	public NeuralSystem(Setting.Model mConf) throws Exception{
-		this.mConf = mConf;
-	}
+	//public NeuralSystem(Setting.Model mConf) throws Exception{
+	//	FzMatrix.type = FzMatrix.MatrixType.valueOf(QNeuralParams.MTX_TYPE);
+	//	this.mConf = mConf;
+	//}
 	
-	public NeuralSystem(Setting.Model mConf, boolean autobuild) throws Exception{
-		this.mConf  = mConf;
+	public NeuralSystem(boolean autobuild) throws Exception{
 		if(autobuild){
-		List<Setting.Layer> layerConfs = mConf.getLayerList();
+			FzMatrix.type = FzMatrix.MatrixType.valueOf(QNeuralParams.MTX_TYPE);
 		layers = new HashMap<String,Layer>();
-		weights = new HashMap<String,Matrix>();
-		biases = new HashMap<String,Matrix>();
+		weights = new HashMap<String,FzMatrix>();
+		biases = new HashMap<String,FzMatrix>();
 		directions = new HashMap<String,Boolean>();
 		
 		// Initialize all layers
-				for(Setting.Layer lconf:layerConfs){
+				for(Setting.Layer lconf:QNeuralParams.LAYERS){
 					Layer l = null;				
 					if(lconf.getUnit()==Setting.Layer.Unit.BINOMIAL){
 						l = new BinomialLayer(lconf.getLid(),lconf.getDimensions());						
@@ -49,7 +53,7 @@ public abstract class NeuralSystem {
 						throw new Exception("Layer's type is not supported");
 					}
 					// Create bias & assign to layer
-					Matrix bias = new Matrix(lconf.getDimensions(),1);
+					FzMatrix bias = FzMatrix.create(lconf.getDimensions(),1);
 					biases.put(lconf.getLid(), bias);
 					l.setBias(bias);
 					// Add layer to the list
@@ -63,11 +67,11 @@ public abstract class NeuralSystem {
 			    }				  
 				 end debug*/
 				// Initialize an empty set of weights
-				weights = new HashMap<String,Matrix>();
+				weights = new HashMap<String,FzMatrix>();
 				directions = new HashMap<String,Boolean>();
 							
 				// Setting dependencies among layers
-				for(Setting.Layer lconf:layerConfs){					
+				for(Setting.Layer lconf:QNeuralParams.LAYERS){					
 					Layer l = layers.get(lconf.getLid());
 					for(Setting.Dependence dConf:lconf.getDependList()){
 						String dlayerID = dConf.getLayerId();
@@ -86,7 +90,7 @@ public abstract class NeuralSystem {
 							//System.out.println(weights.containsKey(ikey));
 							//System.out.println(dConf.getDirection());
 							if(dConf.getDirection() == Setting.Dependence.Direction.FORWARD || !weights.containsKey(ikey)){
-								weights.put(key, FzMath.initializeMatrix(m,n));
+								weights.put(key, FzMatrix.rand(m,n));
 								//System.out.println(weights.get(key).getRowDimension() + " x " + weights.get(key).getColumnDimension());
 								directions.put(key, true);
 							}else{ // It is bidirectional connection and the weight has been defined in "ikey" 								
@@ -116,39 +120,38 @@ public abstract class NeuralSystem {
 	}
 	*/
 	/* This is for pump-priming project */
-	public static NeuralSystem initializeModel(Setting.Model mConf,int stateDim,int actionDim) throws Exception{
-		String modelName = mConf.getModelName();
-		System.out.println(modelName);
-		if(mConf.getModelName().equals("Q Neural Net")){
+	public static NeuralSystem initializeModel() throws Exception{
+		if(QNeuralParams.MODEL_NAME.equals("Q Neural Net")){
 			System.out.println("Creating Q Neural Net model ......");
-			return new QNeuralNet(mConf,stateDim,actionDim);
-		}else if(modelName.equals("Q Fitted Neural Net")){
+			return new QNeuralNet();
+		/*
+		}else if(QNeuralParams.MODEL_NAME.equals("Q Fitted Neural Net")){
 			System.out.println("Creating Q fitted Neural Net model ......");
-			return new QFittedNeuralNet(mConf,stateDim,actionDim);
-		}else if(modelName.equals("Q RBM")){
+			return new QFittedNeuralNet();
+		}else if(QNeuralParams.MODEL_NAME.equals("Q RBM")){
 			System.out.println("Creating Q RBM model ......");
-			return new QRBM(mConf,stateDim,actionDim);
-		}else if(modelName.equals("Q Fitted RBM")){
+			return new QRBM();
+		}else if(QNeuralParams.MODEL_NAME.equals("Q Fitted RBM")){
 			System.out.println("Creating Q fitted RBM model ...");
-			return new QFittedRBM(mConf,stateDim,actionDim);
-		}else if(modelName.equals("QMixtureRBM")){
+			return new QFittedRBM();
+		}else if(QNeuralParams.MODEL_NAME.equals("QMixtureRBM")){
 			// Not implemented
-			//return new QMixtureRBM(mConf,stateDim,actionDim);
-		}else if(modelName.equals("QFittedMixtureRBM")){
+			//return new QMixtureRBM(NeuralSystemParams.STATE_DIM,NeuralSystemParams.ACTION_DIM);
+		}else if(QNeuralParams.MODEL_NAME.equals("QFittedMixtureRBM")){
 			// Not implemented
 			//return new QFittedMixtureRBM(mConf,stateDim,actionDim);	
+		*/
 		}else{
 			throw new Exception("No model has been defined");
 		}
-		return null;
 	}
     
 	
 	
 	// Initialize model
-	protected abstract void buildNetwork(List<Setting.Layer> layerConfs) throws Exception;
+	protected abstract void buildNetwork() throws Exception;
 	// Create dependencies
-	protected abstract void makeDependencies(List<Setting.Layer> layerConfs);
+	protected abstract void makeDependencies();
 	 // Train the model
 	public abstract void train();
 	
@@ -156,5 +159,5 @@ public abstract class NeuralSystem {
 	public abstract void print();
 	
 	// Get output from multiple-input layers in matrices format
-	public abstract Matrix getOutput(Matrix ... inputs);		
+	public abstract FzMatrix getOutput(FzMatrix ... inputs);		
 }

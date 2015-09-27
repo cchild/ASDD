@@ -1,4 +1,4 @@
-package S_NeuralSystem;
+package ac.fz.rl.qneural;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,17 +14,16 @@ import fzdeepnet.FzMath;
 import fzdeepnet.Setting;
 
 //Q-learning RBM (Sallans - JMLR 2004)
-public class QFittedRBM extends QRBM{
+public class QFittedRBM{ 
+		/*extends QRBM{
 										
-			/* This is used to interact with Chris' game */
+			// This is used to interact with Chris' game 
 			public QFittedRBM(Setting.Model mConf,int stateDim,int actionDim) throws Exception{	
 				super(mConf,stateDim,actionDim);
 			}
 						
 			
-			/*
-			 *  Train QFittedRBM
-			 */
+			//  Train QFittedRBM
 			public void train(){	
 				try{
 					// Forward message for s,a & compute initial backprop update for this pair
@@ -80,5 +79,5 @@ public class QFittedRBM extends QRBM{
 				
 				
 			}
-			
+			*/
 }

@@ -1,6 +1,6 @@
-package S_NeuralSystem;
+package ac.fz.rl.qneural;
 
-import Jama.Matrix;
+import ac.fz.matrix.*;
 
 public class SoftmaxLayer extends Layer {
 	
@@ -19,7 +19,7 @@ public class SoftmaxLayer extends Layer {
 	}
 
 	@Override
-	Matrix grad() {
+	FzMatrix grad() {
 		// TODO Auto-generated method stub
 		return null;
 	}

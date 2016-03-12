@@ -21,11 +21,12 @@ import EnvModel.PredatorModel.*;
 import EnvAgent.*;
 import Logging.*;
 import StateGenerator.*;
-import fzdeepnet.GlobalVar;
 import ReinforcementLearner.*;
+import S_ReinforcementLearner.PREDATORParams;
 import EnvAgent.RuleLearner.*;
 import EnvAgent.ClauseLearner.*;
 import EnvAgent.StateActionMap.*;
+
 
 import java.io.*;
 
@@ -105,18 +106,18 @@ public class PredatorAgent extends Agent {
         if (ClauseList.USE_WEIGHTING_OF_ONE)
             aprioriClaueseFileExt = "WOO";
         
-        PERCEP_FILE_NAME = GlobalVar.dat_dir + "percepRecord.sav";        
-        ACTION_FILE_NAME = GlobalVar.dat_dir + "actionRecord.sav";        
-        VALUE_MAP_APRIORI_FILENAME = GlobalVar.dat_dir + "learnedAprioriValues.sav";
-        VALUE_MAP_MSDD_FILENAME= GlobalVar.dat_dir + "learnedMSDDValues.sav";
-        VALUE_MAP_STATE_ACTION_FILENAME= GlobalVar.dat_dir + "learnedStateActionValues.sav";
-        STATE_ACTION_VALUE_MAP_STATE_ACTION_FILENAME= GlobalVar.dat_dir + "learnedStateActionStateActionValues.sav";
-        VALUE_MAP_CLAUSE_APRIORI_FILENAME = GlobalVar.dat_dir + "learnedClauseAprioriValues.sav";
-        MSDD_RULES_FILE_NAME = GlobalVar.dat_dir + "learnedMSDDRules.sav";        
-        APRIORI_RULES_FILE_NAME = GlobalVar.dat_dir + "learnedAprioriRules.sav";        
-        STATE_ACTION_FILE_NAME = GlobalVar.dat_dir + "stateActionMap.sav";        
-        STATE_ACTION_LOTS_FILE_NAME= GlobalVar.dat_dir + "stateActionMapBig.sav";
-        APRIORI_CLAUSES_FILE_NAME = GlobalVar.dat_dir + "learnedAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
+        PERCEP_FILE_NAME = PREDATORParams.DAT_DIR + "percepRecord.sav";        
+        ACTION_FILE_NAME = PREDATORParams.DAT_DIR + "actionRecord.sav";        
+        VALUE_MAP_APRIORI_FILENAME = PREDATORParams.DAT_DIR + "learnedAprioriValues.sav";
+        VALUE_MAP_MSDD_FILENAME= PREDATORParams.DAT_DIR + "learnedMSDDValues.sav";
+        VALUE_MAP_STATE_ACTION_FILENAME= PREDATORParams.DAT_DIR + "learnedStateActionValues.sav";
+        STATE_ACTION_VALUE_MAP_STATE_ACTION_FILENAME= PREDATORParams.DAT_DIR + "learnedStateActionStateActionValues.sav";
+        VALUE_MAP_CLAUSE_APRIORI_FILENAME = PREDATORParams.DAT_DIR + "learnedClauseAprioriValues.sav";
+        MSDD_RULES_FILE_NAME = PREDATORParams.DAT_DIR + "learnedMSDDRules.sav";        
+        APRIORI_RULES_FILE_NAME = PREDATORParams.DAT_DIR + "learnedAprioriRules.sav";        
+        STATE_ACTION_FILE_NAME = PREDATORParams.DAT_DIR + "stateActionMap.sav";        
+        STATE_ACTION_LOTS_FILE_NAME= PREDATORParams.DAT_DIR + "stateActionMapBig.sav";
+        APRIORI_CLAUSES_FILE_NAME = PREDATORParams.DAT_DIR + "learnedAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
   
         initialise(new PredatorAgentPercep(), new PredatorAction());
        

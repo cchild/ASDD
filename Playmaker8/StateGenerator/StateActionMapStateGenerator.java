@@ -34,20 +34,14 @@ public class StateActionMapStateGenerator extends StateGenerator {
     }
     
     public ArrayList generateNextStates(  Percep percep,   Action action) {
-       
-        
-        
-        ArrayList statesAndCounts = stateActionMap.getStatesAndCounts(percep, action);
-        
+        ArrayList statesAndCounts = stateActionMap.getStatesAndCounts(percep, action); 
         if (statesAndCounts == null) {
             if (outputLog) {
                 LogFiles logfile = LogFiles.getInstance();
                 logfile.print("\nWARNING: generate next states produced a NULL result",1);
-                
             }
             return null;
         }
-        
         ArrayList statesAndProbs = convertStatesAndCountsToProbabilities(statesAndCounts);
         
         if (outputLog) {

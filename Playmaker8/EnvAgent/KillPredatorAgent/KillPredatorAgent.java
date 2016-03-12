@@ -22,6 +22,7 @@ import EnvAgent.*;
 import Logging.*;
 import StateGenerator.*;
 import ReinforcementLearner.*;
+import S_ReinforcementLearner.PREDATORParams;
 import EnvAgent.RuleLearner.*;
 import EnvAgent.ClauseLearner.*;
 import EnvAgent.StateActionMap.*;
@@ -104,18 +105,18 @@ public class KillPredatorAgent extends Agent {
         if (ClauseList.USE_WEIGHTING_OF_ONE)
             aprioriClaueseFileExt = "WOO";
         
-        PERCEP_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killPercepRecord.sav";        
-        ACTION_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killActionRecord.sav";        
-        VALUE_MAP_APRIORI_FILENAME = "c:\\JAVA Projects\\playmaker8\\killLearnedAprioriValues.sav";
-        VALUE_MAP_MSDD_FILENAME= "c:\\JAVA Projects\\playmaker8\\killLearnedMSDDValues.sav";
-        VALUE_MAP_STATE_ACTION_FILENAME= "c:\\JAVA Projects\\playmaker8\\killLearnedStateActionValues.sav";
-        STATE_ACTION_VALUE_MAP_STATE_ACTION_FILENAME= "c:\\JAVA Projects\\playmaker8\\killLearnedStateActionStateActionValues.sav";
-        VALUE_MAP_CLAUSE_APRIORI_FILENAME = "c:\\JAVA Projects\\playmaker8\\killLearnedClauseAprioriValues.sav";
-        MSDD_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killLearnedMSDDRules.sav";        
-        APRIORI_RULES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killLearnedAprioriRules.sav";        
-        STATE_ACTION_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killStateActionMap.sav";        
-        STATE_ACTION_LOTS_FILE_NAME= "c:\\JAVA Projects\\playmaker8\\killStateActionMap.sav";
-        APRIORI_CLAUSES_FILE_NAME = "c:\\JAVA Projects\\playmaker8\\killLearnedAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
+        PERCEP_FILE_NAME = PREDATORParams.DAT_DIR + "killPercepRecord.sav";        
+        ACTION_FILE_NAME = PREDATORParams.DAT_DIR + "killActionRecord.sav";        
+        VALUE_MAP_APRIORI_FILENAME = PREDATORParams.DAT_DIR + "killLearnedAprioriValues.sav";
+        VALUE_MAP_MSDD_FILENAME= PREDATORParams.DAT_DIR + "killLearnedMSDDValues.sav";
+        VALUE_MAP_STATE_ACTION_FILENAME= PREDATORParams.DAT_DIR + "killLearnedStateActionValues.sav";
+        STATE_ACTION_VALUE_MAP_STATE_ACTION_FILENAME= PREDATORParams.DAT_DIR + "killLearnedStateActionStateActionValues.sav";
+        VALUE_MAP_CLAUSE_APRIORI_FILENAME = PREDATORParams.DAT_DIR + "killLearnedClauseAprioriValues.sav";
+        MSDD_RULES_FILE_NAME = PREDATORParams.DAT_DIR + "killLearnedMSDDRules.sav";        
+        APRIORI_RULES_FILE_NAME = PREDATORParams.DAT_DIR + "killLearnedAprioriRules.sav";        
+        STATE_ACTION_FILE_NAME = PREDATORParams.DAT_DIR + "killStateActionMap.sav";        
+        STATE_ACTION_LOTS_FILE_NAME= PREDATORParams.DAT_DIR + "killStateActionMap.sav";
+        APRIORI_CLAUSES_FILE_NAME = PREDATORParams.DAT_DIR + "killLearnedAprioriClauses"  +  aprioriClaueseFileExt + ".sav" ;
   
         initialise(new KillPredatorAgentPercep(), new KillPredatorAction());
        

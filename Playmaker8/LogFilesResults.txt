@@ -1,6 +1,6 @@
 
 
-/STEPS Ontop: 6195out of 100000
+/STEPS Ontop: 6151out of 100000
 
-Total reward: 6195.0
+Total reward: 6151.0
 

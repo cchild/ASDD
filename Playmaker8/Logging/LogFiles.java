@@ -3,7 +3,7 @@ package Logging;
 import java.io.*;
 import java.util.Scanner;
 
-import fzdeepnet.GlobalVar;
+import ac.fz.rl.qneural.QNeuralParams;
 
 /*
  * LogFiles.java
@@ -18,13 +18,13 @@ import fzdeepnet.GlobalVar;
  */
 public class LogFiles extends java.lang.Object {
     
-   private  static final String FILE_NAME_1 = GlobalVar.dat_dir + "LogFiles.txt";
-   private  static final String FILE_NAME_2 = GlobalVar.dat_dir + "LogFilesResults.txt";
-   public  static final String FILE_NAME_3 = GlobalVar.dat_dir + "RSList_MSDD.txt";
-   private  static final String FILE_NAME_4 = GlobalVar.dat_dir + "LogFilesOutput.txt";
-   public  static final String FILE_NAME_5 = GlobalVar.dat_dir + "Rules_MSDD.txt";
-   public  static final String FILE_NAME_6 = GlobalVar.dat_dir + "StateTable.txt";   
-   public static String INPUT_FILE = GlobalVar.dat_dir + "InputFile.txt";
+   private  static final String FILE_NAME_1 = QNeuralParams.DAT_DIR + "LogFiles.txt";
+   private  static final String FILE_NAME_2 = QNeuralParams.DAT_DIR + "LogFilesResults.txt";
+   public  static final String FILE_NAME_3 = QNeuralParams.DAT_DIR + "RSList_MSDD.txt";
+   private  static final String FILE_NAME_4 = QNeuralParams.DAT_DIR + "LogFilesOutput.txt";
+   public  static final String FILE_NAME_5 = QNeuralParams.DAT_DIR + "Rules_MSDD.txt";
+   public  static final String FILE_NAME_6 = QNeuralParams.DAT_DIR + "StateTable.txt";   
+   public static String INPUT_FILE = QNeuralParams.DAT_DIR + "InputFile.txt";
    private  PrintWriter outfile1, outfile2, outfile3, outfile4, outfile5, outfile6;
    public static final boolean OUTPUT_LOG0 = true;
    public static final boolean OUTPUT_LOG1 = true;

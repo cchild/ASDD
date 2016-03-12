@@ -13,19 +13,18 @@ import java.io.*;
 
 import com.google.protobuf.TextFormat;
 
-import fzdeepnet.GlobalVar;
 import fzdeepnet.Setting;
 import Jama.Matrix;
 import Logging.*;
 import ReinforcementLearner.StateActionValue;
-import S_NeuralSystem.NeuralSystem;
-import S_NeuralSystem.QNeuralSystem;
+import ac.fz.rl.qneural.*;
 import ReinforcementLearner.StateActionValueMap;
 /**
  *
  * @author  Son Tran
  * @version 
  */
+/*QUESTION: HOW TO DECIDE ACTION*/
 public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActionValueMap implements Serializable {
     
 	 ArrayList stateActionValues;                    // This is not inherited from super class
@@ -33,9 +32,7 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
      QNeuralSystem qNS;    
 	 HashMap<String,Integer> actionInputMap;
 	 HashMap<String,Action> allActions;
-	 int stateDim;
-	 int actionDim;
-	 Setting.Trainer trnConf;
+	 //Setting.Trainer trnConf;
 	/** Creates new StateValueMap */
 	public BaseStateActionValueMap() {
 		super();
@@ -44,18 +41,10 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
 			//java.util.Scanner scanner = new java.util.Scanner(System.in);	
 			//char c = scanner.next().charAt(0);	    	
 		    stateActionValues = new ArrayList();
-		    FileInputStream fis = new FileInputStream(GlobalVar.model_conf_file);
-		    java.io.InputStreamReader reader = new java.io.InputStreamReader(fis);
-		    Setting.Model.Builder modelBuilder= Setting.Model.newBuilder();   
-			TextFormat.merge(reader, modelBuilder);
-			Setting.Model model = modelBuilder.build();
-			trnConf  = model.getDisFtune();
-			// Get all possible actions, create action-input mapping
-			// get state dimension
-			getAgentInfo(model.getAppName());			
-			
+		    QNeuralParams.loadParamsFromConfFile();
+			getAgentInfo(QNeuralParams.APP_NAME);			
 			// initializing model ?? stateDim is empty
-			qNS= (QNeuralSystem)NeuralSystem.initializeModel(model,stateDim,actionInputMap.size());	  
+			qNS= (QNeuralSystem)NeuralSystem.initializeModel();	  
 			qNS.print();
 						
 		}catch(Exception e){
@@ -74,10 +63,12 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
 		allActions = new HashMap<String,Action>();
 		if(appName.equals("Predator")){
 			a = new PredatorAction();
-			stateDim = 5;
+			QNeuralParams.STATE_DIM = 5*3;
+			QNeuralParams.STATE_RANGES = new int[]{3,3,3,3,3};
 		}else if(appName.equals("Paint")){
 			a = new PaintAction();
-			stateDim = 5; // Need to check *****************
+			QNeuralParams.STATE_DIM = 5*3; // Need to check *****************
+			QNeuralParams.STATE_RANGES = new int[]{3,3,3,3,3}; // Need to check **********
 		}
 		if(a !=null){
 			int i=0;
@@ -89,7 +80,7 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
 				actionInputMap.put(a.translation(),i++);
 				allActions.put(a.translation(), (Action)a.clone());
 			}
-			actionDim = actionInputMap.size();
+			QNeuralParams.ACTION_DIM = actionInputMap.size();
 		}		
 	}
     
@@ -131,15 +122,10 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
 	    	String s_state = percep.translation();    	
 	    	String s_action = action.translation();
 	    	
-	    	Matrix mState = state2Matrix(percep);
-	    	Matrix mAction = action2Matrix(action);
+	    	double[] mState = state2Double(percep);
+	    	double[] mAction = action2Double(action);
 	    	
-	    	Matrix op = qNS.getOutput(mState,mAction);
-	    	if(op.getRowDimension()!=1 || op.getColumnDimension()!=1){
-	    		throw new Exception("Output not correct");
-	    	}
-	    	double sa_val = op.get(0, 0);    	    
-	    	
+	    	double sa_val = qNS.getOutput(mState,mAction);
 			return new StateActionValue(percep,action,sa_val);
     	}catch(Exception e){
     		e.printStackTrace();
@@ -152,7 +138,9 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
      * Get Best Action
      */
     public Action getBestAction(Percep percep) {
+    	
     	Action a = null;
+    	/* THIS MUST BE CHANGED TO 
     	Iterator it = allActions.entrySet().iterator();
     	double vl = -Double.MAX_VALUE;
         while (it.hasNext()) {
@@ -162,6 +150,7 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
         		a = (Action)tmpA.clone();
         	}
     	}
+    	/*
         return a;
    }  
     
@@ -171,8 +160,8 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
     
     public void setStateActionValue(Percep percep,Action action,double reward, Percep nextPercep,Action maxAction){
     	// Convert states & action to matrices & set to models   
-    	qNS.addStateActionRewards(state2Matrix(percep),action2Matrix(action),state2Matrix(nextPercep),
-    			action2Matrix(maxAction),reward);
+    	qNS.addStateActionRewards(state2Double(percep),action2Double(action),state2Double(nextPercep),
+    			action2Double(maxAction),reward);
     	// Do the training
     	qNS.train();
     }
@@ -198,12 +187,14 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
     /*
      * Convert state to vector/matrix 
      */
-    public Matrix state2Matrix(Percep percep){
-    	Matrix m = new Matrix(stateDim,1);
-    	for (int i = 0; i < stateDim; i++) {
-             m.set(i, 0, percep.getFluent(i).getValue());            
+    public double[] state2Double(Percep percep){
+    	double[] m = new double[QNeuralParams.STATE_DIM];
+    	int count = 0;
+    	for (int i = 0; i < percep.getNumFluents(); i++) {
+    		//System.out.println(count + " " + percep.getFluent(i).getValue() + " " + m.length);
+             m[count+percep.getFluent(i).getValue()] =  1;
+             count = count + QNeuralParams.STATE_RANGES[i];
         }
-        
         return m;
     }
     
@@ -211,9 +202,9 @@ public class BaseStateActionValueMap extends ReinforcementLearner.BaseStateActio
      * Convert action matrix
      */
     
-    public Matrix action2Matrix(Action action){
-    	Matrix m = new Matrix(actionDim,1);
-    	m.set(actionInputMap.get(action.translation()), 0, 1);
+    public double[] action2Double(Action action){
+    	double[] m = new double[QNeuralParams.ACTION_DIM];
+    	m[actionInputMap.get(action.translation())] =  1;
     	return m;
     }
     

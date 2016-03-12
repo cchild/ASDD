@@ -195,8 +195,10 @@ public class ReinforcementLearner extends java.lang.Object {
     //It also uses a StateActionValue map, rather than a state vale map.
     //As this is model based learning the updates only happen gradualy.
     public void QLearningRefineValue(Percep stateToRefine, Action action, Percep nextState) {
-         //first element of rule elements is the action
-        double ALPHA = 0.1f;
+        //first element of rule elements is the action
+        /*
+    	// Standard Q Learning
+    	double ALPHA = 0.1f;
         double GAMMA = 0.9f;
         
         double oldStateActionValue = 0;
@@ -228,20 +230,24 @@ public class ReinforcementLearner extends java.lang.Object {
         //    } else {
                 sav = stateActionValueMap.getStateActionValue(nextState, maxAction);
         //    }
-            
-            
+                
         //}
         
         double maxActionValue = 0;
         if (sav != null)
             maxActionValue = sav.getValue();
         
-        // 	
         newStateActionValue = oldStateActionValue + 
                                 ALPHA *
                                 (reward + GAMMA * maxActionValue - oldStateActionValue);
+        stateActionValueMap.setStateActionValue(stateToRefine, action , newStateActionValue);       
+         */
         
-        //stateActionValueMap.setStateActionValue(stateToRefine, action , newStateActionValue);      
+    	//Q-Neural System
+    	StateActionValue sa = stateActionValueMap.getStateActionValue(nextState, action);
+        double reward = sa.getReward();
+        //This need to be fixed
+        Action maxAction = stateActionValueMap.getBestAction(nextState);
         stateActionValueMap.setStateActionValue(stateToRefine,action,reward,nextState,maxAction);
     }
     
